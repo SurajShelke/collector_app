@@ -1,0 +1,19 @@
+defaults: &defaults
+  client_id:  <%= ENV['CLIENT_ID'] || 'joqjj7p3jaucbd2' %>
+  client_secret: <%= ENV['CLIENT_SECRET'] || 'rhtgbsko6fnet1x' %>
+  redirect_uri: 'http://localhost:3000/dropbox/callback'
+
+development:
+  <<: *defaults
+
+test:
+  <<: *defaults
+
+staging:
+  <<: *defaults
+
+qa:
+  <<: *defaults
+
+production:
+  <<: *defaults
