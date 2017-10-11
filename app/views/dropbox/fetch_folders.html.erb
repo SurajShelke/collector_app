@@ -1,18 +1,12 @@
 <%= form_tag(create_sources_dropbox_index_path) do |f| %>
-  <label> Organization ID: </label>
-  <%= text_field_tag 'organization_id', params[:organization_id], class: 'hidden'%>
-  <br><br>
-
-  <label> Source Type ID: </label>
-  <%= text_field_tag 'source_type_id', params[:source_type_id], class: 'hidden'%>
-  <br><br>
-
   <label> Select Folders: </label><br><br>
   <% @folders.each do |folder| %>
     <%= check_box_tag "folders[#{folder['id']}]", folder['path_lower'] %>
     <label><%= folder['path_lower']%></label>
     <br><br>
   <% end %>
+  <%= hidden_field_tag 'organization_id', params[:organization_id] %>
+  <%= hidden_field_tag 'source_type_id', params[:source_type_id] %>
   <%= hidden_field_tag 'email', params[:email] %>
   <button type="submit">Submit</button>
 <%end%>

@@ -3,17 +3,34 @@ class DropboxController < ApplicationController
   before_action :get_access_token, only: [:callback]
 
   def authorize
-    redirect_to "https://www.dropbox.com/oauth2/authorize?client_id=#{AppConfig.client_id}&response_type=code&redirect_uri=#{AppConfig.redirect_uri}"
+    # send organization_id and source_type_id in state param
+    state_params = CGI.escape({
+      organization_id: params[:organization_id],
+      source_type_id: params[:source_type_id]
+    }.to_json)
+
+    redirect_to "https://www.dropbox.com/oauth2/authorize?state=#{state_params}&client_id=#{AppConfig.client_id}&response_type=code&redirect_uri=#{AppConfig.redirect_uri}"
   end
 
   def callback
     begin
+      # decode state params
+      state_params = JSON.parse(params[:state])
+
+      # generate client object using access token
       @client = DropboxApi::Client.new(@access_token)
+
+      # fetch user account details
       user_account = @client.get_current_account
 
+      # save user details with identity provider and redirect to list folder UI
       if user_account.present?
         user = User.create_or_update_dropbox_user(user_account, @access_token)
-        redirect_to fetch_folders_dropbox_index_path(email: user.email)
+        redirect_to fetch_folders_dropbox_index_path(
+          email: user.email,
+          organization_id: state_params['organization_id'],
+          source_type_id: state_params['source_type_id']
+        )
       end
     rescue DropboxApi::Errors::HttpError => he
       render json: { message: "#{he.message}" }, status: :unprocessable_entity
@@ -21,6 +38,7 @@ class DropboxController < ApplicationController
   end
 
   def fetch_folders
+    # fetch dropbox access token using email param
     dropbox_access_token = IdentityProvider.get_dropbox_access_token(params[:email])
 
     if dropbox_access_token
@@ -34,7 +52,7 @@ class DropboxController < ApplicationController
 
         respond_to do |format|
           format.html
-          format.json { render json: { folders: @folders || [], email: params[:email] } }
+          format.json { render json: { folders: @folders || [], email: params[:email], organization_id: params[:organization_id], source_type_id: params[:source_type_id] } }
         end
       rescue DropboxApi::Errors::HttpError => he
         redirect_to authorize_dropbox_index_path
