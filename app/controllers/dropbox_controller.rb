@@ -3,10 +3,11 @@ class DropboxController < ApplicationController
   before_action :get_access_token, only: [:callback]
 
   def authorize
-    # send organization_id and source_type_id in state param
+    # send client_host, organization_id, and source_type_id in state param
     state_params = CGI.escape({
       organization_id: params[:organization_id],
-      source_type_id: params[:source_type_id]
+      source_type_id: params[:source_type_id],
+      client_host: params[:client_host]
     }.to_json)
 
     redirect_to "https://www.dropbox.com/oauth2/authorize?state=#{state_params}&client_id=#{AppConfig.client_id}&response_type=code&redirect_uri=#{AppConfig.redirect_uri}"
@@ -29,7 +30,8 @@ class DropboxController < ApplicationController
         redirect_to fetch_folders_dropbox_index_path(
           email: user.email,
           organization_id: state_params['organization_id'],
-          source_type_id: state_params['source_type_id']
+          source_type_id: state_params['source_type_id'],
+          client_host: state_params['client_host']
         )
       end
     rescue DropboxApi::Errors::HttpError => he
@@ -44,15 +46,11 @@ class DropboxController < ApplicationController
     if dropbox_access_token
       begin
         client = DropboxApi::Client.new(dropbox_access_token)
-        result = client.list_folder('')
+        result = client.list_folder('', recursive: true)
 
         if result.instance_values['data']
+          # show only folders list
           @folders = result.instance_values['data']['entries'].select{|c| c[".tag"] == 'folder'}
-        end
-
-        respond_to do |format|
-          format.html
-          format.json { render json: { folders: @folders || [], email: params[:email], organization_id: params[:organization_id], source_type_id: params[:source_type_id] } }
         end
       rescue DropboxApi::Errors::HttpError => he
         redirect_to authorize_dropbox_index_path
@@ -74,7 +72,8 @@ class DropboxController < ApplicationController
         email:           params[:email]
         )
       service.create_sources
-      render json: { message: 'Source Creation successful, fetching content' }, status: :ok
+
+      redirect_to "https://#{params[:client_host]}/admin/integrations/eclConfigurations"
     else
       render json: { message: 'Invalid access token' }, status: :unprocessable_entity
     end
