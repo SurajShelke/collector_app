@@ -58,3 +58,6 @@ gem 'pg'
 gem 'grape'
 gem 'grape_logging'
 gem 'sidekiq'
+gem 'bootstrap'
+gem 'jquery-rails'
+
