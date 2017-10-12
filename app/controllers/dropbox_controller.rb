@@ -73,7 +73,7 @@ class DropboxController < ApplicationController
         )
       service.create_sources
 
-      redirect_to "https://#{params[:client_host]}/admin/integrations/eclConfigurations"
+      redirect_to "#{params[:client_host]}/admin/integrations/eclConfigurations"
     else
       render json: { message: 'Invalid access token' }, status: :unprocessable_entity
     end
