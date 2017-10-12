@@ -71,4 +71,9 @@ class DropboxFetchContentService
       puts "unable to get shared link for #{file_path}"
     end
   end
+
+  def fetch_latest_cursor_and_collect_files(folder_id)
+    response = @client.list_folder_get_latest_cursor(path: folder_id)
+    response.try(:cursor).present? ? collect_files(folder_id, response.cursor) : collect_files(folder_id)
+  end
 end
