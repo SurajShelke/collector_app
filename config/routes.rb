@@ -23,6 +23,12 @@ Rails.application.routes.draw do
           post 'fetch_content'
         end
       end
+
+      resources :webhook, only: [] do
+        collection do
+          post 'fetch_content'
+        end
+      end
     end
   end
 end

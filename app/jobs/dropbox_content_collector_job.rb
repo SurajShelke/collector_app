@@ -11,9 +11,9 @@ class DropboxContentCollectorJob
   def fetch_content(args, options={})
     begin
       service = DropboxFetchContentService.new(args)
-      source  = service.find_source(args[:source_id], args[:organization_id])
+      source  = find_source(args[:source_id], args[:organization_id])
 
-      if source["content_items_count"] || 0)> 0
+      if (source["content_items_count"] || 0) > 0
         service.fetch_latest_cursor_and_collect_files(args[:source_config]['folder_id'])
       else
         service.collect_files(args[:source_config]['folder_id'])
@@ -29,8 +29,8 @@ class DropboxContentCollectorJob
 
   def find_source(source_id, organization_id)
     service = EclClient::Source.new(organization_id: organization_id, is_org_admin: true)
-    response = service.find(source_id)
-    response.status_code == 200 ? response.response_data["data"] : {}
+    service.find(source_id)
+    service.status_code == 200 ? service.response_data["data"] : {}
   end
 
   def update_source(source_id, organization_id)
