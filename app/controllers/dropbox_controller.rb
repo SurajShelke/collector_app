@@ -4,11 +4,13 @@ class DropboxController < ApplicationController
 
   def authorize
     # send client_host, organization_id, and source_type_id in state param
-    state_params = CGI.escape({
-      organization_id: params[:organization_id],
-      source_type_id: params[:source_type_id],
-      client_host: params[:client_host]
-    }.to_json)
+    state_params = Base64.encode64(
+      CGI.escape({
+        organization_id: params[:organization_id],
+        source_type_id: params[:source_type_id],
+        client_host: params[:client_host]
+      }.to_json)
+    )
 
     redirect_to "https://www.dropbox.com/oauth2/authorize?state=#{state_params}&client_id=#{AppConfig.client_id}&response_type=code&redirect_uri=#{AppConfig.redirect_uri}"
   end
@@ -16,7 +18,7 @@ class DropboxController < ApplicationController
   def callback
     begin
       # decode state params
-      state_params = JSON.parse(params[:state])
+      state_params = JSON.parse(CGI.unescape(Base64.decode64(params[:state])))
 
       # generate client object using access token
       @client = DropboxApi::Client.new(@access_token)
