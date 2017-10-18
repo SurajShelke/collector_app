@@ -1,25 +1,19 @@
 class DropboxController < ApplicationController
   skip_before_action :verify_authenticity_token
   before_action :get_access_token, only: [:callback]
+  before_action :verify_referer, only: [:authorize]
 
   def authorize
-    # send client_host, organization_id, and source_type_id in state param
-    state_params = Base64.encode64(
-      CGI.escape({
-        organization_id: params[:organization_id],
-        source_type_id: params[:source_type_id],
-        client_host: params[:client_host]
-      }.to_json)
-    )
+    state_params = {
+      auth_data: params[:auth_data],
+      secret: params[:secret]
+    }.to_json
 
     redirect_to "https://www.dropbox.com/oauth2/authorize?state=#{state_params}&client_id=#{AppConfig.client_id}&response_type=code&redirect_uri=#{AppConfig.redirect_uri}"
   end
 
   def callback
     begin
-      # decode state params
-      state_params = JSON.parse(CGI.unescape(Base64.decode64(params[:state])))
-
       # generate client object using access token
       @client = DropboxApi::Client.new(@access_token)
 
@@ -31,9 +25,7 @@ class DropboxController < ApplicationController
         user = User.create_or_update_dropbox_user(user_account, @access_token)
         redirect_to fetch_folders_dropbox_index_path(
           email: user.email,
-          organization_id: state_params['organization_id'],
-          source_type_id: state_params['source_type_id'],
-          client_host: state_params['client_host']
+          state: params[:state]
         )
       end
     rescue DropboxApi::Errors::HttpError => he
@@ -66,16 +58,25 @@ class DropboxController < ApplicationController
     dropbox_access_token = IdentityProvider.get_dropbox_access_token(params[:email])
 
     if dropbox_access_token
-      service = SourceCreationService.new(
-        source_type_id:  source_params[:source_type_id],
-        organization_id: source_params[:organization_id],
-        folders:         source_params[:folders],
-        access_token:    dropbox_access_token,
-        email:           params[:email]
-        )
-      service.create_sources
+      begin
+        decrypt_state
 
-      redirect_to "#{params[:client_host]}/admin/integrations/eclConfigurations"
+        if @unauthorized_parameters
+          render json: { message: 'Unauthorized parameters' }, status: :unauthorized
+        else
+          service = SourceCreationService.new(
+            folders:         source_params[:folders] || [],
+            access_token:    dropbox_access_token,
+            email:           params[:email],
+            organization_id: @organization_id,
+            source_type_id:  @source_type_id
+            )
+          service.create_sources
+          redirect_to "#{@client_host}/admin/integrations/eclConfigurations"
+        end
+      rescue => e
+        render json: { message: 'Invalid or bad parameters' }, status: :unprocessable_entity
+      end
     else
       render json: { message: 'Invalid access token' }, status: :unprocessable_entity
     end
@@ -84,17 +85,37 @@ class DropboxController < ApplicationController
   private
 
   def source_params
-    params.permit(:source_type_id, :organization_id, folders: {})
+    params.permit(:state, folders: {})
+  end
+
+  def decrypt_state
+    state_data = JSON.parse(source_params[:state])
+    decrypted_data = JSON.parse(Base64.decode64(state_data["auth_data"]))
+
+    digest  = OpenSSL::Digest.new('sha256')
+    calculated_secret = OpenSSL::HMAC.hexdigest(digest, AppConfig.digest_secret, state_data['auth_data'])
+
+    # check integrity of params passed
+    if calculated_secret == state_data['secret']
+      @client_host     = decrypted_data['client_host']
+      @organization_id = decrypted_data['organization_id']
+      @source_type_id  = decrypted_data['source_type_id']
+    else
+      @unauthorized_parameters = true
+    end
   end
 
   def get_access_token
     begin
-      authenticator = DropboxApi::Authenticator.new(AppConfig.client_id, AppConfig.client_secret)
+      authenticator = DropboxApi::Authenticator.new(AppConfig.client_id, AppConfig.client_secret + "Dsafds")
       auth_bearer = authenticator.get_token(params[:code], redirect_uri: AppConfig.redirect_uri)
-
       @access_token = auth_bearer.token
     rescue OAuth2::Error => oe
       render json: { message: "#{oe.message}" }, status: :unprocessable_entity
     end
+  end
+
+  def verify_referer
+    # check referer TODO
   end
 end
