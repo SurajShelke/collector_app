@@ -60,4 +60,7 @@ gem 'grape_logging'
 gem 'sidekiq'
 gem 'bootstrap'
 gem 'jquery-rails'
-
+gem 'google-api-client'
+gem 'googleauth'
+gem 'bugsnag'
+gem 'google_drive'
