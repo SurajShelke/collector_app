@@ -107,7 +107,7 @@ class DropboxController < ApplicationController
 
   def get_access_token
     begin
-      authenticator = DropboxApi::Authenticator.new(AppConfig.client_id, AppConfig.client_secret + "Dsafds")
+      authenticator = DropboxApi::Authenticator.new(AppConfig.client_id, AppConfig.client_secret)
       auth_bearer = authenticator.get_token(params[:code], redirect_uri: AppConfig.redirect_uri)
       @access_token = auth_bearer.token
     rescue OAuth2::Error => oe
