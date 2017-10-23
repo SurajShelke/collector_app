@@ -9,8 +9,8 @@ class SourceCreationService
 
   def create_sources
     @folders.each do |folder_id, folder_name|
-      service = EclClient::Source.new(is_org_admin: true, organization_id: @organization_id)
-      service.create(
+      communicator = EclCommunicator.new
+      attributes = {
         source_type_id:  @source_type_id,
         source_config:   {
           client_id:     AppConfig.client_id,
@@ -25,13 +25,9 @@ class SourceCreationService
         is_default:      false,
         is_featured:     false,
         approved:        true
-      )
-
-      json_response = service.response_data
-
-      if service.error.present?
-        puts 'Source creation failed'
-      end
+      }
+      response = communicator.establish_post_connection("api/developer/v1/sources", attributes)
+      response.success? ? communicator.response_data["data"] : {}
     end
   end
 end

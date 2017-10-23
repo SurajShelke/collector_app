@@ -53,11 +53,9 @@ end
 gem 'pry'
 gem 'dropbox_api' # https://github.com/Jesus/dropbox_api
 gem 'faraday'
-gem 'ecl_client', git: 'https://f4b03dbb1824f562729c7d77a1ba474d5d9e7d12:x-oauth-basic@github.com/Course-Master/ecl_client.git'
 gem 'pg'
 gem 'grape'
 gem 'grape_logging'
 gem 'sidekiq'
 gem 'bootstrap'
 gem 'jquery-rails'
-

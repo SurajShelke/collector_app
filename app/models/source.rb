@@ -1,9 +1,9 @@
 class Source
   # Get Source  based on id
   def self.find(source_id)
-    service = EclClient::Source.new(is_superadmin: true)
-    response = service.find(source_id)
-    response.success? ? service.response_data["data"] : {}
+    communicator = EclCommunicator.new
+    response = communicator.establish_connection("api/developer/v1/sources/#{source_id}")
+    response.success? ? communicator.response_data["data"] : {}
   end
 
   def self.fetch_content(source_id)
