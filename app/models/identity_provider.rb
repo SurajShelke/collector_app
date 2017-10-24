@@ -10,18 +10,11 @@ class IdentityProvider < ApplicationRecord
 
     identity_provider.uid   = args[:account_id]
     identity_provider.token = args[:access_token]
-    identity_provider.save!
+    identity_provider.save! ? identity_provider : nil
   end
 
-  def self.get_dropbox_access_token(email)
-    user = User.find_by(email: email)
-
-    if user
-      provider = IdentityProvider.find_by(
-        user_id: user.id,
-        provider_type: IdentityProvider.provider_types['dropbox']
-      )
-      provider.try(:token)
-    end
+  def self.get_dropbox_access_token(provider_id)
+    provider = IdentityProvider.find_by(id: provider_id)
+    provider.try(:token)
   end
 end

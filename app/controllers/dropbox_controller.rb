@@ -22,11 +22,16 @@ class DropboxController < ApplicationController
 
       # save user details with identity provider and redirect to list folder UI
       if user_account.present?
-        user = User.create_or_update_dropbox_user(user_account, @access_token)
-        redirect_to fetch_folders_dropbox_index_path(
-          email: user.email,
-          state: params[:state]
-        )
+        provider = User.create_or_update_dropbox_user(user_account, @access_token)
+
+        if provider
+          redirect_to fetch_folders_dropbox_index_path(
+            provider_id: provider.id,
+            state: params[:state]
+          )
+        else
+          render json: { message: "Record cannot be processed" }, status: :unprocessable_entity
+        end
       end
     rescue DropboxApi::Errors::HttpError => he
       render json: { message: "#{he.message}" }, status: :unprocessable_entity
@@ -35,7 +40,7 @@ class DropboxController < ApplicationController
 
   def fetch_folders
     # fetch dropbox access token using email param
-    dropbox_access_token = IdentityProvider.get_dropbox_access_token(params[:email])
+    dropbox_access_token = IdentityProvider.get_dropbox_access_token(params[:provider_id])
 
     if dropbox_access_token
       begin

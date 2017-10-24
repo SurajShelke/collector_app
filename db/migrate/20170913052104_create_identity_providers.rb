@@ -9,7 +9,7 @@ class CreateIdentityProviders < ActiveRecord::Migration[5.1]
       t.datetime :created_at
       t.datetime :updated_at
       t.json     :auth_info
-      t.references :user, index: true, foreign_key: true
+      t.references :user, index: true, foreign_key: true, type: :uuid
     end
 
     add_index :identity_providers, [:user_id, :provider_type], unique: true

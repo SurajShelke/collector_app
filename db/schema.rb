@@ -14,6 +14,8 @@ ActiveRecord::Schema.define(version: 20170913052104) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+  enable_extension "pgcrypto"
+  enable_extension "uuid-ossp"
 
   create_table "identity_providers", force: :cascade do |t|
     t.integer "provider_type", null: false
@@ -24,12 +26,12 @@ ActiveRecord::Schema.define(version: 20170913052104) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.json "auth_info"
-    t.bigint "user_id"
+    t.uuid "user_id"
     t.index ["user_id", "provider_type"], name: "index_identity_providers_on_user_id_and_provider_type", unique: true
     t.index ["user_id"], name: "index_identity_providers_on_user_id"
   end
 
-  create_table "users", force: :cascade do |t|
+  create_table "users", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.string "first_name"
     t.string "last_name"
     t.string "email", null: false

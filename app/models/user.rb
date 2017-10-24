@@ -5,16 +5,13 @@ class User < ApplicationRecord
     user            = find_or_initialize_by(email: account.email)
     user.first_name = account.name.given_name
     user.last_name  = account.name.surname
-    user.save!
 
-    if user
+    if user.save!
       IdentityProvider.create_or_update_dropbox(
         user_id: user.id,
         account_id: account.account_id,
         access_token: access_token
       )
     end
-
-    user
   end
 end
