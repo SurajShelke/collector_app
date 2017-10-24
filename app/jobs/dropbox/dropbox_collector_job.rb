@@ -1,10 +1,11 @@
 class DropboxCollectorJob
 
   include Sidekiq::Worker
-  sidekiq_options queue: :dropbox, retry: 1, backtrace: true
+  sidekiq_options queue: :dropbox, backtrace: true
 
   def perform(source_type_id= nil)
-    source_type_id ||= SourceType.get_source_type_by_name("dropbox").first["id"]
+    source_type_service = SourceTypeService.new(Dropbox.ecl_client_id,Dropbox.ecl_token)
+    source_type_id ||= SourceTypeService.get_source_type_by_name("dropbox").first["id"]
 
     if source_type_id.present?
       service = SourcePullerService.new(source_type_id)

@@ -1,6 +1,6 @@
 class DropboxContentCollectorJob
   include Sidekiq::Worker
-  sidekiq_options queue: :dropbox_ecl_job, retry: 1, backtrace: true
+  sidekiq_options queue: :dropbox_ecl_job, backtrace: true
 
   def perform(args)
     args = args.symbolize_keys

@@ -1,11 +1,11 @@
 class DropboxContentItemCreationJob
 
   include Sidekiq::Worker
-  sidekiq_options queue: :dropbox_content_creation_job, retry: 1, backtrace: true
+  sidekiq_options queue: :dropbox_content_creation_job,  backtrace: true
 
   def perform(organization_id, attributes)
     begin
-      service = EclClient::ContentItem.new(organization_id: organization_id, is_org_admin: true)
+      service = EclDeveloperClient::ContentItem.new(organization_id: organization_id, is_org_admin: true)
       service.create(attributes)
     rescue => e
       if e.is_a?(Faraday::ConnectionFailed)

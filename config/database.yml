@@ -24,7 +24,7 @@ default: &default
 development:
   <<: *default
   database: connector_development
-  username: yogendra
+  username: amar
   host: localhost
   pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 25 } %>
 

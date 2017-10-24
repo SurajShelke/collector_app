@@ -28,3 +28,6 @@ Collectore Webhook URL for reference:
 Enhancement Required:
 - Pull metadata for each shared link content item to create ECL content item
   with resource metadata
+
+# JOB
+- DropboxEclJob.perform_async

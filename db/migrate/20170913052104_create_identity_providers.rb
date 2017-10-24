@@ -1,6 +1,6 @@
 class CreateIdentityProviders < ActiveRecord::Migration[5.1]
   def change
-    create_table :identity_providers do |t|
+    create_table :identity_providers, id: :uuid do |t|
       t.integer  :provider_type, null: false
       t.string   :uid, null: false
       t.string   :token

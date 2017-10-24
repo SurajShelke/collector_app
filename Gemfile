@@ -59,3 +59,6 @@ gem 'grape_logging'
 gem 'sidekiq'
 gem 'bootstrap'
 gem 'jquery-rails'
+gem 'bugsnag'
+gem 'ecl_developer_client', :git => 'https://d7f5b0a7f74cadd93799ae93eb277453414f1e14:x-oauth-basic@github.com/Course-Master/ecl_developer_client.git'
+
