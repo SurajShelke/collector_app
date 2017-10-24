@@ -31,3 +31,7 @@ Enhancement Required:
 
 # JOB
 - DropboxEclJob.perform_async
+
+# Generate git hub token 
+bundle config github.com Your token
+https://blog.codeship.com/managing-private-dependencies-with-bundler/

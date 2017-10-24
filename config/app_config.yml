@@ -4,8 +4,8 @@ defaults: &defaults
   dropbox:
     client_id: <%= ENV['DROPBOX_CLIENT_ID'] || 'eks77359dcm819n' %>
     client_secret: <%= ENV['DROPBOX_CLIENT_SECRET'] || 'bfgz7hc0z7vn6b1' %> 
-    ecl_app_client: <%= ENV['DROPBOX_ECL_CLIENT_ID'] || 'Dfsn19ehHA' %>
-    ecl_app_token: <%= ENV['DROPBOX_ECL_TOKEN'] || 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc19kZXZlbG9wZXIiOnRydWUsImNsaWVudF9pZCI6IkRmc24xOWVoSEEifQ.npB8vBKFfUUSi9OCSykqDzzbnPgu1w1u25ZrmiBk1Bo' %>
+    ecl_client_id: <%= ENV['DROPBOX_ECL_CLIENT_ID'] || 'Dfsn19ehHA' %>
+    ecl_token: <%= ENV['DROPBOX_ECL_TOKEN'] || 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc19kZXZlbG9wZXIiOnRydWUsImNsaWVudF9pZCI6IkRmc24xOWVoSEEifQ.npB8vBKFfUUSi9OCSykqDzzbnPgu1w1u25ZrmiBk1Bo' %>
     redirect_uri: <%= ENV['DROPBOX_REDIRECT_URL'] || 'http://localhost:5000/dropbox/callback' %>
 
 development:
