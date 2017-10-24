@@ -1,5 +1,7 @@
-class SourceCreationService
-  def initialize(options= {})
+class DropboxSourceCreationService
+  def initialize(ecl_client_id,ecl_token,options= {})
+    @ecl_client_id = ecl_client_id
+    @ecl_token = ecl_token
     @options         = options
     @source_type_id  = options[:source_type_id]
     @organization_id = options[:organization_id]
@@ -9,7 +11,7 @@ class SourceCreationService
 
   def create_sources
     @folders.each do |folder_id, folder_name|
-      communicator = EclCommunicator.new
+      communicator =EclDeveloperClient::Source.new(ecl_client_id,ecl_token)
       attributes = {
         source_type_id:  @source_type_id,
         source_config:   {
@@ -26,7 +28,7 @@ class SourceCreationService
         is_featured:     false,
         approved:        true
       }
-      response = communicator.establish_post_connection("api/developer/v1/sources", attributes)
+      response = communicator.create(attributes)
       response.success? ? communicator.response_data["data"] : {}
     end
   end

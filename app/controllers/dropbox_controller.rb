@@ -9,7 +9,7 @@ class DropboxController < ApplicationController
       secret: params[:secret]
     }.to_json
 
-    redirect_to "https://www.dropbox.com/oauth2/authorize?state=#{state_params}&client_id=#{AppConfig.client_id}&response_type=code&redirect_uri=#{AppConfig.redirect_uri}"
+    redirect_to "https://www.dropbox.com/oauth2/authorize?state=#{state_params}&client_id=#{AppConfig.dropbox['client_id']}&response_type=code&redirect_uri=#{AppConfig.dropbox['redirect_uri']}"
   end
 
   def callback
@@ -69,7 +69,7 @@ class DropboxController < ApplicationController
         if @unauthorized_parameters
           render json: { message: 'Unauthorized parameters' }, status: :unauthorized
         else
-          service = SourceCreationService.new(
+          service = DropboxSourceCreationService.new(
             folders:         source_params[:folders] || [],
             access_token:    dropbox_access_token,
             email:           params[:email],
