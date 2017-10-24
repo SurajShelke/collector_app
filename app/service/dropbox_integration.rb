@@ -47,12 +47,12 @@ class DropboxIntegration < BaseIntegration
     end
     
   end
-  
+
   def collect_files(response)
     response.entries.each do |entry|
     #  Conisder folder has 3 sub folder and 3 file
     #  Create 3 content Item and spawn 3 different job
-    # TODO add code for to check last polled at vs server update 
+    # TODO add code for to check last polled at vs server update - 1 days so we will not fetched lot of data
     # time so we will not have multiple jobs to spawn every time
     if entry.class.to_s == "DropboxApi::Metadata::Folder"
       credential = @credentials
@@ -91,6 +91,7 @@ class DropboxIntegration < BaseIntegration
       external_id:   link['id'],
       raw_record:    link,
       source_id:     @source_id,
+      organization_id: @organization_id,
       resource_metadata: {
         images:      [{ url: nil }],
         title:       link['name'],
@@ -107,7 +108,7 @@ class DropboxIntegration < BaseIntegration
       }
     }
 
-    DropboxContentItemCreationJob.perform_async(@organization_id, entry)
+    ContentItemCreationJob.perform_async(self.class.ecl_client_id,self.class.ecl_token, entry)
   end
 
   

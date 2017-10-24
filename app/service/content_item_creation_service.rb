@@ -2,29 +2,25 @@ class ContentItemCreationService
 
   attr_accessor :attributes, :organization_id
 
-  def initialize(attributes,organization_id=nil)
+  def initialize(ecl_client_id,ecl_token,attributes)
+    @ecl_client_id = ecl_client_id
+    @ecl_token = ecl_token
     @attributes = attributes
-    @organization_id = organization_id
   end
 
   def create
     begin
-      service = EclClient::ContentItem.new(payload)
+      service = EclDeveloperClient::ContentItem.new(@ecl_client_id,@ecl_token)
       service.create(@attributes)
     rescue => e
       if e.is_a?(Faraday::ConnectionFailed)
-        ContentItemCreationJob.perform_in(15.minutes, @attributes, @organization_id)
-        reschedule_message = "Rescheduled: After 15 minutes"
+        ContentItemCreationJob.perform_in(3.minutes,@ecl_client_id,@ecl_token, @attributes)
+        reschedule_message = "Rescheduled: After 3 minutes"
       end
       raise Collector::Error::ContentCreationFailure, "ECL Content Creation Error - OrganizationId: #{@organization_id}, ErrorMessage: #{e.message}, #{reschedule_message}"
     end
   end
 
-  def payload
-    {
-      "organization_id"=> @organization_id,
-      "is_superadmin" => @organization_id.blank? ? true : false
-    }
-  end
+  
 
 end
