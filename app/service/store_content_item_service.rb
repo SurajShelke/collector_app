@@ -1,5 +1,6 @@
 class StoreContentItemService
   def initialize(content_integration_str, credentials, source_id, organization_id=nil, last_polled_at=nil)
+
     @content_integration = content_integration_str.constantize
     @source_id = source_id
     @organization_id = organization_id

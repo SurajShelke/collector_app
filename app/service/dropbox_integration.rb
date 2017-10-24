@@ -25,22 +25,27 @@ class DropboxIntegration < BaseIntegration
   #  We dont need start or limit for this Integration 
   #  Whenever pagination is available we can use it
   def get_content(options={})
+
     @options = options
-    @client          = DropboxApi::Client.new(@credential['access_token'])
-    @source_id       = @credential["source_id"]
-    @organization_id = @credential["organization_id"]
-    fetch_content(@credential['folder_id'])
+    @client          = DropboxApi::Client.new(@credentials['access_token'])
+    @source_id       = @credentials["source_id"]
+    @organization_id = @credentials["organization_id"]
+    fetch_content(@credentials['folder_id'])
   end
 
-  def fetch_content(folder_id,cursor)
+  def fetch_content(folder_id,cursor=nil)
     begin
       if cursor.nil?
-        response = @client.list_folder(path: @credential['folder_id'],recursive: true)
+
+        response = @client.list_folder(folder_id,recursive: true)
+
         collect_files(response)
+
       else
         response = @client.list_folder_continue(cursor)
         collect_files(response)
       end
+      # fetch_content(folder_id, response.cursor) if response.has_more?
     rescue DropboxApi::Errors::HttpError => e
       logs.error  "Invalid Oauth2 token, #{e.message}"
       nil
@@ -50,22 +55,24 @@ class DropboxIntegration < BaseIntegration
 
   def collect_files(response)
     response.entries.each do |entry|
-    #  Conisder folder has 3 sub folder and 3 file
-    #  Create 3 content Item and spawn 3 different job
-    # TODO add code for to check last polled at vs server update - 1 days so we will not fetched lot of data
-    # time so we will not have multiple jobs to spawn every time
-    if entry.class.to_s == "DropboxApi::Metadata::Folder"
-      credential = @credentials
-      credential['folder_id'] = entry.id
-      Sidekiq::Client.push(
-        'class' => FetchContentJob,
-        'queue' => self.get_fetch_content_job_queue.to_s,
-        'args' => [self.class.to_s, credential, @source_id, @organization_id, @options[:last_polled_at]]
-      )
-      # Call again background job so current job is finish faster
-    elsif entry.class.to_s == "DropboxApi::Metadata::File"
-      create_file_as_content_item(entry.path_lower)
-    end
+      #  Conisder folder has 3 sub folder and 3 file
+      #  Create 3 content Item and spawn 3 different job
+      # TODO add code for to check last polled at vs server update - 1 days so we will not fetched lot of data
+      # time so we will not have multiple jobs to spawn every time
+      if entry.class.to_s == "DropboxApi::Metadata::Folder"
+        # credential = @credentials
+        # credential['folder_id'] = entry.id
+        # Sidekiq::Client.push(
+        #   'class' => FetchContentJob,
+        #   'queue' => self.class.get_fetch_content_job_queue.to_s,
+        #   'args' => [self.class.to_s, credential, @source_id, @organization_id, @options[:last_polled_at]]
+        # )
+        # Call again background job so current job is finish faster
+      elsif entry.class.to_s == "DropboxApi::Metadata::File"
+        
+        create_file_as_content_item(entry.path_lower)
+      end
+    end  
   end
 
  
@@ -76,7 +83,7 @@ class DropboxIntegration < BaseIntegration
     if links.links.present?
       links.links.map {|link| create_content_item(link.to_hash) }
     else
-      logs.error "unable to get shared link for #{file_path}"
+      Rails.logger.error "unable to get shared link for #{file_path}"
     end
   end
 
@@ -110,10 +117,5 @@ class DropboxIntegration < BaseIntegration
 
     ContentItemCreationJob.perform_async(self.class.ecl_client_id,self.class.ecl_token, entry)
   end
-
-  
-  
-
-
 
 end

@@ -77,6 +77,7 @@ class DropboxController < ApplicationController
             organization_id: @organization_id,
             source_type_id:  @source_type_id
             )
+          binding.pry
           service.create_sources
           redirect_to "#{@client_host}/admin/integrations/eclConfigurations"
         end

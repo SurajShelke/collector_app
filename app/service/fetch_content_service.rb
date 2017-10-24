@@ -9,9 +9,8 @@ class FetchContentService
     # STEP 3: Initialize the source puller service with the required source name
     sources = content_integration.get_source_name
     sources = sources.is_a?(String) ? [sources] : sources
-
     sources.each do |source_name|
-      service = SourcePullerService.new(source_name: source_name)
+      service = SourcePullerService.new(source_name,content_integration.ecl_client_id,content_integration.ecl_token)
 
       service.fetch_sources_by_source_type do |source|
         # STEP 4: Get properly formatted credentials from the content integration

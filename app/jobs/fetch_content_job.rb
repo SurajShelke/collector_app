@@ -3,9 +3,9 @@ class FetchContentJob
   sidekiq_options queue: :fetch_content_ecl_job, backtrace: true
 
   def perform(content_integration_str, credentials, source_id, organization_id=nil, last_polled_at=nil,page=0)
-
-    service = StoreContentItemService.new(content_integration_str, credentials, source_id, organization_id, last_polled_at,page)
-    service.run
+    
+    service = StoreContentItemService.new(content_integration_str, credentials, source_id, organization_id, last_polled_at)
+    service.run(page)
 
     integration = content_integration_str.constantize
     

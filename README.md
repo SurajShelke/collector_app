@@ -35,3 +35,21 @@ Enhancement Required:
 # Generate git hub token 
 bundle config github.com Your token
 https://blog.codeship.com/managing-private-dependencies-with-bundler/
+
+# Simulate Dropbox on local without UI
+  - Consider App is running on 5000
+  require 'base64'
+  require 'openssl'
+  require 'json'
+  key_hash = {organization_id: 15,client_host: 'http://es.lvh.me:4000',source_type_id:'37b7923c-ba37-417f-b43f-b901a45b92e6'}.to_json
+  secret = "34899d721ba319bb99f79847d5146093"
+  encode_key = Base64.encode64(key_hash).gsub("\n","")
+  digest  = OpenSSL::Digest.new('sha256')
+  digest_key =  OpenSSL::HMAC.hexdigest(digest, secret, encode_key)
+
+  decode_key = Base64.decode64(encode_key)
+  decode_key_encode =  Base64.encode64(decode_key).gsub("\n","")
+  decode_digest  = OpenSSL::Digest.new('sha256')
+  decode_digest =  OpenSSL::HMAC.hexdigest(decode_digest, secret, decode_key_encode)
+digest_key == decode_digest
+ "http://localhost:5000/dropbox/authorize?auth_data=#{encode_key}&secret=#{digest_key}"

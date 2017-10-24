@@ -17,5 +17,6 @@ production:
   :concurrency: 5
 :queues:
   - [dropbox, 5]
+  - [content_item_job, 5]
   - [dropbox_ecl_job, 3]
 
