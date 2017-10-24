@@ -28,17 +28,5 @@ class StoreContentItemService
     end
   end
 
-  def trigger_create_content_job(entry)
-    # STEP 2:
-    # For each content item, send it for content item creation
-    # If persistence is enabled, then persist the data
-    if @persistence_enabled && @refetch
-      ContentItem.persist_entry(@source_name, entry)
-    end
-
-    ContentItemCreationJob.perform_async(
-      entry.merge({source_id: @source_id}),
-      @organization_id
-    )
-  end
+  
 end
