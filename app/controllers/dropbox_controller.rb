@@ -55,12 +55,12 @@ class DropboxController < ApplicationController
         redirect_to authorize_dropbox_index_path
       end
     else
-      render json: { folders: [], email: params[:email], message: 'Invalid user' }, status: :unprocessable_entity
+      render json: { folders: [], provider_id: params[:provider_id], message: 'Invalid user' }, status: :unprocessable_entity
     end
   end
 
   def create_sources
-    dropbox_access_token = IdentityProvider.get_dropbox_access_token(params[:email])
+    dropbox_access_token = IdentityProvider.get_dropbox_access_token(params[:provider_id])
 
     if dropbox_access_token
       begin
@@ -70,9 +70,10 @@ class DropboxController < ApplicationController
           render json: { message: 'Unauthorized parameters' }, status: :unauthorized
         else
           service = DropboxSourceCreationService.new(
+            AppConfig.dropbox['ecl_client_id'],
+            AppConfig.dropbox['ecl_token'],
             folders:         source_params[:folders] || [],
             access_token:    dropbox_access_token,
-            email:           params[:email],
             organization_id: @organization_id,
             source_type_id:  @source_type_id
             )
@@ -112,8 +113,8 @@ class DropboxController < ApplicationController
 
   def get_access_token
     begin
-      authenticator = DropboxApi::Authenticator.new(AppConfig.client_id, AppConfig.client_secret)
-      auth_bearer = authenticator.get_token(params[:code], redirect_uri: AppConfig.redirect_uri)
+      authenticator = DropboxApi::Authenticator.new(AppConfig.dropbox['client_id'], AppConfig.dropbox['client_secret'])
+      auth_bearer = authenticator.get_token(params[:code], redirect_uri: AppConfig.dropbox['redirect_uri'])
       @access_token = auth_bearer.token
     rescue OAuth2::Error => oe
       render json: { message: "#{oe.message}" }, status: :unprocessable_entity
