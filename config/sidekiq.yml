@@ -18,5 +18,4 @@ production:
 :queues:
   - [dropbox, 5]
   - [dropbox_ecl_job, 3]
-  - [dropbox_content_creation_job, 7]
-  - [dropbox_course_job, 3]
+
