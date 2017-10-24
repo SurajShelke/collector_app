@@ -15,8 +15,8 @@ class DropboxSourceCreationService
       attributes = {
         source_type_id:  @source_type_id,
         source_config:   {
-          client_id:     AppConfig.client_id,
-          client_secret: AppConfig.client_secret,
+          client_id:     AppConfig.dropbox['client_id'],
+          client_secret: AppConfig.dropbox['client_secret'],
           access_token:  @access_token,
           folder_id:     folder_id
         },
