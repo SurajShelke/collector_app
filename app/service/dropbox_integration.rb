@@ -20,12 +20,11 @@ class DropboxIntegration < BaseIntegration
     AppConfig.dropbox['ecl_token']
   end
 
-  # 
+  #
   #  @options ={start: start, limit: limit, page: page, last_polled_at: @last_polled_at}
-  #  We dont need start or limit for this Integration 
+  #  We dont need start or limit for this Integration
   #  Whenever pagination is available we can use it
   def get_content(options={})
-
     @options = options
     @client          = DropboxApi::Client.new(@credentials['access_token'])
     @source_id       = @credentials["source_id"]
@@ -36,21 +35,17 @@ class DropboxIntegration < BaseIntegration
   def fetch_content(folder_id,cursor=nil)
     begin
       if cursor.nil?
-
         response = @client.list_folder(folder_id,recursive: true)
-
         collect_files(response)
-
       else
         response = @client.list_folder_continue(cursor)
         collect_files(response)
       end
       # fetch_content(folder_id, response.cursor) if response.has_more?
     rescue DropboxApi::Errors::HttpError => e
-      logs.error  "Invalid Oauth2 token, #{e.message}"
+      Rails.logger.error "Invalid Oauth2 token, #{e.message}"
       nil
     end
-    
   end
 
   def collect_files(response)
@@ -69,13 +64,12 @@ class DropboxIntegration < BaseIntegration
         # )
         # Call again background job so current job is finish faster
       elsif entry.class.to_s == "DropboxApi::Metadata::File"
-        
         create_file_as_content_item(entry.path_lower)
       end
-    end  
+    end
   end
 
- 
+
 
   def create_file_as_content_item(file_path)
     links = @client.list_shared_links(path: file_path, direct_only: true)
@@ -86,8 +80,6 @@ class DropboxIntegration < BaseIntegration
       Rails.logger.error "unable to get shared link for #{file_path}"
     end
   end
-
- 
 
   def create_content_item(link)
     entry = {
@@ -117,5 +109,4 @@ class DropboxIntegration < BaseIntegration
 
     ContentItemCreationJob.perform_async(self.class.ecl_client_id,self.class.ecl_token, entry)
   end
-
 end
