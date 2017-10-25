@@ -8,6 +8,9 @@ module Collector
 
     def initialize(options={})
       @options = options
+      @ecl_client_id = AppConfig.dropbox['ecl_client_id']
+      @ecl_token = AppConfig.dropbox['ecl_token']
+
       fetch_record
       get_collector_details
     end
@@ -45,13 +48,13 @@ module Collector
 
     def fetch_record
       if @options[:webhook_type] == "source_type"
-        ecl_communicator = EclDeveloperClient::SourceType.new(AppConfig.dropbox['ecl_client_id'], AppConfig.dropbox['ecl_token'])
+        communicator = EclDeveloperClient::SourceType.new(@ecl_client_id, @ecl_token)
       elsif @options[:webhook_type] == "source"
-        ecl_communicator = EclDeveloperClient::Source.new(AppConfig.dropbox['ecl_client_id'], AppConfig.dropbox['ecl_token'])
+        communicator = EclDeveloperClient::Source.new(@ecl_client_id, @ecl_token)
       end
 
-      response      = ecl_communicator.find(@options[:id])
-      response_data = ecl_communicator.response_data
+      response      = communicator.find(@options[:id])
+      response_data = communicator.response_data
       @record       = response_data["data"] if response.success?
     end
 

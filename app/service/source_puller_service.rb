@@ -10,7 +10,7 @@ class SourcePullerService
   end
 
   def fetch_source_type
-    service = EclDeveloperClient::SourceType.new(@ecl_client,@ecl_secret)
+    service = EclDeveloperClient::SourceType.new(@ecl_client, @ecl_secret)
     @response = service.get(name: @source_name)
     response_data = service.response_data
 
@@ -29,7 +29,7 @@ class SourcePullerService
         offset: offset*10
       }
 
-      service = EclDeveloperClient::Source.new(@ecl_client,@ecl_secret)
+      service = EclDeveloperClient::Source.new(@ecl_client, @ecl_secret)
       @response = service.get(params)
       response_data = service.response_data
 
@@ -44,8 +44,6 @@ class SourcePullerService
       else
         break
       end
-
     end
   end
-
 end
