@@ -60,5 +60,5 @@ gem 'sidekiq'
 gem 'bootstrap'
 gem 'jquery-rails'
 gem 'bugsnag'
-gem 'ecl_developer_client', :git => 'https://d7f5b0a7f74cadd93799ae93eb277453414f1e14:x-oauth-basic@github.com/Course-Master/ecl_developer_client.git'
+gem 'ecl_developer_client', :git => 'https://b888442a42fbe26785f22765635a680ccd2159c7:x-oauth-basic@github.com/Course-Master/ecl_developer_client.git'
 
