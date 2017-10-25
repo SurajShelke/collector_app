@@ -1,11 +1,22 @@
 defaults: &defaults
+  redis:
+    host: <%= ENV['REDIS_HOST'] || 'localhost' %>
+    port: <%= ENV['REDIS_PORT'] || '6379' %>
+    password: <%= ENV['REDIS_PASSWORD'] || "" %>
+
   digest_secret: '34899d721ba319bb99f79847d5146093'
   ecl_app_url: <%= ENV['ECL_APP_URL'] || "http://localhost:3000/api/developer/v1" %>
   dropbox:
     client_id: <%= ENV['DROPBOX_CLIENT_ID'] || 'a1lacf0749xcl6p' %>
-    client_secret: <%= ENV['DROPBOX_CLIENT_SECRET'] || '6ioipyw0wypiaq3' %> 
+    client_secret: <%= ENV['DROPBOX_CLIENT_SECRET'] || '6ioipyw0wypiaq3' %>
     ecl_client_id: <%= ENV['DROPBOX_ECL_CLIENT_ID'] || 'z3M3-yxsyg' %>
     ecl_token: <%= ENV['DROPBOX_ECL_TOKEN'] || 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc19kZXZlbG9wZXIiOnRydWUsImNsaWVudF9pZCI6InozTTMteXhzeWciLCJlbWFpbCI6ImFtYXJAZWRjYXN0LmNvbSJ9.JoPRp0MyvVPIHFd8ZCOygoDackUgFO40y5qtKvMxAs0' %>
+    redirect_uri: <%= ENV['DROPBOX_REDIRECT_URL'] || 'http://localhost:5000/dropbox/callback' %>
+  team_srive:
+    client_id: <%= ENV['DROPBOX_CLIENT_ID'] || 'eks77359dcm819n' %>
+    client_secret: <%= ENV['DROPBOX_CLIENT_SECRET'] || 'bfgz7hc0z7vn6b1' %>
+    ecl_client_id: <%= ENV['DROPBOX_ECL_CLIENT_ID'] || '9fJcx5yqeg' %>
+    ecl_token: <%= ENV['DROPBOX_ECL_TOKEN'] || 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc19kZXZlbG9wZXIiOnRydWUsImNsaWVudF9pZCI6IjlmSmN4NXlxZWciLCJlbWFpbCI6InlvZ2VuZHJhKzMyNDEyQGVkY2FzdC5jb20ifQ.-C9jUXPslVmdtO0zR8Oz7-i0i7PuWVbKkM9Zu1z0fCc' %>
     redirect_uri: <%= ENV['DROPBOX_REDIRECT_URL'] || 'http://localhost:5000/dropbox/callback' %>
 
 development:
