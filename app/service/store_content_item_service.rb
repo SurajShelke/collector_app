@@ -12,7 +12,6 @@ class StoreContentItemService
     @client = @content_integration.new(credentials)
 
     @source_name = @content_integration.get_source_name
-   
   end
 
   def run(page=0)
@@ -21,7 +20,7 @@ class StoreContentItemService
       start = page * @content_integration.per_page
       limit = @content_integration.per_page
       @client.get_content({start: start, limit: limit, page: page, last_polled_at: @last_polled_at})
-      
+
     rescue NoContentException => _
       # Ignored
     rescue => e
@@ -29,5 +28,5 @@ class StoreContentItemService
     end
   end
 
-  
+
 end

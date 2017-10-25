@@ -20,10 +20,11 @@ class BaseIntegration
   def self.get_credentials_from_config(config)
     raise NotImplementedError
   end
+
   def self.ecl_client
     raise NotImplementedError
   end
-  
+
   def self.ecl_token
     raise NotImplementedError
   end
@@ -118,5 +119,4 @@ class BaseIntegration
   def cached_content_pagination?
     true
   end
-
 end

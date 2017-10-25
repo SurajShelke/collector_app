@@ -107,6 +107,6 @@ class DropboxIntegration < BaseIntegration
       }
     }
 
-    ContentItemCreationJob.perform_async(self.class.ecl_client_id,self.class.ecl_token, entry)
+    ContentItemCreationJob.perform_async(self.class.ecl_client_id, self.class.ecl_token, entry)
   end
 end

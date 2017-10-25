@@ -1,5 +1,4 @@
 class SourcePullerService
-
   attr_accessor :source_type_id, :sources, :source_name
 
   def initialize(source_name,ecl_client,ecl_secret)
