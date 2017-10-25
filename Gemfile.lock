@@ -1,5 +1,5 @@
 GIT
-  remote: https://27af49aecabc3fe0d4a781f7db322fe86a6a9777:x-oauth-basic@github.com/Course-Master/ecl_developer_client.git
+  remote: https://github.com/Course-Master/ecl_developer_client
   revision: 335fa4b696cff1ebea3cd32ed4efcd8041f12945
   specs:
     ecl_developer_client (0.1.0)
