@@ -21,7 +21,7 @@ class BaseIntegration
     raise NotImplementedError
   end
 
-  def self.ecl_client
+  def self.ecl_client_id
     raise NotImplementedError
   end
 
