@@ -1,7 +1,7 @@
 class DropboxSourceCreationService
   def initialize(ecl_client_id, ecl_token, options= {})
-    @ecl_client_id = ecl_client_id
-    @ecl_token = ecl_token
+    @ecl_client_id   = ecl_client_id
+    @ecl_token       = ecl_token
     @options         = options
     @source_type_id  = options[:source_type_id]
     @organization_id = options[:organization_id]
@@ -28,7 +28,6 @@ class DropboxSourceCreationService
         approved:        true
       }
       response = communicator.create(attributes)
-      binding.pry
       response.success? ? communicator.response_data["data"] : {}
     end
   end
