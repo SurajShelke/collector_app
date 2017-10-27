@@ -25,6 +25,8 @@ gem 'coffee-rails', '~> 4.2'
 gem 'turbolinks', '~> 5'
 # Build JSON APIs with ease. Read more: https://github.com/rails/jbuilder
 gem 'jbuilder', '~> 2.5'
+
+gem 'google_drive'
 # Use Redis adapter to run Action Cable in production
 # gem 'redis', '~> 3.0'
 # Use ActiveModel has_secure_password
@@ -60,5 +62,5 @@ gem 'sidekiq'
 gem 'bootstrap'
 gem 'jquery-rails'
 gem 'bugsnag'
-gem 'ecl_developer_client', :git => 'https://b888442a42fbe26785f22765635a680ccd2159c7:x-oauth-basic@github.com/Course-Master/ecl_developer_client.git'
-
+gem 'ecl_developer_client', :git => 'https://github.com/Course-Master/ecl_developer_client'
+gem 'sidekiq-unique-jobs'

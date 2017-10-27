@@ -19,4 +19,6 @@ production:
   - [dropbox, 5]
   - [content_item_job, 5]
   - [dropbox_ecl_job, 3]
+  - [team_drive, 5]
+  - [team_drive_ecl_job, 3]
 

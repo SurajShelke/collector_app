@@ -1,0 +1,15 @@
+<table class="responstable">
+  <thead>
+    <th width="20px"><%= check_box_tag("all") %></th>
+    <th>File Name</th>
+  </thead>
+  <tbody>
+    <% @files.each do |file| %>
+      <tr>
+          <td><%= check_box_tag "folders[#{file.id}]", file.name, false, class: 'mr-10' %></td>
+          <td><%= image_tag "folder.png" %> <%= file.name %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+<%= submit_tag("Sync",{ class: "btn btn-primary", align: "right" }) %>

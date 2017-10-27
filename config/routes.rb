@@ -10,6 +10,17 @@ Rails.application.routes.draw do
     end
   end
 
+  resources :team_drive, only: [] do
+    collection do
+      get  'index'
+      get  'authorize'
+      get  'callback'
+      post  'fetch_folders'
+      get  'fetch_content'
+      post 'create_sources'
+    end
+  end
+
   namespace :api do
     namespace :v1 do
       resources :source_types, only: [] do

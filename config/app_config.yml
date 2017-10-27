@@ -5,19 +5,26 @@ defaults: &defaults
     password: <%= ENV['REDIS_PASSWORD'] || "" %>
 
   digest_secret: '34899d721ba319bb99f79847d5146093'
-  ecl_app_url: <%= ENV['ECL_APP_URL'] || "http://localhost:3000/api/developer/v1" %>
-  dropbox:
-    client_id: <%= ENV['DROPBOX_CLIENT_ID'] || 'a1lacf0749xcl6p' %>
-    client_secret: <%= ENV['DROPBOX_CLIENT_SECRET'] || '6ioipyw0wypiaq3' %>
-    ecl_client_id: <%= ENV['DROPBOX_ECL_CLIENT_ID'] || 'z3M3-yxsyg' %>
-    ecl_token: <%= ENV['DROPBOX_ECL_TOKEN'] || 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc19kZXZlbG9wZXIiOnRydWUsImNsaWVudF9pZCI6InozTTMteXhzeWciLCJlbWFpbCI6ImFtYXJAZWRjYXN0LmNvbSJ9.JoPRp0MyvVPIHFd8ZCOygoDackUgFO40y5qtKvMxAs0' %>
-    redirect_uri: <%= ENV['DROPBOX_REDIRECT_URL'] || 'http://localhost:5000/dropbox/callback' %>
-  team_srive:
-    client_id: <%= ENV['DROPBOX_CLIENT_ID'] || 'eks77359dcm819n' %>
-    client_secret: <%= ENV['DROPBOX_CLIENT_SECRET'] || 'bfgz7hc0z7vn6b1' %>
-    ecl_client_id: <%= ENV['DROPBOX_ECL_CLIENT_ID'] || '9fJcx5yqeg' %>
-    ecl_token: <%= ENV['DROPBOX_ECL_TOKEN'] || 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc19kZXZlbG9wZXIiOnRydWUsImNsaWVudF9pZCI6IjlmSmN4NXlxZWciLCJlbWFpbCI6InlvZ2VuZHJhKzMyNDEyQGVkY2FzdC5jb20ifQ.-C9jUXPslVmdtO0zR8Oz7-i0i7PuWVbKkM9Zu1z0fCc' %>
-    redirect_uri: <%= ENV['DROPBOX_REDIRECT_URL'] || 'http://localhost:5000/dropbox/callback' %>
+  ecl_app_url: <%= ENV['ECL_APP_URL'] || "http://qa.edcast.io/api/developer/v1" %>
+  integrations:
+    dropbox:
+      client_id: <%= ENV['DROPBOX_CLIENT_ID'] || 'a1lacf0749xcl6p' %>
+      client_secret: <%= ENV['DROPBOX_CLIENT_SECRET'] || '6ioipyw0wypiaq3' %>
+      ecl_client_id: <%= ENV['DROPBOX_ECL_CLIENT_ID'] || 'z3M3-yxsyg' %>
+      ecl_token: <%= ENV['DROPBOX_ECL_TOKEN'] || 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc19kZXZlbG9wZXIiOnRydWUsImNsaWVudF9pZCI6InozTTMteXhzeWciLCJlbWFpbCI6ImFtYXJAZWRjYXN0LmNvbSJ9.JoPRp0MyvVPIHFd8ZCOygoDackUgFO40y5qtKvMxAs0' %>
+      redirect_uri: <%= ENV['DROPBOX_REDIRECT_URL'] || 'http://localhost:5000/dropbox/callback' %>
+      source_type_id:  <%= ENV['DROPBOX_SOURCE_TYPE_ID'] || 'abc' %>
+      source_id:  <%= ENV['DROPBOX_SOURCE_ID'] || 'abc' %>
+      name: "DropboxIntegration"
+    team_drive:
+      client_id: <%= ENV['TEAM_DRIVE_CLIENT_ID'] || "465977795792-c12240a72drufrtoqu3so9n7btdabgnl.apps.googleusercontent.com" %>
+      client_secret: <%= ENV['TEAM_DRIVE_CLIENT_SECRET'] || "zwlT5xGtmietz2TXXpUlCjfm" %>
+      ecl_client_id: <%= ENV['TEAM_DRIVE_ECL_CLIENT_ID'] || "Ej4bAsuYiw" %>
+      ecl_token: <%= ENV['TEAM_DRIVE_ECL_TOKEN'] || "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc19kZXZlbG9wZXIiOnRydWUsImNsaWVudF9pZCI6IkVqNGJBc3VZaXciLCJlbWFpbCI6Im5pbGVzaF9uYXZhbGVAcGVyc2lzdGVudC5jby5pbiJ9.t2Tm0-jlF21kBiNpsRmDbpLUQmp8K5qoWviJqbz0bvg" %>
+      redirect_uri: <%= ENV['TEAM_DRIVE_REDIRECT_URL'] || 'http://localhost:3000/team_drive/callback' %>
+      source_type_id:  <%= ENV['TEAM_DRIVE_SOURCE_TYPE_ID'] || 'f8ad2ed9-d1eb-4ec5-80d0-7ca0088baa9a' %>
+      source_id:  <%= ENV['TEAM_DRIVE_SOURCE_ID'] || 'abc' %>
+      name: "TeamDriveIntegration"
 
 development:
   <<: *defaults

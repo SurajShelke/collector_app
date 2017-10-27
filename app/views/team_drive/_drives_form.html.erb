@@ -1,0 +1,15 @@
+<% if @drives %>
+  <%= form_tag(fetch_folders_team_drive_index_path, :method => 'post') do %>
+    <h3>Team Drives (Total: <%= @drives.size || 0 %>):</h3>
+    <% drives = @drives.map { |drive| [drive.name, drive.id] } %>
+
+    <div class="styled-select">
+      <%= select_tag "drive_id", options_for_select(drives, :selected => @drive_id), prompt: "Select Team Drive" %>
+      <%= hidden_field_tag "state", params["state"] %>
+      <%= hidden_field_tag "provider_id", params["provider_id"] %>
+      <%= submit_tag("Fetch Content", { class: "btn btn-primary", align: "right" }) %>
+    </div>
+  <% end %>
+<% else %>
+  No Team Drives found.
+<% end %>
