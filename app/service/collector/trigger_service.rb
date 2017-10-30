@@ -7,10 +7,6 @@ module Collector
 
     def initialize(options={})
       @options = options
-
-      @ecl_client_id = AppConfig.dropbox['ecl_client_id']
-      @ecl_token = AppConfig.dropbox['ecl_token']
-
       fetch_record
       get_collector_details
     end
@@ -49,7 +45,7 @@ module Collector
     # TODO raise exception if no source type or sources has been configured
     def fetch_record
       if @options[:webhook_type] == "source_type"
-        @app_config = AppConfig.integration.select {|k,v|v["source_type_id"] == @options[:id]]}.first
+        @app_config = AppConfig.integrations.select {|k,v|v["source_type_id"] == @options[:id]}.first
         app_config_value = @app_config[1]
         @ecl_client_id = app_config_value["ecl_client_id"]
         @ecl_token = app_config_value["ecl_token"]
