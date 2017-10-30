@@ -8,11 +8,6 @@ module Collector
 
     def initialize(options={})
       @options = options
-      @ecl_client_id = AppConfig.dropbox['ecl_client_id']
-      @ecl_token = AppConfig.dropbox['ecl_token']
-
-      fetch_record
-      get_collector_details
     end
 
     def run
