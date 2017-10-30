@@ -21,12 +21,7 @@ defaults: &defaults
       ecl_client_id: <%= ENV['DROPBOX_ECL_CLIENT_ID'] || '9fJcx5yqeg' %>
       ecl_token: <%= ENV['DROPBOX_ECL_TOKEN'] || 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc19kZXZlbG9wZXIiOnRydWUsImNsaWVudF9pZCI6IjlmSmN4NXlxZWciLCJlbWFpbCI6InlvZ2VuZHJhKzMyNDEyQGVkY2FzdC5jb20ifQ.-C9jUXPslVmdtO0zR8Oz7-i0i7PuWVbKkM9Zu1z0fCc' %>
       redirect_uri: <%= ENV['DROPBOX_REDIRECT_URL'] || 'http://localhost:5000/dropbox/callback' %>
-<<<<<<< HEAD
-      source_type_id:  <%= ENV['TEAM_DRIVE_SOURCE_TYPE_ID'] || 'abc' %>
-=======
       source_type_id:  <%= ENV['TEAM_DRIVE_SOURCE_TYPE_ID'] || 'xyz' %>
-      source_id:  <%= ENV['TEAM_DRIVE_SOURCE_ID'] || 'xyz' %>
->>>>>>> 17d8826558487505e7540df9be9fa348bdaa1a61
       name: "TeamDriveIntegration"
 
 development:

@@ -51,7 +51,7 @@ module Collector
         @ecl_token = app_config_value["ecl_token"]
         communicator = EclDeveloperClient::SourceType.new(@ecl_client_id, @ecl_token)
       elsif @options[:webhook_type] == "source"
-        @app_config = AppConfig.integration.select {|k,v|v["source_type_id"] == @options[:source_type_id] }.first
+        @app_config = AppConfig.integrations.select {|k,v|v["source_type_id"] == @options[:source_type_id] }.first
         app_config_value = @app_config[1]
         @ecl_client_id = app_config_value["ecl_client_id"]
         @ecl_token = app_config_value["ecl_token"]
