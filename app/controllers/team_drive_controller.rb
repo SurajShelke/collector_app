@@ -203,13 +203,19 @@ class TeamDriveController < ApplicationController
   end
 
   def get_team_drive_content(drive_sesion)
-      query = params[:folder_id] ? "'#{params[:folder_id]}' in parents" : ""
-      drive_sesion.files(q: "#{query}",
+      query = params[:folder_id] ? "'#{params[:folder_id]}'" : "'#{params[:drive_id]}'"
+      paginated_files = []
+      begin
+        (files, page_token) = drive_sesion.files(q: "#{query} in parents",
                     supports_team_drives: true,
                     team_drive_id: params[:drive_id],
                     include_team_drive_items: true,
                     corpora: 'teamDrive',
-                    orderBy: "folder")
+                    orderBy: "folder",
+                    page_token: page_token)
+        paginated_files.concat(files)
+      end while page_token
+      return paginated_files
     end
 
   def source_params

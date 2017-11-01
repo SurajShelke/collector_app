@@ -38,14 +38,19 @@ class TeamDriveIntegration < BaseIntegration
   #  #<GoogleDrive::File id="1pZfz3RRhHJ4k7T-Z2Qgjm06JhZcjmrvO_SttyLyYah0" title="File3.docx">]
   def fetch_content(team_drive_id, folder_id)
     begin
-      query = folder_id ? "'#{folder_id}' in parents" : ""
-      files = auth_session.files(q: "#{query}",
+      query = folder_id ? "'#{folder_id}'" : "'#{team_drive_id}'"
+      paginated_files = []
+      begin
+        (files, page_token) = auth_session.files(q: "#{query} in parents",
                         supports_team_drives: true,
                         team_drive_id: team_drive_id,
                         include_team_drive_items: true,
                         corpora: 'teamDrive',
-                        orderBy: "folder")
-      collect_files(files)
+                        orderBy: "folder",
+                        page_token: page_token)
+        paginated_files.concat(files)
+      end while page_token
+      collect_files(paginated_files)
     rescue StandardError => e
       Rails.logger.error "Invalid Oauth2 token, #{e.message}"
       nil
