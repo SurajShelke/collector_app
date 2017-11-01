@@ -13,11 +13,11 @@ class DropboxIntegration < BaseIntegration
   end
 
   def self.ecl_client_id
-    AppConfig.dropbox['ecl_client_id']
+    AppConfig.integrations['dropbox']['ecl_client_id']
   end
 
   def self.ecl_token
-    AppConfig.dropbox['ecl_token']
+    AppConfig.integrations['dropbox']['ecl_token']
   end
 
   #
