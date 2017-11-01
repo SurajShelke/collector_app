@@ -1,4 +1,4 @@
-module Collector
+module Webhook
   class Error < StandardError
     def initialize(message = '')
       puts "#{exception.class} - #{message}"
