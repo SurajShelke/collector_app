@@ -1,4 +1,5 @@
 class IdentityProvider < ApplicationRecord
+  enum provider_type: { dropbox: 1 }
   enum provider_type: { team_drive: 1 }
   belongs_to :user
 

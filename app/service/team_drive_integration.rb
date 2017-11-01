@@ -32,22 +32,20 @@ class TeamDriveIntegration < BaseIntegration
     fetch_content(@credentials['team_drive_id'], @credentials['folder_id'])
   end
 
-  def fetch_content(team_drive_id, folder_id, cursor=nil)
+  # Sample `auth_session.files` response from Google Drive API
+  # [#<GoogleDrive::File id="1u5_4-NFatQPw9doeL8sZBZgSiDdjhhGn3gbUQARqBac" title="File1">,
+  #  #<GoogleDrive::File id="1W8IQH7TeiSA7Exu1vVtDLAbsK3jiNtddBRWtjmbwd5U" title="File2">,
+  #  #<GoogleDrive::File id="1pZfz3RRhHJ4k7T-Z2Qgjm06JhZcjmrvO_SttyLyYah0" title="File3.docx">]
+  def fetch_content(team_drive_id, folder_id)
     begin
-      if cursor.nil?
-        query = folder_id ? "'#{folder_id}' in parents" : ""
-        files = auth_session.files(q: "#{query}",
-                          supports_team_drives: true,
-                          team_drive_id: team_drive_id,
-                          include_team_drive_items: true,
-                          corpora: 'teamDrive',
-                          orderBy: "folder")
-        collect_files(files)
-      else
-        #TODO: handle for team drive
-        collect_files(files)
-      end
-      # fetch_content(folder_id, response.cursor) if response.has_more?
+      query = folder_id ? "'#{folder_id}' in parents" : ""
+      files = auth_session.files(q: "#{query}",
+                        supports_team_drives: true,
+                        team_drive_id: team_drive_id,
+                        include_team_drive_items: true,
+                        corpora: 'teamDrive',
+                        orderBy: "folder")
+      collect_files(files)
     rescue StandardError => e
       Rails.logger.error "Invalid Oauth2 token, #{e.message}"
       nil
