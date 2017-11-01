@@ -23,6 +23,10 @@ defaults: &defaults
       redirect_uri: <%= ENV['DROPBOX_REDIRECT_URL'] || 'http://localhost:5000/dropbox/callback' %>
       source_type_id:  <%= ENV['TEAM_DRIVE_SOURCE_TYPE_ID'] || 'xyz' %>
       name: "TeamDriveIntegration"
+    safari_books_online:
+      ecl_client_id: <%= ENV['SAFARI_BOOKS_ONLINE_ECL_CLIENT_ID'] || 'o-m8JtbcSQ' %>
+      ecl_token: <%= ENV['SAFARI_BOOKS_ONLINE_ECL_TOKEN'] || 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc19kZXZlbG9wZXIiOnRydWUsImNsaWVudF9pZCI6Im8tbThKdGJjU1EiLCJlbWFpbCI6InBhbGxhdisxQGVkY2FzdC5jb20ifQ.4yURzwX8EPsrdDDu-f5bC2I0PT4lih781MkixduITe8' %>
+      source_type_id:  <%= ENV['SAFARI_BOOKS_ONLINE_SOURCE_TYPE_ID'] || 'foo' %>
 
 development:
   <<: *defaults

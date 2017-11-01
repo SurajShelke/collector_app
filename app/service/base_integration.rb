@@ -84,7 +84,6 @@ class BaseIntegration
     if response.status == 204
       raise NoContentException
     end
-
     # Return json body
     ActiveSupport::JSON.decode(response.body)
   end

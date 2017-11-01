@@ -16,6 +16,7 @@ class StoreContentItemService
 
   def run(page=0)
     begin
+
       # STEP 1: Get data from the client
       start = page * @content_integration.per_page
       limit = @content_integration.per_page

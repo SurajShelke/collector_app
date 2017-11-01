@@ -31,6 +31,8 @@ Enhancement Required:
 
 # JOB
 - DropboxEclJob.perform_async
+- SafariBooksOnlineEclJob.perform_async
+
 
 # Generate git hub token 
 bundle config github.com Your token

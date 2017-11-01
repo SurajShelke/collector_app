@@ -41,7 +41,7 @@ class DropboxIntegration < BaseIntegration
         response = @client.list_folder_continue(cursor)
         collect_files(response)
       end
-      # fetch_content(folder_id, response.cursor) if response.has_more?
+    # fetch_content(folder_id, response.cursor) if response.has_more?
     rescue DropboxApi::Errors::HttpError => e
       Rails.logger.error "Invalid Oauth2 token, #{e.message}"
       nil

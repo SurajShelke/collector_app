@@ -3,7 +3,7 @@ class FetchContentJob
   sidekiq_options queue: :fetch_content_ecl_job, retry: 1, backtrace: true,  unique: :until_executed, unique_args: ->(args) {[ args.first.except('job_id') ]}
 
   def perform(content_integration_str, credentials, source_id, organization_id=nil, last_polled_at= nil, page= 0)
-
+  	
     service = StoreContentItemService.new(content_integration_str, credentials, source_id, organization_id, last_polled_at)
     service.run(page)
 
