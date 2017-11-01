@@ -4,7 +4,7 @@ defaults: &defaults
     port: <%= ENV['REDIS_PORT'] || '6379' %>
     password: <%= ENV['REDIS_PASSWORD'] || "" %>
 
-  digest_secret: <%= ENV[DIGEST_SECRET] ||'34899d721ba319bb99f79847d5146093' %>
+  digest_secret: <%= ENV[DIGEST_SECRET] || 'da4b0aaec42c8a17183b5c52be5cd3b0' %>
   ecl_app_url: <%= ENV['ECL_APP_URL'] || "http://localhost:3000/api/developer/v1" %>
   integrations:
     dropbox:
