@@ -1,9 +1,21 @@
-<% if @files %>
-  <%= form_tag(create_sources_team_drive_index_path, :method => 'post') do %>
-    <h3>Select Folders:</h3>
-    <%= render :partial => 'files_listing' %>
-    <input type="hidden" name="drive_id" value="<%= @drive_id %>">
-    <%= hidden_field_tag "state", params["state"] %>
-    <%= hidden_field_tag "provider_id", params["provider_id"] %>
-  <% end %>
-<% end %>
+
+	<% if @files %>
+	  <%= form_tag(create_sources_team_drive_index_path, :method => 'post') do %>
+	    <h5 class="card-header">Select Folders</h5>
+	    <div class="card-body">
+
+	      <div class='row'>
+
+	        <%= render :partial => 'files_listing' %>
+
+	        <%= hidden_field_tag "drive_id", @drive_id %>
+	    	<%= hidden_field_tag "state", params["state"] %>
+	    	<%= hidden_field_tag "provider_id", params["provider_id"] %>
+	      </div>
+
+	      <div class="pt-3">
+	        <%= submit_tag("Sync",{ class: "btn btn-secondary" }) %>
+	      </div>
+	    </div>
+	  <%end%>
+	<%end%>

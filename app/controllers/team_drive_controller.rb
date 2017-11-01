@@ -32,7 +32,7 @@ class TeamDriveController < ApplicationController
   # mine
   def callback
     unless params[:code]
-      redirect_to root_url
+      render json: { message: "Invalid user" }, status: :unprocessable_entity
     else
       token = get_token_from_code(params[:code])
       # fetch user account details
@@ -42,7 +42,6 @@ class TeamDriveController < ApplicationController
         provider = User.create_or_update_team_drive_user(user_account, @refresh_token)
 
         if provider
-          # redirect_to fetch_folders_team_drive_index_path(
           redirect_to team_drive_index_url(
             provider_id: provider.id,
             state: params[:state]
@@ -89,8 +88,12 @@ class TeamDriveController < ApplicationController
             organization_id:  @organization_id,
             source_type_id:   @source_type_id
         )
-        service.create_sources
-        redirect_to "#{@client_host}/admin/integrations/eclConfigurations"
+        begin
+          service.create_sources
+          redirect_to "#{@client_host}/admin/integrations/eclConfigurations"
+        rescue StandardError => err
+          render json: { message: err }, status: :unprocessable_entity
+        end
       end
     rescue => e
       render json: { message: 'Invalid or bad parameters' }, status: :unprocessable_entity

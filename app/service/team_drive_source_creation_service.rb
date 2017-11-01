@@ -30,7 +30,11 @@ class TeamDriveSourceCreationService
         approved:        true
       }
       response = communicator.create(attributes)
-      response.success? ? communicator.response_data["data"] : {}
+      if response.success?
+        return communicator.response_data["data"]
+      else
+        raise JSON.parse(response.body)["message"].first
+      end
     end
   end
 end
