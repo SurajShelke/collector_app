@@ -25,23 +25,23 @@ class SafariBooksOnlineIntegration < BaseIntegration
   def self.ecl_token
     AppConfig.integrations['safari_books_online']['ecl_token']
   end
-  
+
   def get_content(options={})
     begin
       current_page = options[:page].to_i+1
       data = json_request(SAFARI_BOOKS_ONLINE_URL, :get,params: {page: current_page})
-      if data["results"].present? 
+      if data["results"].present?
         data["results"].map {|entry| create_content_item(entry)}
-       Sidekiq::Client.push(
+        Sidekiq::Client.push(
           'class' => FetchContentJob,
           'queue' => self.class.get_fetch_content_job_queue.to_s,
           'args' => [self.class.to_s, @credentials, @credentials["source_id"],@credentials["organization_id"], options[:last_polled_at],current_page],
-          'at' => Time.now.to_i
+          'at' => self.class.schedule_at
         )
-      end 
+      end
     rescue=>e
       binding.pry
-    end  
+    end
   end
 
 
@@ -79,7 +79,6 @@ class SafariBooksOnlineIntegration < BaseIntegration
   end
 
   def create_content_item(entry)
-    
     ContentItemCreationJob.perform_async(self.class.ecl_client_id, self.class.ecl_token, content_item_attributes(entry))
   end
 end
