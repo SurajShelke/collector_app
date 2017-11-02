@@ -33,16 +33,20 @@ class SharepointController < ApplicationController
     end
   end
 
+  def select_folders(folders)
+    system_folders = ["Attachments", "Item", "Forms"]
+    folders.select do |folder| 
+      folder unless system_folders.include?(folder["Name"])
+    end
+  end
+
   def fetch_folders
     # fetch sharepoint access token using email param
     @access_token = IdentityProvider.get_sharepoint_access_token(params[:provider_id])
     if @access_token
       begin
         @access_token = JSON.parse(@access_token)
-        # sharepoint_communicator = SharepointMethods.new(sharepoint_access_token)
-        # @folders = list_folder(sharepoint_access_token)
-        
-        @folders = sharepoint_communicator.get_folders("/_api/web/GetFolderByServerRelativeUrl('#{URI.encode('/Shared Documents')}')", { "$expand" => "Folders" })["Folders"]
+        @folders = select_folders(sharepoint_communicator.get_folders("/_api/web/GetFolderByServerRelativeUrl('#{URI.encode('/Shared Documents')}')", { "$expand" => "Folders" })["Folders"])
       rescue Exception => he
         redirect_to authorize_sharepoint_index_path
       end

@@ -57,6 +57,13 @@ class SharepointIntegration < BaseIntegration
     collect_files(response)
   end
 
+  def select_folders(folders)
+    system_folders = ["Attachments", "Item", "Forms"]
+    folders.select do |folder| 
+      folder unless system_folders.include?(folder["Name"])
+    end
+  end
+
   def collect_files(response)
     response["Files"].each do |entry|
       entry["parent_name"] = @credentials['parent_name']
@@ -64,7 +71,7 @@ class SharepointIntegration < BaseIntegration
       create_content_item(entry)
     end  
 
-    response["Folders"].each do |folder|
+    select_folders(response["Folders"]).each do |folder|
       credentials = @credentials
       credentials['folder_relative_url'] = folder["ServerRelativeUrl"]
       credentials['parent_name'] = folder["Name"]
