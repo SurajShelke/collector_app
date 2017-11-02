@@ -47,15 +47,13 @@ class SafariBooksOnlineIntegration < BaseIntegration
     end
   end
 
-
-
   def get_url(url)
     "https://safarijv.auth0.com/authorize?client_id=#{@credentials['client_id']}&response_type=code&redirect_uri=https://www.safaribooksonline.com/complete/auth0-oauth2/&connection=#{@credentials['domain']}&state=#{url}"
   end
 
   def content_item_attributes(entry)
     {
-      external_id:  entry['archive_id'],
+      external_id:  entry['id'], # This is the unique ID (as far as the search API is concerned) of the result.
       source_id:  @credentials["source_id"],
       url:          get_url(entry['web_url']),
       name:         sanitize_content(entry['title']),

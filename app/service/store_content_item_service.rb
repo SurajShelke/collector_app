@@ -28,6 +28,4 @@ class StoreContentItemService
       raise Webhook::Error::IntegrationFailure, "Failed Integration #{@source_id} => Page: #{page}, ErrorMessage: #{e.message}"
     end
   end
-
-
 end
