@@ -10,6 +10,15 @@ Rails.application.routes.draw do
     end
   end
 
+  resources :sharepoint, only: [] do
+    collection do
+      get  'authorize'
+      get  'callback'
+      get  'fetch_folders'
+      post 'create_sources'
+    end
+  end
+
   namespace :api do
     namespace :v1 do
       resources :source_types, only: [] do

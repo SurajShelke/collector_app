@@ -27,6 +27,24 @@ defaults: &defaults
       ecl_client_id: <%= ENV['SAFARI_BOOKS_ONLINE_ECL_CLIENT_ID'] || 'o-m8JtbcSQ' %>
       ecl_token: <%= ENV['SAFARI_BOOKS_ONLINE_ECL_TOKEN'] || 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc19kZXZlbG9wZXIiOnRydWUsImNsaWVudF9pZCI6Im8tbThKdGJjU1EiLCJlbWFpbCI6InBhbGxhdisxQGVkY2FzdC5jb20ifQ.4yURzwX8EPsrdDDu-f5bC2I0PT4lih781MkixduITe8' %>
       source_type_id:  <%= ENV['SAFARI_BOOKS_ONLINE_SOURCE_TYPE_ID'] || 'foo' %>
+    sharepoint:
+      client_id:  <%= ENV['CLIENT_ID'] || '1a983345-732d-4c73-baac-0d32abe84d92' %>
+      client_secret: <%= ENV['CLIENT_SECRET'] || '39WxHICZUuCyI4hbIKWc25FMZmT01osQAIzwfnoujnQ=' %>
+      ecl_client_id: <%= ENV['ECL_APP_CLIENT']  || "Y96ZRvXXjA" %>
+      ecl_token: <%= ENV['ECL_APP_TOKEN'] || "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc19kZXZlbG9wZXIiOnRydWUsImNsaWVudF9pZCI6Ilk5NlpSdlhYakEiLCJlbWFpbCI6ImRhcnNoYW5fcGF0ZWxAcGVyc2lzdGVudC5jby5pbiJ9.bF638d7ZPiaXTSMZiEb4HgyOEhDN28zS-wXoRDtfa3U" %>
+      redirect_uri: <%= ENV['SHAREPOINT_REDIRECT_URL'] || 'https://spcollector.pagekite.me/sharepoint/callback' %>
+      source_type_id:  <%= ENV['SHAREPOINT_SOURCE_TYPE_ID'] || 'ba114a89-44ce-44ef-97fa-a88e8219d8d1' %>
+      name: "SharePointIntegration"
+
+      sharepoint_url: 'edcastindia.sharepoint.com'
+      site_realm: '586145ec-0428-4da6-8061-fb114257ab70'
+      folder_relative_url: '/Shared Documents/'
+      audience_principal_id: '00000003-0000-0ff1-ce00-000000000000'
+      
+      #source_type_name: SharePoint_Edcast_India_with_folder_ID
+      apache_tika_jar_path: /Users/darshan/Desktop/Apache_Tika/
+      temp_storage_path: /Users/darshan/dev/projects/edcast_connectors/sp_files/
+      max_content_size: 2
 
 development:
   <<: *defaults
