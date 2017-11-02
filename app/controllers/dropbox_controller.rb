@@ -113,8 +113,8 @@ class DropboxController < ApplicationController
 
   def get_access_token
     begin
-      authenticator = DropboxApi::Authenticator.new(AppConfig.dropbox['client_id'], AppConfig.dropbox['client_secret'])
-      auth_bearer = authenticator.get_token(params[:code], redirect_uri: AppConfig.dropbox['redirect_uri'])
+      authenticator = DropboxApi::Authenticator.new(AppConfig.integrations['dropbox']['client_id'], AppConfig.integrations['dropbox']['client_secret'])
+      auth_bearer = authenticator.get_token(params[:code], redirect_uri: AppConfig.integrations['dropbox']['redirect_uri'])
       @access_token = auth_bearer.token
     rescue OAuth2::Error => oe
       render json: { message: "#{oe.message}" }, status: :unprocessable_entity

@@ -25,7 +25,7 @@ class StoreContentItemService
     rescue NoContentException => _
       # Ignored
     rescue => e
-      raise Collector::Error::IntegrationFailure, "Failed Integration #{@source_id} => Page: #{page}, ErrorMessage: #{e.message}"
+      raise Webhook::Error::IntegrationFailure, "Failed Integration #{@source_id} => Page: #{page}, ErrorMessage: #{e.message}"
     end
   end
 
