@@ -74,9 +74,7 @@ class SafariBooksOnlineIntegration < BaseIntegration
         url:         entry['web_url'],
         images:      [{ url: entry['cover_url'] }]
       }
-
     }
-
   end
 
   def create_content_item(entry)
