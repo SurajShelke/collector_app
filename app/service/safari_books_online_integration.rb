@@ -25,7 +25,7 @@ class SafariBooksOnlineIntegration < BaseIntegration
   def self.ecl_token
     AppConfig.integrations['safari_books_online']['ecl_token']
   end
-  
+
   def get_content(options={})
     begin
       current_page = options[:page].to_i+1
@@ -38,10 +38,9 @@ class SafariBooksOnlineIntegration < BaseIntegration
           'args' => [self.class.to_s, @credentials, @credentials["source_id"],@credentials["organization_id"], options[:last_polled_at],current_page],
           'at' => Time.now.to_i
         )
-      end 
+      end
     rescue=>e
-      binding.pry
-    end  
+    end
   end
 
 
