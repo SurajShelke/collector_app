@@ -32,12 +32,16 @@ class SafariBooksOnlineIntegration < BaseIntegration
       data = json_request(SAFARI_BOOKS_ONLINE_URL, :get,params: {page: current_page})
       if data["results"].present?
         data["results"].map {|entry| create_content_item(entry)}
-        Sidekiq::Client.push(
-          'class' => FetchContentJob,
-          'queue' => self.class.get_fetch_content_job_queue.to_s,
-          'args' => [self.class.to_s, @credentials, @credentials["source_id"],@credentials["organization_id"], options[:last_polled_at],current_page],
-          'at' => self.class.schedule_at
-        )
+        if current_page == 1
+          (1..(data['total']/10)).each do |page|
+            Sidekiq::Client.push(
+              'class' => FetchContentJob,
+              'queue' => self.class.get_fetch_content_job_queue.to_s,
+              'args' => [self.class.to_s, @credentials, @credentials["source_id"],@credentials["organization_id"], options[:last_polled_at], page],
+              'at' => self.class.schedule_at
+            )
+          end
+        end
       end
     rescue=>e
     end
