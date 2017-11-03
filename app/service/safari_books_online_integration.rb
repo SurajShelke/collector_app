@@ -14,10 +14,6 @@ class SafariBooksOnlineIntegration < BaseIntegration
     source["source_config"]
   end
 
-  def pagination?
-    true
-  end
-
   def self.ecl_client_id
     AppConfig.integrations['safari_books_online']['ecl_client_id']
   end
@@ -28,7 +24,7 @@ class SafariBooksOnlineIntegration < BaseIntegration
 
   def get_content(options={})
     begin
-      current_page = options[:page].to_i+1
+      current_page = options[:page].to_i + 1
       data = json_request(SAFARI_BOOKS_ONLINE_URL, :get,params: {page: current_page})
       if data["results"].present?
         data["results"].map {|entry| create_content_item(entry)}

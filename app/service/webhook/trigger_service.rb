@@ -64,7 +64,7 @@ module Webhook
     end
 
     def source_type_name
-      @options[:webhook_type] == "source_type" ? @record["name"] : @record["source_type_name"]
+      @options[:webhook_type] == "source_type" ? @record["name"].downcase : @record["source_type_name"].downcase
     end
   end
 end
