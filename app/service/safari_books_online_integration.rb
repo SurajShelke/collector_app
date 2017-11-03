@@ -38,7 +38,7 @@ class SafariBooksOnlineIntegration < BaseIntegration
               'class' => FetchContentJob,
               'queue' => self.class.get_fetch_content_job_queue.to_s,
               'args' => [self.class.to_s, @credentials, @credentials["source_id"],@credentials["organization_id"], options[:last_polled_at], page],
-              'at' => self.class.schedule_at
+              'at' => (Time.now + rand(0..120)).to_f
             )
           end
         end
