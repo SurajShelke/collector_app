@@ -20,10 +20,6 @@ class DropboxIntegration < BaseIntegration
     AppConfig.integrations['dropbox']['ecl_token']
   end
 
-  def pagination?
-    true
-  end
-
   def get_content(options={})
     @options         = options
     @client          = DropboxApi::Client.new(@credentials['access_token'])
@@ -34,7 +30,7 @@ class DropboxIntegration < BaseIntegration
 
   def fetch_content(folder_id)
     begin
-      cursor = @options[:page]
+      cursor = @options[:page] == 0 ? nil : @options[:page]
       if cursor.nil?
         response = @client.list_folder(folder_id, recursive: true)
         collect_files(response)
