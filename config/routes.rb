@@ -15,7 +15,7 @@ Rails.application.routes.draw do
       get  'index'
       get  'authorize'
       get  'callback'
-      post  'fetch_folders'
+      get  'fetch_folders'
       get  'fetch_content'
       post 'create_sources'
     end

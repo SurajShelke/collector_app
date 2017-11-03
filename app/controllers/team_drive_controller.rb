@@ -53,7 +53,7 @@ class TeamDriveController < ApplicationController
     end
   end
 
-  # Fetch files for selected Team Drive
+  # Fetch folders for selected Team Drive
   # Input: Drive Id
   def fetch_folders
     refresh_token = IdentityProvider.get_team_drive_refresh_token(params[:provider_id])
@@ -62,9 +62,9 @@ class TeamDriveController < ApplicationController
         drive_sesion = authentication_session(refresh_token: refresh_token)
 
         @drives = get_team_drives(drive_sesion)
-        @files  = get_team_drive_content(drive_sesion)
+        @folders  = get_team_drive_content(drive_sesion)
 
-        @files.select! { |file| file.mime_type == "application/vnd.google-apps.folder" } if @files
+        @folders.select! { |folder| folder.mime_type == "application/vnd.google-apps.folder" } if @folders
         @drive_id = source_params[:drive_id]
       end
     end

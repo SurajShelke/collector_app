@@ -20,7 +20,6 @@ class TeamDriveIntegration < BaseIntegration
     AppConfig.integrations['team_drive']['ecl_token']
   end
 
-  #
   #  @options ={start: start, limit: limit, page: page, last_polled_at: @last_polled_at}
   #  We dont need start or limit for this Integration
   #  Whenever pagination is available we can use it
@@ -39,18 +38,26 @@ class TeamDriveIntegration < BaseIntegration
   def fetch_content(team_drive_id, folder_id)
     begin
       query = folder_id ? "'#{folder_id}'" : "'#{team_drive_id}'"
-      paginated_files = []
-      begin
-        (files, page_token) = auth_session.files(q: "#{query} in parents",
-                        supports_team_drives: true,
-                        team_drive_id: team_drive_id,
-                        include_team_drive_items: true,
-                        corpora: 'teamDrive',
-                        orderBy: "folder",
-                        page_token: page_token)
-        paginated_files.concat(files)
-      end while page_token
-      collect_files(paginated_files)
+      page_token = @options[:page] == 0 ? nil : @options[:page]
+
+      files, new_page_token = auth_session.files(q: "#{query} in parents",
+        supports_team_drives: true,
+        team_drive_id: team_drive_id,
+        include_team_drive_items: true,
+        corpora: 'teamDrive',
+        orderBy: "folder",
+        page_token: page_token)
+
+      if new_page_token.present?
+        Sidekiq::Client.push(
+          'class' => FetchContentJob,
+          'queue' => self.class.get_fetch_content_job_queue.to_s,
+          'args' => [self.class.to_s, @credentials, @source_id, @organization_id, @options[:last_polled_at], new_page_token],
+          'at' => self.class.schedule_at
+        )
+      end
+
+      collect_files(files)
     rescue StandardError => e
       Rails.logger.error "Invalid Oauth2 token, #{e.message}"
       nil

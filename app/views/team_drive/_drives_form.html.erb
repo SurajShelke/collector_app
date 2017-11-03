@@ -1,13 +1,13 @@
 <% if @drives %>
-  <%= form_tag(fetch_folders_team_drive_index_path, :method => 'post') do %>
+  <%= form_tag(fetch_folders_team_drive_index_path, method: 'get') do %>
     <h5 class="card-header">Team Drives (Total: <%= @drives.size || 0 %>)</h5>
     <% drives = @drives.map { |drive| [drive.name, drive.id] } %>
 
     <div class="styled-select">
-      <%= select_tag "drive_id", options_for_select(drives, :selected => @drive_id), prompt: "Select Team Drive", style: "height:56px;width:260px;padding: 10px;align-self: center;" %>
+      <%= select_tag "drive_id", options_for_select(drives, :selected => @drive_id), style: "height: 50px; max-width: 240px; padding: 20px; align-self: center;" %>
       <%= hidden_field_tag "state", params["state"] %>
       <%= hidden_field_tag "provider_id", params["provider_id"] %>
-      <%= submit_tag("Fetch Content", { class: "btn btn-secondary", align: "right" }) %>
+      <%= submit_tag("Select drive", { class: "btn btn-secondary", align: "right" }) %>
     </div>
   <% end %>
 <% else %>
