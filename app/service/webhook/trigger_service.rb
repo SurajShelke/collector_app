@@ -1,7 +1,7 @@
 # options = {id: "162d6e4d-e780-48f4-b471-280c88aaf14b", webhook_type: "source"}
 # Collector::TriggerService.new(options)
 
-module Collector
+module Webhook
   class TriggerService
     attr_accessor :options, :record, :collector_queue_name,:collector_class_name,:app_config
 

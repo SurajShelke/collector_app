@@ -16,6 +16,7 @@ class StoreContentItemService
 
   def run(page=0)
     begin
+
       # STEP 1: Get data from the client
       start = page * @content_integration.per_page
       limit = @content_integration.per_page
@@ -24,9 +25,7 @@ class StoreContentItemService
     rescue NoContentException => _
       # Ignored
     rescue => e
-      raise Collector::Error::IntegrationFailure, "Failed Integration #{@source_id} => Page: #{page}, ErrorMessage: #{e.message}"
+      raise Webhook::Error::IntegrationFailure, "Failed Integration #{@source_id} => Page: #{page}, ErrorMessage: #{e.message}"
     end
   end
-
-
 end

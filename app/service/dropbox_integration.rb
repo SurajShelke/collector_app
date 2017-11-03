@@ -20,20 +20,21 @@ class DropboxIntegration < BaseIntegration
     AppConfig.integrations['dropbox']['ecl_token']
   end
 
-  #
-  #  @options ={start: start, limit: limit, page: page, last_polled_at: @last_polled_at}
-  #  We dont need start or limit for this Integration
-  #  Whenever pagination is available we can use it
+  def pagination?
+    true
+  end
+
   def get_content(options={})
-    @options = options
+    @options         = options
     @client          = DropboxApi::Client.new(@credentials['access_token'])
     @source_id       = @credentials["source_id"]
     @organization_id = @credentials["organization_id"]
     fetch_content(@credentials['folder_id'])
   end
 
-  def fetch_content(folder_id,cursor=nil)
+  def fetch_content(folder_id)
     begin
+      cursor = @options[:page]
       if cursor.nil?
         response = @client.list_folder(folder_id, recursive: true)
         collect_files(response)
@@ -41,7 +42,16 @@ class DropboxIntegration < BaseIntegration
         response = @client.list_folder_continue(cursor)
         collect_files(response)
       end
-      # fetch_content(folder_id, response.cursor) if response.has_more?
+
+      # send response.cursor as page param in other FetchContentJob
+      if response.has_more?
+        Sidekiq::Client.push(
+          'class' => FetchContentJob,
+          'queue' => self.class.get_fetch_content_job_queue.to_s,
+          'args'  => [self.class.to_s, @credentials, @credentials["source_id"],@credentials["organization_id"], options[:last_polled_at], response.cursor],
+          'at'    => self.class.schedule_at
+        )
+      end
     rescue DropboxApi::Errors::HttpError => e
       Rails.logger.error "Invalid Oauth2 token, #{e.message}"
       nil

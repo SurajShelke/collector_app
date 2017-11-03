@@ -6,7 +6,7 @@
 # 3. "#{integration_name}_content_creation_job"
 
 ---
-:concurrency: 1
+:concurrency: 2
 :pidfile: ./sidekiq.pid
 :logfile: ./sidekiq.log
 qa:
@@ -21,4 +21,5 @@ production:
   - [dropbox_ecl_job, 3]
   - [team_drive, 5]
   - [team_drive_ecl_job, 3]
-
+  - [safari_books_online_ecl_job, 3]
+  - [safari_books_online, 3]
