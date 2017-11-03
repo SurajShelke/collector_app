@@ -1,5 +1,5 @@
 <% if @drives %>
-  <%= form_tag(fetch_folders_team_drive_index_path, method: 'get') do %>
+  <%= form_tag(fetch_folders_google_team_drive_index_path, method: 'get') do %>
     <h5 class="card-header">Team Drives (Total: <%= @drives.size || 0 %>)</h5>
     <% drives = @drives.map { |drive| [drive.name, drive.id] } %>
 

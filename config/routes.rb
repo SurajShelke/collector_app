@@ -10,7 +10,7 @@ Rails.application.routes.draw do
     end
   end
 
-  resources :team_drive, only: [] do
+  resources :google_team_drive, only: [] do
     collection do
       get  'index'
       get  'authorize'

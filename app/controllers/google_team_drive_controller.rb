@@ -1,4 +1,4 @@
-class TeamDriveController < ApplicationController
+class GoogleTeamDriveController < ApplicationController
 
   skip_before_action :verify_authenticity_token
 
@@ -11,7 +11,7 @@ class TeamDriveController < ApplicationController
         drive_sesion = authentication_session(refresh_token: refresh_token)
         @drives = get_team_drives(drive_sesion)
       rescue StandardError => he
-        redirect_to authorize_team_drive_index_path
+        redirect_to authorize_google_team_drive_index_path
       end
     else
       render json: { folders: [], provider_id: params[:provider_id], message: 'Invalid user' }, status: :unprocessable_entity
@@ -25,7 +25,7 @@ class TeamDriveController < ApplicationController
     }.to_json
     # send client_host, organization_id, and source_type_id in state param
     state_params = Base64.urlsafe_encode64(state_params)
-    auth_url = client.auth_code.authorize_url(:redirect_uri => callback_team_drive_index_url, :scope => [Google::Apis::DriveV3::AUTH_DRIVE_READONLY, 'https://www.googleapis.com/auth/userinfo.email'].join(' '), :access_type => "offline", :approval_prompt => 'force', :state => state_params)
+    auth_url = client.auth_code.authorize_url(:redirect_uri => callback_google_team_drive_index_url, :scope => [Google::Apis::DriveV3::AUTH_DRIVE_READONLY, 'https://www.googleapis.com/auth/userinfo.email'].join(' '), :access_type => "offline", :approval_prompt => 'force', :state => state_params)
     redirect_to auth_url
   end
 
@@ -39,10 +39,10 @@ class TeamDriveController < ApplicationController
       user_account = get_user_info(@access_token)
       # save user details with identity provider and redirect to list folder UI
       if user_account.present?
-        provider = User.create_or_update_team_drive_user(user_account, @refresh_token)
+        provider = User.create_or_update_google_team_drive_user(user_account, @refresh_token)
 
         if provider
-          redirect_to team_drive_index_url(
+          redirect_to google_team_drive_index_url(
             provider_id: provider.id,
             state: params[:state]
           )
@@ -128,7 +128,7 @@ class TeamDriveController < ApplicationController
   # Exchanges an authorization code for a token
   def get_token_from_code(code)
     begin
-      auth_bearer = client.auth_code.get_token(code, { :redirect_uri => callback_team_drive_index_url, :token_method => :post })
+      auth_bearer = client.auth_code.get_token(code, { :redirect_uri => callback_google_team_drive_index_url, :token_method => :post })
       session[:google_auth_token] = auth_bearer.to_hash
       @access_token = auth_bearer.token
       @refresh_token = auth_bearer.refresh_token
