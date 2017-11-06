@@ -10,6 +10,17 @@ Rails.application.routes.draw do
     end
   end
 
+  resources :google_team_drive, only: [] do
+    collection do
+      get  'index'
+      get  'authorize'
+      get  'callback'
+      get  'fetch_folders'
+      get  'fetch_content'
+      post 'create_sources'
+    end
+  end
+
   resources :sharepoint, only: [] do
     collection do
       get  'authorize'

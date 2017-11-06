@@ -20,7 +20,4 @@ class ContentItemCreationService
       raise Collector::Error::ContentCreationFailure, "ECL Content Creation Error - OrganizationId: #{@organization_id}, ErrorMessage: #{e.message}, #{reschedule_message}"
     end
   end
-
-  
-
 end

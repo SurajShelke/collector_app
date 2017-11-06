@@ -9,7 +9,7 @@ class DropboxController < ApplicationController
       secret: params[:secret]
     }.to_json
 
-    redirect_to "https://www.dropbox.com/oauth2/authorize?state=#{state_params}&client_id=#{AppConfig.integrations['dropbox']['client_id']}&response_type=code&redirect_uri=#{AppConfig.integrations['dropbox']['redirect_uri']}"
+    redirect_to "https://www.dropbox.com/oauth2/authorize?state=#{state_params}&client_id=#{AppConfig.integrations['dropbox']['client_id']}&response_type=code&redirect_uri=#{callback_dropbox_index_url}"
   end
 
   def callback
@@ -114,7 +114,7 @@ class DropboxController < ApplicationController
   def get_access_token
     begin
       authenticator = DropboxApi::Authenticator.new(AppConfig.integrations['dropbox']['client_id'], AppConfig.integrations['dropbox']['client_secret'])
-      auth_bearer = authenticator.get_token(params[:code], redirect_uri: AppConfig.integrations['dropbox']['redirect_uri'])
+      auth_bearer = authenticator.get_token(params[:code], redirect_uri: callback_dropbox_index_url)
       @access_token = auth_bearer.token
     rescue OAuth2::Error => oe
       render json: { message: "#{oe.message}" }, status: :unprocessable_entity

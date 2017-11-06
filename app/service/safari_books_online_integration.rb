@@ -14,10 +14,6 @@ class SafariBooksOnlineIntegration < BaseIntegration
     source["source_config"]
   end
 
-  def pagination?
-    true
-  end
-
   def self.ecl_client_id
     AppConfig.integrations['safari_books_online']['ecl_client_id']
   end
@@ -25,26 +21,33 @@ class SafariBooksOnlineIntegration < BaseIntegration
   def self.ecl_token
     AppConfig.integrations['safari_books_online']['ecl_token']
   end
-  
+
   def get_content(options={})
     begin
-      current_page = options[:page].to_i+1
+      current_page = options[:page].to_i + 1
       data = json_request(SAFARI_BOOKS_ONLINE_URL, :get,params: {page: current_page})
-      if data["results"].present? 
+      if data["results"].present?
         data["results"].map {|entry| create_content_item(entry)}
-       Sidekiq::Client.push(
-          'class' => FetchContentJob,
-          'queue' => self.class.get_fetch_content_job_queue.to_s,
-          'args' => [self.class.to_s, @credentials, @credentials["source_id"],@credentials["organization_id"], options[:last_polled_at],current_page],
-          'at' => Time.now.to_i
-        )
-      end 
+        if current_page == 1
+          (1..(data['total']/10)).each do |page|
+            Sidekiq::Client.push(
+              'class' => FetchContentJob,
+              'queue' => self.class.get_fetch_content_job_queue.to_s,
+              'args' => [self.class.to_s, @credentials, @credentials["source_id"],@credentials["organization_id"], options[:last_polled_at], page],
+              # 'at' => (Time.now + rand(0..120)).to_f,
+              'rate' => {
+                :name   => 'safari_books_online_50_rpm_rate_limit',
+                :limit  => 50,
+                :period => 60, ## A minute
+              }
+            )
+          end
+
+        end
+      end
     rescue=>e
-      binding.pry
-    end  
+    end
   end
-
-
 
   def get_url(url)
     "https://safarijv.auth0.com/authorize?client_id=#{@credentials['client_id']}&response_type=code&redirect_uri=https://www.safaribooksonline.com/complete/auth0-oauth2/&connection=#{@credentials['domain']}&state=#{url}"
@@ -52,7 +55,7 @@ class SafariBooksOnlineIntegration < BaseIntegration
 
   def content_item_attributes(entry)
     {
-      external_id:  entry['archive_id'],
+      external_id:  entry['id'], # This is the unique ID (as far as the search API is concerned) of the result.
       source_id:  @credentials["source_id"],
       url:          get_url(entry['web_url']),
       name:         sanitize_content(entry['title']),
@@ -73,13 +76,10 @@ class SafariBooksOnlineIntegration < BaseIntegration
         url:         entry['web_url'],
         images:      [{ url: entry['cover_url'] }]
       }
-
     }
-
   end
 
   def create_content_item(entry)
-    
     ContentItemCreationJob.perform_async(self.class.ecl_client_id, self.class.ecl_token, content_item_attributes(entry))
   end
 end

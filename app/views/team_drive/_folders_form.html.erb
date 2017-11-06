@@ -1,0 +1,17 @@
+<% if @folders %>
+  <%= form_tag(create_sources_google_team_drive_index_path, :method => 'post') do %>
+    <h5 class="card-header">Select Folders</h5>
+    <div class="card-body">
+      <div class='row'>
+        <%= render 'folders_listing' %>
+        <%= hidden_field_tag "drive_id", @drive_id %>
+        <%= hidden_field_tag "state", params["state"] %>
+        <%= hidden_field_tag "provider_id", params["provider_id"] %>
+      </div>
+
+      <div class="pt-3">
+        <%= submit_tag("Fetch Content",{ class: "btn btn-secondary" }) %>
+      </div>
+    </div>
+  <%end%>
+<%end%>
