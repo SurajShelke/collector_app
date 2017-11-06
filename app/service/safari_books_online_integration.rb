@@ -34,9 +34,15 @@ class SafariBooksOnlineIntegration < BaseIntegration
               'class' => FetchContentJob,
               'queue' => self.class.get_fetch_content_job_queue.to_s,
               'args' => [self.class.to_s, @credentials, @credentials["source_id"],@credentials["organization_id"], options[:last_polled_at], page],
-              'at' => (Time.now + rand(0..120)).to_f
+              # 'at' => (Time.now + rand(0..120)).to_f,
+              'rate' => {
+                :name   => 'safari_books_online_50_rpm_rate_limit',
+                :limit  => 50,
+                :period => 60, ## A minute
+              }
             )
           end
+
         end
       end
     rescue=>e
