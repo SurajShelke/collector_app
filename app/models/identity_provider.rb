@@ -36,10 +36,13 @@ class IdentityProvider < ApplicationRecord
     provider.try(:token)
   end
 
-  # Methods for SharePoint connector
   def self.create_or_update_sharepoint(args= {})
     identity_provider = find_or_initialize_by(
-    provider_type: IdentityProvider.provider_types['sharepoint'],
+      provider_type: IdentityProvider.provider_types['sharepoint'],
+      user_id:       args[:user_id]
+    )
+
+    identity_provider.uid   = args[:account_id]
     identity_provider.token = args[:access_token]
     identity_provider.save! ? identity_provider : nil
   end
