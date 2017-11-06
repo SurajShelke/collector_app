@@ -34,7 +34,9 @@ class SharepointIntegration < BaseIntegration
     @client_secret          = @credentials["client_secret"]
     @site_realm             = @credentials["site_realm"]
     @sharepoint_url         = @credentials["sharepoint_url"]
+    # this is older token stored in the user table in database
     @token                  = JSON.parse(@credentials['access_token'])
+    # Refreshing older token using refresh token
     @token                  = sharepoint_communicator.get_refresh_token
 
     fetch_content(@credentials["folder_relative_url"])
@@ -105,10 +107,6 @@ class SharepointIntegration < BaseIntegration
       additional_metadata: {
         path_lower:      entry["ServerRelativeUrl"],
         parent_name:     entry["parent_name"]
-        # size:            link['size'],
-        # revision:        link['rev'],
-        # client_modified: link['client_modified'],
-        # server_modified: link['server_modified'],
       }
     }
 
