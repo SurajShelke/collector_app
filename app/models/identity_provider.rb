@@ -20,7 +20,7 @@ class IdentityProvider < ApplicationRecord
   end
 
   # Methods for Team Drive connector
-  def self.create_or_update_team_drive(args= {})
+  def self.create_or_update_google_team_drive(args= {})
     identity_provider = find_or_initialize_by(
       provider_type: IdentityProvider.provider_types['team_drive'],
       user_id:       args[:user_id]
