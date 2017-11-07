@@ -1,5 +1,5 @@
 class DropboxIntegration < BaseIntegration
-  attr_accessor :client,:source_id,:organization_id
+  attr_accessor :client
   def self.get_source_name
     'dropbox'
   end
@@ -23,8 +23,6 @@ class DropboxIntegration < BaseIntegration
   def get_content(options={})
     @options         = options
     @client          = DropboxApi::Client.new(@credentials['access_token'])
-    @source_id       = @credentials["source_id"]
-    @organization_id = @credentials["organization_id"]
     fetch_content(@credentials['folder_id'])
   end
 
@@ -71,7 +69,7 @@ class DropboxIntegration < BaseIntegration
           Sidekiq::Client.push(
             'class' => FetchContentJob,
             'queue' => self.class.get_fetch_content_job_queue.to_s,
-            'args' => [self.class.to_s, credentials, @source_id, @organization_id, @options[:last_polled_at]],
+            'args' => [self.class.to_s, credentials, credentials["source_id"], credentials["organization_id"], @options[:last_polled_at]],
             'at' => self.class.schedule_at
           )
         end
@@ -99,8 +97,8 @@ class DropboxIntegration < BaseIntegration
       content_type:  'article',
       external_id:   link['id'],
       raw_record:    link,
-      source_id:     @source_id,
-      organization_id: @organization_id,
+      source_id:     @credentials['source_id'],
+      organization_id: @credentials['organization_id'],
       resource_metadata: {
         images:      [{ url: nil }],
         title:       link['name'],

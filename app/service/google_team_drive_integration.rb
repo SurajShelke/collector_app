@@ -1,5 +1,5 @@
 class GoogleTeamDriveIntegration < BaseIntegration
-  attr_accessor :client,:source_id,:organization_id
+  attr_accessor :client
   def self.get_source_name
     'google_team_drive'
   end
@@ -25,9 +25,7 @@ class GoogleTeamDriveIntegration < BaseIntegration
   #  Whenever pagination is available we can use it
   def get_content(options={})
     @options = options
-    @client          = client
-    @source_id       = @credentials["source_id"]
-    @organization_id = @credentials["organization_id"]
+    @client  = client
     fetch_content(@credentials['team_drive_id'], @credentials['folder_id'])
   end
 
@@ -52,7 +50,7 @@ class GoogleTeamDriveIntegration < BaseIntegration
         Sidekiq::Client.push(
           'class' => FetchContentJob,
           'queue' => self.class.get_fetch_content_job_queue.to_s,
-          'args' => [self.class.to_s, @credentials, @source_id, @organization_id, @options[:last_polled_at], new_page_token],
+          'args' => [self.class.to_s, @credentials, @credentials['source_id'], @credentials['organization_id'], @options[:last_polled_at], new_page_token],
           'at' => self.class.schedule_at
         )
       end
@@ -80,7 +78,7 @@ class GoogleTeamDriveIntegration < BaseIntegration
         Sidekiq::Client.push(
           'class' => FetchContentJob,
           'queue' => self.class.get_fetch_content_job_queue.to_s,
-          'args' => [self.class.to_s, credentials, @source_id, @organization_id, @options[:last_polled_at]],
+          'args' => [self.class.to_s, credentials, @credentials['source_id'], @credentials['organization_id'], @options[:last_polled_at]],
           'at' => self.class.schedule_at
         )
       else
@@ -102,8 +100,8 @@ class GoogleTeamDriveIntegration < BaseIntegration
       # author: entry.owners.first.display_name, #Files within a Team Drive are owned by the Team Drive, not individual users.
       external_id: entry.id,
       content_type: 'document',
-      source_id:     @source_id,
-      organization_id: @organization_id,
+      source_id:     @credentials['source_id'],
+      organization_id: @credentials['organization_id'],
       resource_metadata: {
         title: entry.title,
         description: entry.description,
