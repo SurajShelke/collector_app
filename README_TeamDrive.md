@@ -32,7 +32,7 @@ Enhancement Required:
 # JOB
 - TeamDriveEclJob.perform_async
 
-# Generate git hub token 
+# Generate git hub token
 bundle config github.com Your token
 https://blog.codeship.com/managing-private-dependencies-with-bundler/
 
@@ -58,8 +58,8 @@ http://localhost:3000/team_drive/authorize?organization_id=&source_type_id=&clie
   puts "http://localhost:3000/team_drive/authorize?auth_data=#{encode_key}&secret=#{digest_key}"
 ```
  # To run webhook using rails console
-  - Input: For `webhook_type=source`, pass `source_type_id` along with `source_id` as well. 
+  - Input: For `webhook_type=source`, pass `source_type_id` along with `source_id` as well.
 ```
 input = {:webhook_type=>"source", :id=>"9bff2b98-ec9b-4eda-bcbc-69d7b587a177", :source_type_id=>"f8ad2ed9-d1eb-4ec5-80d0-7ca0088baa9a"}
-Collector::TriggerService.new(input).run
+Webhook::TriggerService.new(input).run
 ```
