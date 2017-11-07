@@ -1,11 +1,11 @@
-class TeamDriveIntegration < BaseIntegration
+class GoogleTeamDriveIntegration < BaseIntegration
   attr_accessor :client,:source_id,:organization_id
   def self.get_source_name
-    'team_drive'
+    'google_team_drive'
   end
 
   def self.get_fetch_content_job_queue
-    :team_drive
+    :google_team_drive
   end
 
   def self.get_credentials_from_config(source)
