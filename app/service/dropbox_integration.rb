@@ -62,15 +62,19 @@ class DropboxIntegration < BaseIntegration
       # time so we will not have multiple jobs to spawn every time
       if entry.class.to_s == "DropboxApi::Metadata::Folder"
         credentials = @credentials
-        credentials['folder_id'] = entry.id
 
-        # Call again background job so current job is finish faster
-        Sidekiq::Client.push(
-          'class' => FetchContentJob,
-          'queue' => self.class.get_fetch_content_job_queue.to_s,
-          'args' => [self.class.to_s, credentials, @source_id, @organization_id, @options[:last_polled_at]],
-          'at' => self.class.schedule_at
-        )
+        # check for subfolders only
+        if credentials['folder_id'] != entry.id
+          credentials['folder_id'] = entry.id
+
+          # Call again background job so current job is finish faster
+          Sidekiq::Client.push(
+            'class' => FetchContentJob,
+            'queue' => self.class.get_fetch_content_job_queue.to_s,
+            'args' => [self.class.to_s, credentials, @source_id, @organization_id, @options[:last_polled_at]],
+            'at' => self.class.schedule_at
+          )
+        end
       elsif entry.class.to_s == "DropboxApi::Metadata::File"
         create_file_as_content_item(entry.path_lower)
       end
