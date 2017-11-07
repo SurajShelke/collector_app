@@ -73,7 +73,7 @@ class SafariBooksOnlineIntegration < BaseIntegration
       resource_metadata: {
         title:       sanitize_content(entry['title']),
         description: sanitize_content(entry['description']),
-        url:         entry['web_url'],
+        url:         get_url(entry['web_url']),
         images:      [{ url: entry['cover_url'] }]
       }
     }
