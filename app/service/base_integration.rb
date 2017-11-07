@@ -82,7 +82,7 @@ class BaseIntegration
 
     # If no content, then raise a no content exception
     if response.status == 204
-      raise NoContentException
+      raise Webhook::NoContentException
     end
     # Return json body
     ActiveSupport::JSON.decode(response.body)

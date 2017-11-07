@@ -5,7 +5,7 @@ class TeamDriveSourceCreationService
     @options         = options
     @source_type_id  = options[:source_type_id]
     @organization_id = options[:organization_id]
-    @refresh_token    = options[:refresh_token]
+    @refresh_token   = options[:refresh_token]
     @folders         = options[:folders]
     @team_drive_id   = options[:team_drive_id]
   end

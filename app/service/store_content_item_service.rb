@@ -14,15 +14,20 @@ class StoreContentItemService
     @source_name = @content_integration.get_source_name
   end
 
-  def run(page=0)
+  def run(page= 0)
     begin
-
       # STEP 1: Get data from the client
-      start = page * @content_integration.per_page
-      limit = @content_integration.per_page
+      if page.is_a?(String)
+        start = 0
+        limit = 0
+      else
+        start = page * @content_integration.per_page
+        limit = @content_integration.per_page
+      end
+
       @client.get_content({start: start, limit: limit, page: page, last_polled_at: @last_polled_at})
 
-    rescue NoContentException => _
+    rescue Webhook::NoContentException => _
       # Ignored
     rescue => e
       raise Webhook::Error::IntegrationFailure, "Failed Integration #{@source_id} => Page: #{page}, ErrorMessage: #{e.message}"

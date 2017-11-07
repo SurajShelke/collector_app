@@ -20,6 +20,7 @@ class FetchContentService
 
         # STEP 5: Execute the fetch content job with
         # credentials, source id and organization id
+
         Sidekiq::Client.push(
           'class' => FetchContentJob,
           'queue' => fetch_content_job_queue.to_s,
