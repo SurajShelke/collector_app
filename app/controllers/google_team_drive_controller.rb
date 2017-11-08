@@ -82,8 +82,8 @@ class GoogleTeamDriveController < ApplicationController
         service = TeamDriveSourceCreationService.new(
             AppConfig.integrations['team_drive']['ecl_client_id'],
             AppConfig.integrations['team_drive']['ecl_token'],
-            folders:          params[:folders] || [],
-            team_drive_id:    params[:drive_id],
+            folders:          source_params[:folders] || [],
+            team_drive_id:    source_params[:drive_id],
             refresh_token:    refresh_token,
             organization_id:  @organization_id,
             source_type_id:   @source_type_id
