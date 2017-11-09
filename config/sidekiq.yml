@@ -23,3 +23,5 @@ production:
   - [google_team_drive_ecl_job, 3]
   - [safari_books_online_ecl_job, 3]
   - [safari_books_online, 3]
+  - [sharepoint, 5]
+  - [sharepoint_ecl_job, 3]

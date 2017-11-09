@@ -27,6 +27,8 @@ gem 'turbolinks', '~> 5'
 gem 'jbuilder', '~> 2.5'
 
 gem 'google_drive'
+
+gem 'omniauth-microsoft_v2_auth', git: 'https://github.com/cbales/omniauth-microsoft_graph'
 # Use Redis adapter to run Action Cable in production
 # gem 'redis', '~> 3.0'
 # Use ActiveModel has_secure_password

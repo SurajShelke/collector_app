@@ -23,6 +23,14 @@ defaults: &defaults
       ecl_client_id: <%= ENV['SAFARI_BOOKS_ONLINE_ECL_CLIENT_ID'] || 'o-m8JtbcSQ' %>
       ecl_token: <%= ENV['SAFARI_BOOKS_ONLINE_ECL_TOKEN'] || 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc19kZXZlbG9wZXIiOnRydWUsImNsaWVudF9pZCI6Im8tbThKdGJjU1EiLCJlbWFpbCI6InBhbGxhdisxQGVkY2FzdC5jb20ifQ.4yURzwX8EPsrdDDu-f5bC2I0PT4lih781MkixduITe8' %>
       source_type_id:  <%= ENV['SAFARI_BOOKS_ONLINE_SOURCE_TYPE_ID'] || 'foo' %>
+    sharepoint:
+      client_id:  <%= ENV['CLIENT_ID'] || '0138a21b-af37-47ee-9dad-c7f23fb5b2a6' %>
+      client_secret: <%= ENV['CLIENT_SECRET'] || 'lyoxNNFAU2651])nhhCA2<(' %>
+      ecl_client_id: <%= ENV['ECL_APP_CLIENT']  || "Y96ZRvXXjA" %>
+      ecl_token: <%= ENV['ECL_APP_TOKEN'] || "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc19kZXZlbG9wZXIiOnRydWUsImNsaWVudF9pZCI6Ilk5NlpSdlhYakEiLCJlbWFpbCI6ImRhcnNoYW5fcGF0ZWxAcGVyc2lzdGVudC5jby5pbiJ9.bF638d7ZPiaXTSMZiEb4HgyOEhDN28zS-wXoRDtfa3U" %>
+      redirect_uri: <%= ENV['SHAREPOINT_REDIRECT_URL'] || 'http://localhost:3000/sharepoint/callback' %>
+      source_type_id:  <%= ENV['SHAREPOINT_SOURCE_TYPE_ID'] || 'c36a0d27-05c0-4d36-9c06-8bf38a8be9cc' %>
+      name: "SharePointIntegration"
 
 development:
   <<: *defaults
