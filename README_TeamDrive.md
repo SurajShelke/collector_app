@@ -1,5 +1,11 @@
 # README
 
+# Register an application with Google
+- Register new application using Google API Console dashboard. Reference: [About Google authorization](https://developers.google.com/drive/v3/web/about-auth)
+- Google then provides information we need later, such as a client ID and a client secret.
+- Activate the Drive API in the Google API Console.
+- Refer sample application registration screenshot at public/GoogleTeamDriveAppRegistration.png
+
 Local server URL: http://localhost:3000
 
 Step 1 (authorize):
