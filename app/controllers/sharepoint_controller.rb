@@ -113,13 +113,17 @@ class SharepointController < ApplicationController
   end
 
   def get_access_token_details
-    data   = request.env['omniauth.auth']
-    @email = data.extra.raw_info.userPrincipalName
-    @name  = data.extra.raw_info.displayName
-    @access_token = data['credentials']["token"]
-    @refresh_token = data['credentials']["refresh_token"]
-    @expires_at = data['credentials']['expires_at']
-    @state = request.env['omniauth.params']['state_params']
+    begin
+      data   = request.env['omniauth.auth']
+      @email = data.extra.raw_info.userPrincipalName
+      @name  = data.extra.raw_info.displayName
+      @access_token = data['credentials']["token"]
+      @refresh_token = data['credentials']["refresh_token"]
+      @expires_at = data['credentials']['expires_at']
+      @state = request.env['omniauth.params']['state_params']
+    rescue OAuth2::Error => oe
+      render json: { message: "#{oe.message}" }, status: :unprocessable_entity
+    end
   end
 
   def verify_referer
