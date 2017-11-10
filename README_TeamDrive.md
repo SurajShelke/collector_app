@@ -1,10 +1,16 @@
 # README
 
+# Register an application with Google
+- Register new application using Google API Console dashboard. Reference: [About Google authorization](https://developers.google.com/drive/v3/web/about-auth)
+- Google then provides information we need later, such as a client ID and a client secret.
+- Activate the Drive API in the Google API Console.
+- Refer sample application registration screenshot at public/GoogleTeamDriveAppRegistration.png and [wiki page](https://github.com/Course-Master/collector_app/wiki/Register-an-application-with-third-party-services-and-Connector-Configurations).
+
 Local server URL: http://localhost:3000
 
 Step 1 (authorize):
-- Connects to team_drive: http://localhost:3000/team_drive/authorize
-- This will get redirected to configured callback url after successful authorization (AppConfig.redirect_uri) ie: http://localhost:3000/team_drive/callback
+- Connects to team_drive: http://localhost:3000/google_team_drive/authorize
+- This will get redirected to configured callback url after successful authorization (AppConfig.redirect_uri) ie: http://localhost:3000/google_team_drive/callback
 
 Step 2 (callback) :
 - Proceed create or update User details with received authentication code
@@ -36,7 +42,7 @@ Enhancement Required:
 bundle config github.com Your token
 https://blog.codeship.com/managing-private-dependencies-with-bundler/
 
-http://localhost:3000/team_drive/authorize?organization_id=&source_type_id=&client_host=localhost
+http://localhost:3000/google_team_drive/authorize?organization_id=&source_type_id=&client_host=localhost
 # Simulate team drive on local without UI
   - Consider App is running on 3000
 ```
@@ -55,7 +61,7 @@ http://localhost:3000/team_drive/authorize?organization_id=&source_type_id=&clie
   decode_digest =  OpenSSL::HMAC.hexdigest(decode_digest, secret, decode_key_encode)
   digest_key == decode_digest
   # use following URL in the web browser to launch the connector app UI interface
-  puts "http://localhost:3000/team_drive/authorize?auth_data=#{encode_key}&secret=#{digest_key}"
+  puts "http://localhost:3000/google_team_drive/authorize?auth_data=#{encode_key}&secret=#{digest_key}"
 ```
  # To run webhook using rails console
   - Input: For `webhook_type=source`, pass `source_type_id` along with `source_id` as well.
