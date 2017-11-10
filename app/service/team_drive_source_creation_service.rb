@@ -22,7 +22,7 @@ class TeamDriveSourceCreationService
           folder_id:     folder_id,
           team_drive_id: @team_drive_id
         },
-        display_name:    folder_name,
+        display_name:    "TeamDrive (#{folder_name})",
         organization_id: @organization_id,
         is_enabled:      true,
         is_default:      false,

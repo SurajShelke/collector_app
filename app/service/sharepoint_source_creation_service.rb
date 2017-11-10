@@ -22,7 +22,7 @@ class SharepointSourceCreationService
           folder_id:      folder_id,
           sharepoint_url: @sharepoint_url
         },
-        display_name:    folder_name,
+        display_name:    "Sharepoint (#{folder_name})",
         organization_id: @organization_id,
         is_enabled:      true,
         is_default:      false,
