@@ -25,3 +25,5 @@ production:
   - [safari_books_online, 3]
   - [sharepoint, 5]
   - [sharepoint_ecl_job, 3]
+  - [kpoint, 5]
+  - [kpoint_ecl_job, 3]

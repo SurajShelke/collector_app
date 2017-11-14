@@ -5,7 +5,7 @@ defaults: &defaults
     password: <%= ENV['REDIS_PASSWORD'] || "" %>
 
   digest_secret: <%= ENV['DIGEST_SECRET'] || 'da4b0aaec42c8a17183b5c52be5cd3b0' %>
-  ecl_app_url: <%= ENV['ECL_APP_URL'] || "http://localhost:3000/api/developer/v1" %>
+  ecl_app_url: <%= ENV['ECL_APP_URL'] || "http://qa.edcast.io/api/developer/v1" %>
   integrations:
     dropbox:
       client_id: <%= ENV['DROPBOX_CLIENT_ID'] || 'a1lacf0749xcl6p' %>
@@ -29,6 +29,16 @@ defaults: &defaults
       ecl_client_id: <%= ENV['SHAREPOINT_ECL_CLIENT_ID']  || "Y96ZRvXXjA" %>
       ecl_token: <%= ENV['SHAREPOINT_ECL_CLIENT_TOKEN'] || "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc19kZXZlbG9wZXIiOnRydWUsImNsaWVudF9pZCI6Ilk5NlpSdlhYakEiLCJlbWFpbCI6ImRhcnNoYW5fcGF0ZWxAcGVyc2lzdGVudC5jby5pbiJ9.bF638d7ZPiaXTSMZiEb4HgyOEhDN28zS-wXoRDtfa3U" %>
       source_type_id:  <%= ENV['SHAREPOINT_SOURCE_TYPE_ID'] || 'c36a0d27-05c0-4d36-9c06-8bf38a8be9cc' %>
+    kpoint:
+      client_id: <%= ENV['KPOINT_CLIENT_ID'] || 'cicd1f44f82f224bb99c15db0a5f99c755' %>
+      client_secret: <%= ENV['KPOINT_CLIENT_SECRET'] || 'sk1bddb184792543259e2d377361158ef9' %>
+      ecl_client_id: <%= ENV['KPOINT_ECL_CLIENT_ID'] || 'Ej4bAsuYiw' %>
+      ecl_token: <%= ENV['KPOINT_ECL_TOKEN'] || 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc19kZXZlbG9wZXIiOnRydWUsImNsaWVudF9pZCI6IkVqNGJBc3VZaXciLCJlbWFpbCI6Im5pbGVzaF9uYXZhbGVAcGVyc2lzdGVudC5jby5pbiJ9.t2Tm0-jlF21kBiNpsRmDbpLUQmp8K5qoWviJqbz0bvg' %>
+      request_uri: <%= ENV['KPOINT_REQUEST_URI'] || 'https://videoken.zencite.com' %>
+      redirect_uri: <%= ENV['KPOINT_REDIRECT_URL'] || 'http://localhost:3000/kpoint/callback' %>
+      source_type_id:  <%= ENV['KPOINT_SOURCE_TYPE_ID'] || 'b64d90c3-7ddb-458c-b057-b0c52c2da05c' %>
+      name: "Kpoint"
+      source_type_name: "Kpoint"
 development:
   <<: *defaults
 

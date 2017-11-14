@@ -30,6 +30,17 @@ Rails.application.routes.draw do
     end
   end
 
+  resources :kpoint, only: [] do
+    collection do
+      get  'index'
+      get  'authorize'
+      get  'callback'
+      post 'callback_extended'
+      post 'sync_kapsules'
+      post 'create_source'
+    end
+  end
+
   match '/auth/:provider/callback', to: 'sharepoint#callback', via: %i[get post]
 
   namespace :api do
