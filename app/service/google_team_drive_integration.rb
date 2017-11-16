@@ -62,6 +62,32 @@ class GoogleTeamDriveIntegration < BaseIntegration
     end
   end
 
+  def permissions_api(file_id, permission_id, gtd_token)
+    begin
+      conn = Faraday.new("https://www.googleapis.com/drive/v3/files/#{file_id}/permissions/#{permission_id}?supportsTeamDrives=true&useDomainAdminAccess=true&fields=id%2Crole%2CemailAddress%2Ckind%2Ctype")
+      response = conn.get { |req| req.headers = { 'Authorization' => "Bearer #{gtd_token}" }}
+      JSON.parse(response.body)
+    rescue StandardError => err
+      puts "Failed Integration while fetching permissions api for file #{file_id}, ErrorMessage: #{err.message}"
+      err.backtrace.each { |ee| puts ee }
+      raise Webhook::Error::IntegrationFailure, "Failed Integration while fetching permissions api for file #{file_id}, ErrorMessage: #{err.message}"
+    end
+  end
+
+  # curl 'https://www.googleapis.com/drive/v3/files/<file-id>/permissions/<permission-id>?supportsTeamDrives=true&useDomainAdminAccess=true&fields=id%2Crole%2CemailAddress%2Ckind' \
+  # -H 'Authorization: Bearer [YOUR_BEARER_TOKEN]' \
+  def file_permissions(file)
+    permissions = []
+    permission_ids = file.permission_ids
+    if permission_ids
+      permission_ids.each do |permission_id|
+        permissions << permissions_api(file.id, permission_id, @token.token)
+      end
+    end
+    puts "#{file.id} -- permissions --- \n#{permissions.inspect}"
+    #TODO: Save permissions to DB table
+  end
+
   def collect_files(files)
     @parents = {}
     files.each do |entry|
@@ -82,6 +108,7 @@ class GoogleTeamDriveIntegration < BaseIntegration
           'at' => self.class.schedule_at
         )
       else
+        file_permissions(entry)
         create_content_item(entry)
       end
     end
@@ -126,31 +153,39 @@ class GoogleTeamDriveIntegration < BaseIntegration
   end
 
   def auth_session
-    token = get_refresh_token
-    if token
-      token_hash = JSON.parse(token.to_json)
-      access_token = OAuth2::AccessToken.from_hash(@client, token_hash.dup)
-      # access_token.refesh! if Time.now.to_i > access_token.expires_at
-      GoogleDrive.login_with_oauth(access_token)
+    begin
+      @token = get_refresh_token
+      if @token
+        token_hash = JSON.parse(@token.to_json)
+        access_token = OAuth2::AccessToken.from_hash(@client, token_hash.dup)
+        # access_token.refesh! if Time.now.to_i > access_token.expires_at
+        GoogleDrive.login_with_oauth(access_token)
+      end
+    rescue StandardError => err
+      raise Webhook::Error::IntegrationFailure, "Failed Integration while initializing authentication session, ErrorMessage: #{err.message}"
     end
   end
 
   # Gets the current access token
   def get_refresh_token
-    params = {
+    begin
+      params = {
         client_id: @credentials['client_id'],
         client_secret: @credentials['client_secret'],
         refresh_token: @credentials["refresh_token"],
         grant_type: 'refresh_token',
         additional_parameters: {"access_type" => "offline"}
       }
-    conn = Faraday.new('https://accounts.google.com')
-    response = conn.post do |req|
-      req.url '/o/oauth2/token'
-      req.headers = { 'Content-Type' => 'application/x-www-form-urlencoded' }
-      req.body = params
+      conn = Faraday.new('https://accounts.google.com')
+      response = conn.post do |req|
+        req.url '/o/oauth2/token'
+        req.headers = { 'Content-Type' => 'application/x-www-form-urlencoded' }
+        req.body = params
+      end
+      response = JSON.parse(response.body)
+      OAuth2::AccessToken.new(@client, response["access_token"])
+    rescue StandardError => err
+      raise Webhook::Error::IntegrationFailure, "Failed Integration while accessing refresh_token, ErrorMessage: #{err.message}"
     end
-    response = JSON.parse(response.body)
-    OAuth2::AccessToken.new(@client, response["access_token"])
   end
 end
