@@ -5,3 +5,6 @@ Rails.application.config.middleware.use OmniAuth::Builder do
    scope: ENV['OAUTH_SCOPE'] || "offline_access openid email profile https://graph.microsoft.com/User.Read https://graph.microsoft.com/Mail.Send https://graph.microsoft.com/Files.Read.All https://graph.microsoft.com/Files.ReadWrite.All",
    redirect_uri: ENV['SHAREPOINT_REDIRECT_URI'] || 'http://localhost:3000/auth/microsoft_v2_auth/callback'
 end
+OmniAuth.config.on_failure = Proc.new { |env|
+  OmniAuth::FailureEndpoint.new(env).redirect_to_failure
+}

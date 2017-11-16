@@ -30,6 +30,10 @@ class SharepointController < ApplicationController
     end
   end
 
+  def failure
+    render json: { message: "#{params[:message]}" }, status: :unprocessable_entity
+  end
+
   def fetch_folders
     record = IdentityProvider.find_by(id: params[:provider_id])
     if record
@@ -49,6 +53,7 @@ class SharepointController < ApplicationController
 
           if @sharepoint_url
               @folders = sharepoint_communicator.folders("/v1.0/sites/#{@sharepoint_url}/drive/root/children")["value"]
+              @folders = @folders.select {|folder| folder["folder"]}
           else
             render json: { message: 'Failed to get root site information, Please contact administrator' }, status: :unprocessable_entity
           end
