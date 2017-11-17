@@ -6,6 +6,8 @@ defaults: &defaults
 
   digest_secret: <%= ENV['DIGEST_SECRET'] || 'da4b0aaec42c8a17183b5c52be5cd3b0' %>
   ecl_app_url: <%= ENV['ECL_APP_URL'] || "http://localhost:3000/api/developer/v1" %>
+  # maximum file content size in bytes to push file content to ECL
+  max_file_content_size: <%= ENV['MAX_FILE_CONTENT_SIZE'] || 31457280 %> 
   integrations:
     dropbox:
       client_id: <%= ENV['DROPBOX_CLIENT_ID'] || 'a1lacf0749xcl6p' %>

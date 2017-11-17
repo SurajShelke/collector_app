@@ -73,11 +73,13 @@ class SharepointIntegration < BaseIntegration
   end
 
   def create_content_item(entry)
+    content = @sharepoint_communicator.get_content(entry["name"], entry["@microsoft.graph.downloadUrl"])
     attributes = {
       name:         entry["name"],
       description:  "",
       url:          entry["webUrl"],
       content_type: 'document',
+      content:      content,
       external_id:  entry["id"],
       raw_record:   entry,
       source_id:    @source_id,
