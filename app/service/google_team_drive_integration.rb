@@ -1,4 +1,5 @@
 class GoogleTeamDriveIntegration < BaseIntegration
+  include ContentExtractionService
   attr_accessor :client
   def self.get_source_name
     'google_team_drive'
@@ -87,9 +88,31 @@ class GoogleTeamDriveIntegration < BaseIntegration
     end
   end
 
+  def get_file_data(file)
+    begin
+      # Google document
+      if file.mime_type.include? "application/vnd.google-apps"
+        if file.mime_type == "application/vnd.google-apps.spreadsheet"
+          content_type = "text/csv"
+        else
+          content_type = "text/plain"
+        end
+        file.export_as_string(content_type)[0...AppConfig.max_file_content_size]
+      else
+        tmp_file = Tempfile.new(file.name)
+        tmp_file.close
+        file.download_to_file(tmp_file.path)
+        get_file_content(tmp_file.path)
+      end
+    rescue Exception => e
+      Rails.logger.error "unable to get content for file name : #{file.name} \npublic_url : #{file.web_view_link}"
+    end
+  end
+
   def create_content_item(entry, last_polled_at=nil)
     #Do not process Trashed file
     return if entry.trashed?
+    content = get_file_data(entry)
     #collecting parent information
     parent_name = get_parent(entry.parents.first.to_sym) if entry.parents
     attributes = {
@@ -100,6 +123,7 @@ class GoogleTeamDriveIntegration < BaseIntegration
       # author: entry.owners.first.display_name, #Files within a Team Drive are owned by the Team Drive, not individual users.
       external_id: entry.id,
       content_type: 'document',
+      content:      content,
       source_id:     @credentials['source_id'],
       organization_id: @credentials['organization_id'],
       resource_metadata: {
