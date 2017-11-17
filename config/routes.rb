@@ -31,6 +31,7 @@ Rails.application.routes.draw do
   end
 
   match '/auth/:provider/callback', to: 'sharepoint#callback', via: %i[get post]
+  match "/auth/failure", to: 'sharepoint#failure', via: %i[get post]
 
   namespace :api do
     namespace :v1 do
