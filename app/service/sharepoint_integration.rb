@@ -73,6 +73,8 @@ class SharepointIntegration < BaseIntegration
   end
 
   def create_content_item(entry)
+    permission = @sharepoint_communicator.files("/v1.0/sites/#{@sharepoint_url}/drive/items/#{entry["id"]}/permissions")
+    entry["permission"] = permission
     attributes = {
       name:         entry["name"],
       description:  "",
@@ -91,7 +93,8 @@ class SharepointIntegration < BaseIntegration
       additional_metadata: {
         size:            entry['size'],
         cTag:            entry['cTag'],
-        eTag:            entry['eTag']
+        eTag:            entry['eTag']#,
+        # permission:      entry['permission']
       }
     }
 
