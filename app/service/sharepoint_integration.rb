@@ -86,7 +86,7 @@ class SharepointIntegration < BaseIntegration
         images:       [{ url: nil }],
         title:        entry["name"],
         description:  "",
-        url:          entry["@microsoft.graph.downloadUrl"]
+        url:          entry["webUrl"]
       },
       additional_metadata: {
         size:            entry['size'],
