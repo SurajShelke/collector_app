@@ -1,7 +1,7 @@
 FROM ruby:2.3
 
 RUN apt-get update && apt-get install -qq -y build-essential nodejs libpq-dev postgresql-client-9.4 --fix-missing --no-install-recommends
-RUN apt-get install -y oracle-java8-installer
+RUN apt-get install -y oracle-java8-installer --no-install-recommends
 RUN mkdir -p /var/app
 RUN mkdir -p /var/app/tmp/pids/
 WORKDIR /var/app

@@ -32,6 +32,7 @@ Enhancement Required:
 # JOB
 - DropboxEclJob.perform_async
 - SafariBooksOnlineEclJob.perform_async
+- LinkedinLearningEclJob.perform_async
 
 
 # Generate git hub token 
