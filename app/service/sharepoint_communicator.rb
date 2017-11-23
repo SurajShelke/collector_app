@@ -4,20 +4,6 @@ class SharepointCommunicator
   GRAPH_RESOURCE = 'https://graph.microsoft.com'.freeze
   GRAPH_AUTH_URL = 'https://login.microsoftonline.com'.freeze
 
-  def get_content(name, public_url)
-    begin
-      # TODO Figure out way to get content using Farady and remove RestClient
-      # response = Faraday.new(public_url).get
-      response = RestClient.get public_url
-      tmp_file = Tempfile.new(name)
-      tmp_file.write(response.body)
-      tmp_file.close
-      get_file_content(tmp_file.path)
-    rescue Exception => e
-      Rails.logger.error "unable to get content for file name : #{name} \npublic_url : #{public_url}"
-    end
-  end
-
   def initialize(options= {})
     @options                = options
     @client_id              = options[:client_id]
