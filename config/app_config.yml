@@ -5,7 +5,7 @@ defaults: &defaults
     password: <%= ENV['REDIS_PASSWORD'] || "" %>
 
   digest_secret: <%= ENV['DIGEST_SECRET'] || 'da4b0aaec42c8a17183b5c52be5cd3b0' %>
-  ecl_app_url: <%= ENV['ECL_APP_URL'] || "http://localhost:3000/api/developer/v1" %>
+  ecl_app_url: <%= ENV['ECL_APP_URL'] || "http://qa.edcast.io/api/developer/v1" %>
   # maximum file content size in bytes to push file content to ECL
   max_file_content_size: <%= ENV['MAX_FILE_CONTENT_SIZE'] || 31457280 %> 
   integrations:
@@ -25,6 +25,12 @@ defaults: &defaults
       ecl_client_id: <%= ENV['SAFARI_BOOKS_ONLINE_ECL_CLIENT_ID'] || 'o-m8JtbcSQ' %>
       ecl_token: <%= ENV['SAFARI_BOOKS_ONLINE_ECL_TOKEN'] || 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc19kZXZlbG9wZXIiOnRydWUsImNsaWVudF9pZCI6Im8tbThKdGJjU1EiLCJlbWFpbCI6InBhbGxhdisxQGVkY2FzdC5jb20ifQ.4yURzwX8EPsrdDDu-f5bC2I0PT4lih781MkixduITe8' %>
       source_type_id:  <%= ENV['SAFARI_BOOKS_ONLINE_SOURCE_TYPE_ID'] || 'foo' %>
+    linkedin_learning:
+      client_id: <%= ENV['LINKEDIN_LEARNING_CLIENT_ID'] || '7828s2gqfyjvp0' %>
+      client_secret: <%= ENV['LINKEDIN_LEARNING_CLIENT_SECRET'] || 'F8LpE0oCB7oJ71ia' %>
+      ecl_client_id: <%= ENV['LINKEDIN_LEARNING_ECL_CLIENT_ID'] || 'Ej4bAsuYiw' %>
+      ecl_token: <%= ENV['LINKEDIN_LEARNING_ECL_TOKEN'] || 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc19kZXZlbG9wZXIiOnRydWUsImNsaWVudF9pZCI6IkVqNGJBc3VZaXciLCJlbWFpbCI6Im5pbGVzaF9uYXZhbGVAcGVyc2lzdGVudC5jby5pbiJ9.t2Tm0-jlF21kBiNpsRmDbpLUQmp8K5qoWviJqbz0bvg' %>
+      source_type_id:  <%= ENV['LINKEDIN_LEARNING_SOURCE_TYPE_ID'] || '0a5b5557-a22e-44d7-be50-7996cd8504d6' %>
     sharepoint:
       client_id:  <%= ENV['SHAREPOINT_CLIENT_ID'] || '0138a21b-af37-47ee-9dad-c7f23fb5b2a6' %>
       client_secret: <%= ENV['SHAREPOINT_CLIENT_SECRET'] || 'lyoxNNFAU2651])nhhCA2<(' %>
