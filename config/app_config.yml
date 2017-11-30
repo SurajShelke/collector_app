@@ -35,6 +35,12 @@ defaults: &defaults
       ecl_client_id: <%= ENV['SHAREPOINT_ECL_CLIENT_ID']  || "Y96ZRvXXjA" %>
       ecl_token: <%= ENV['SHAREPOINT_ECL_CLIENT_TOKEN'] || "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc19kZXZlbG9wZXIiOnRydWUsImNsaWVudF9pZCI6Ilk5NlpSdlhYakEiLCJlbWFpbCI6ImRhcnNoYW5fcGF0ZWxAcGVyc2lzdGVudC5jby5pbiJ9.bF638d7ZPiaXTSMZiEb4HgyOEhDN28zS-wXoRDtfa3U" %>
       source_type_id:  <%= ENV['SHAREPOINT_SOURCE_TYPE_ID'] || 'c36a0d27-05c0-4d36-9c06-8bf38a8be9cc' %>
+    one_drive:
+      client_id:  <%= ENV['ONE_DRIVE_CLIENT_ID'] || '0138a21b-af37-47ee-9dad-c7f23fb5b2a6' %>
+      client_secret: <%= ENV['ONE_DRIVE_CLIENT_SECRET'] || 'lyoxNNFAU2651])nhhCA2<(' %>
+      ecl_client_id: <%= ENV['ONE_DRIVE_ECL_CLIENT_ID']  || "Y96ZRvXXjA" %>
+      ecl_token: <%= ENV['ONE_DRIVE_ECL_CLIENT_TOKEN'] || "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc19kZXZlbG9wZXIiOnRydWUsImNsaWVudF9pZCI6Ilk5NlpSdlhYakEiLCJlbWFpbCI6ImRhcnNoYW5fcGF0ZWxAcGVyc2lzdGVudC5jby5pbiJ9.bF638d7ZPiaXTSMZiEb4HgyOEhDN28zS-wXoRDtfa3U" %>
+      source_type_id:  <%= ENV['ONE_DRIVE_SOURCE_TYPE_ID'] || '127e439d-af19-49fe-8bd7-96991a639861' %>
 development:
   <<: *defaults
 
