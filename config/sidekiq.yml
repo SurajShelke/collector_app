@@ -26,3 +26,5 @@ production:
   - [linkedin_learning, 3]
   - [sharepoint, 5]
   - [sharepoint_ecl_job, 3]
+  - [one_drive, 5]
+  - [one_drive_ecl_job, 3]

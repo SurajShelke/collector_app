@@ -66,7 +66,7 @@ class OneDriveController < ApplicationController
         if @unauthorized_parameters
           render json: { message: 'Unauthorized parameters' }, status: :unauthorized
         else
-          service = SharepointSourceCreationService.new(
+          service = OneDriveSourceCreationService.new(
             AppConfig.integrations['one_drive']['ecl_client_id'],
             AppConfig.integrations['one_drive']['ecl_token'],
             folders:         source_params[:folders] || [],
