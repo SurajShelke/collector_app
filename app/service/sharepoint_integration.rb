@@ -74,7 +74,7 @@ class SharepointIntegration < BaseIntegration
   end
 
   def create_content_item(entry)
-    content = @sharepoint_communicator.get_file_content(entry["@microsoft.graph.downloadUrl"]) if @extract_content
+    content = @sharepoint_communicator.get_file_content(entry["@microsoft.graph.downloadUrl"]) if @extract_content && @extract_content == "true"
     attributes = {
       name:         entry["name"],
       description:  "",
