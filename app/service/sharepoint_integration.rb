@@ -30,6 +30,7 @@ class SharepointIntegration < BaseIntegration
     @sharepoint_url          = @credentials["sharepoint_url"]
     @client_id               = AppConfig.integrations['sharepoint']['client_id']
     @client_secret           = AppConfig.integrations['sharepoint']['client_secret']
+    @extract_content         = @credentials["extract_content"]
     @sharepoint_communicator = SharepointCommunicator.new(
       client_id:      @client_id,
       client_secret:  @client_secret,
@@ -73,7 +74,7 @@ class SharepointIntegration < BaseIntegration
   end
 
   def create_content_item(entry)
-    content = @sharepoint_communicator.get_file_content(entry["@microsoft.graph.downloadUrl"])
+    content = @sharepoint_communicator.get_file_content(entry["@microsoft.graph.downloadUrl"]) if @extract_content
     attributes = {
       name:         entry["name"],
       description:  "",
