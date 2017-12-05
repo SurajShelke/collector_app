@@ -86,7 +86,8 @@ class GoogleTeamDriveController < ApplicationController
             team_drive_id:    source_params[:drive_id],
             refresh_token:    refresh_token,
             organization_id:  @organization_id,
-            source_type_id:   @source_type_id
+            source_type_id:   @source_type_id,
+            extract_content:  @extract_content
         )
         begin
           service.create_sources
@@ -120,6 +121,7 @@ class GoogleTeamDriveController < ApplicationController
       @client_host     = decrypted_data['client_host']
       @organization_id = decrypted_data['organization_id']
       @source_type_id  = decrypted_data['source_type_id']
+      @extract_content = decrypted_data['extract_content']
     else
       @unauthorized_parameters = true
     end

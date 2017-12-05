@@ -8,6 +8,7 @@ class TeamDriveSourceCreationService
     @refresh_token   = options[:refresh_token]
     @folders         = options[:folders]
     @team_drive_id   = options[:team_drive_id]
+    @extract_content = options[:extract_content]
   end
 
   def create_sources
@@ -20,7 +21,8 @@ class TeamDriveSourceCreationService
           client_secret: AppConfig.integrations['team_drive']['client_secret'],
           refresh_token:  @refresh_token,
           folder_id:     folder_id,
-          team_drive_id: @team_drive_id
+          team_drive_id: @team_drive_id,
+          extract_content: @extract_content
         },
         display_name:    "TeamDrive (#{folder_name})",
         organization_id: @organization_id,

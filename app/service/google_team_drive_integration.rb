@@ -27,6 +27,7 @@ class GoogleTeamDriveIntegration < BaseIntegration
   def get_content(options={})
     @options = options
     @client  = client
+    @extract_content = @credentials["extract_content"]
     fetch_content(@credentials['team_drive_id'], @credentials['folder_id'])
   end
 
@@ -112,7 +113,7 @@ class GoogleTeamDriveIntegration < BaseIntegration
   def create_content_item(entry, last_polled_at=nil)
     #Do not process Trashed file
     return if entry.trashed?
-    content = get_file_data(entry)
+    content = get_file_data(entry) if @extract_content && @extract_content == "true"
     #collecting parent information
     parent_name = get_parent(entry.parents.first.to_sym) if entry.parents
     attributes = {
