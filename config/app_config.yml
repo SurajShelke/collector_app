@@ -34,7 +34,7 @@ defaults: &defaults
       client_secret: <%= ENV['SHAREPOINT_CLIENT_SECRET'] || 'lyoxNNFAU2651])nhhCA2<(' %>
       ecl_client_id: <%= ENV['SHAREPOINT_ECL_CLIENT_ID']  || "Y96ZRvXXjA" %>
       ecl_token: <%= ENV['SHAREPOINT_ECL_CLIENT_TOKEN'] || "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc19kZXZlbG9wZXIiOnRydWUsImNsaWVudF9pZCI6Ilk5NlpSdlhYakEiLCJlbWFpbCI6ImRhcnNoYW5fcGF0ZWxAcGVyc2lzdGVudC5jby5pbiJ9.bF638d7ZPiaXTSMZiEb4HgyOEhDN28zS-wXoRDtfa3U" %>
-      source_type_id:  <%= ENV['SHAREPOINT_SOURCE_TYPE_ID'] || 'c36a0d27-05c0-4d36-9c06-8bf38a8be9cc' %>
+      source_type_id:  <%= ENV['SHAREPOINT_SOURCE_TYPE_ID'] || '1835f385-8e20-4a84-bde4-db8aebc95f8b' %>
 development:
   <<: *defaults
 

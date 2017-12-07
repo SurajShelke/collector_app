@@ -17,7 +17,7 @@ class SharepointController < ApplicationController
       if @access_token && @email && @name
         provider = User.create_or_update_sharepoint_user(@access_token, @refresh_token, @expires_at, @email, @name)
         if provider
-          redirect_to fetch_folders_sharepoint_index_path(
+          redirect_to fetch_sites_sharepoint_index_path(
             provider_id: provider.id,
             state: @state
           )
@@ -34,35 +34,66 @@ class SharepointController < ApplicationController
     render json: { message: "#{params[:message]}" }, status: :unprocessable_entity
   end
 
-  def fetch_folders
-    record = IdentityProvider.find_by(id: params[:provider_id])
+  def fetch_sites
+    begin
+      sharepoint_communicator = create_sharepoint_communicator(params[:provider_id])
+      @sites = sharepoint_communicator.folders("/v1.0/sites",{:search => '*'})["value"]
+    rescue Exception => he
+      Rails.logger.error "Invalid Oauth2 token, #{he.message}"
+      redirect_to authorize_sharepoint_index_path
+    end
+  end
+  
+  def create_sharepoint_communicator(provider_id)
+    record = IdentityProvider.find_by(id: provider_id)
     if record
-      begin
-        decrypt_state
-        if @unauthorized_parameters
-          render json: { message: 'Unauthorized parameters' }, status: :unauthorized
-        else
-          sharepoint_communicator = SharepointCommunicator.new(
-            client_id:     AppConfig.integrations['sharepoint']['client_id'],
-            client_secret: AppConfig.integrations['sharepoint']['client_secret'],
-            token:         record.token
-          )
-
-          root_site = sharepoint_communicator.root_site("/v1.0/sites/root")
-          @sharepoint_url = root_site["siteCollection"]["hostname"]
-
-          if @sharepoint_url
-              @folders = sharepoint_communicator.folders("/v1.0/sites/#{@sharepoint_url}/drive/root/children")["value"]
-              @folders = @folders.select {|folder| folder["folder"]}
-          else
-            render json: { message: 'Failed to get root site information, Please contact administrator' }, status: :unprocessable_entity
-          end
-        end
-      rescue Exception => he
-        redirect_to authorize_sharepoint_index_path
-      end
+      sharepoint_communicator = SharepointCommunicator.new(
+                client_id:     AppConfig.integrations['sharepoint']['client_id'],
+                client_secret: AppConfig.integrations['sharepoint']['client_secret'],
+                token:         record.token
+              )
     else
-      render json: { folders: [], provider_id: params[:provider_id], message: 'Invalid user' }, status: :unprocessable_entity
+      raise "Invalid token, please contact administrator."
+    end
+  end
+
+  def fetch_drives
+    begin
+      @site_id = source_params[:site_id]
+      if @site_id
+        sharepoint_communicator = create_sharepoint_communicator(params[:provider_id])
+        @sites = sharepoint_communicator.folders("/v1.0/sites",{:search => '*'})["value"]
+        @drives = sharepoint_communicator.folders("/v1.0/sites/#{@site_id}/drives")["value"]
+      else
+        render json: { message: 'Failed to get site information, Please contact administrator' }, status: :unprocessable_entity
+      end
+    rescue Exception => he
+      Rails.logger.error "Invalid Oauth2 token, #{he.message}"
+      redirect_to authorize_sharepoint_index_path
+    end
+  end
+
+  def fetch_folders
+    begin
+      decrypt_state
+      if @unauthorized_parameters
+        render json: { message: 'Unauthorized parameters' }, status: :unauthorized
+      else
+        sharepoint_communicator = create_sharepoint_communicator(params[:provider_id])
+        @site_id = source_params[:site_id]
+        @drive_id = source_params[:drive_id]
+        if @drive_id
+          @folders = sharepoint_communicator.folders("/v1.0/drives/#{@drive_id}/root/children")["value"]
+          @folders = @folders.select {|folder| folder["folder"]}
+          @sites = sharepoint_communicator.folders("/v1.0/sites",{:search => '*'})["value"]
+          @drives = sharepoint_communicator.folders("/v1.0/sites/#{@site_id}/drives")["value"] if @site_id
+        else
+          render json: { message: 'Failed to get drive information, Please contact administrator' }, status: :unprocessable_entity
+        end
+      end
+    rescue Exception => he
+      Rails.logger.error "Invalid Oauth2 token, #{he.message}"
+      redirect_to authorize_sharepoint_index_path
     end
   end
 
@@ -79,7 +110,7 @@ class SharepointController < ApplicationController
             AppConfig.integrations['sharepoint']['ecl_token'],
             folders:         source_params[:folders] || [],
             refresh_token:   record.secret,
-            sharepoint_url:  source_params[:sharepoint_url],
+            drive_id:        source_params[:drive_id],
             organization_id: @organization_id,
             source_type_id:  @source_type_id
           )
@@ -97,7 +128,7 @@ class SharepointController < ApplicationController
   private
 
   def source_params
-    params.permit(:state, :sharepoint_url, :provider_id, folders: {})
+    params.permit(:state, :site_id, :drive_id, :provider_id, folders: {})
   end
 
   def decrypt_state

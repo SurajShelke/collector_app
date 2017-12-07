@@ -25,6 +25,8 @@ Rails.application.routes.draw do
     collection do
       get  'authorize'
       get  'callback'
+      get  'fetch_sites'
+      get  'fetch_drives'
       get  'fetch_folders'
       post 'create_sources'
     end

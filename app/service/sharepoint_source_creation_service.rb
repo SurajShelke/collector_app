@@ -7,7 +7,7 @@ class SharepointSourceCreationService
     @organization_id        = options[:organization_id]
     @refresh_token          = options[:refresh_token]
     @folders                = options[:folders]
-    @sharepoint_url         = options[:sharepoint_url]
+    @drive_id               = options[:drive_id]
   end
 
   def create_sources
@@ -20,7 +20,7 @@ class SharepointSourceCreationService
           client_secret:  AppConfig.integrations['sharepoint']['client_secret'],
           refresh_token:  @refresh_token,
           folder_id:      folder_id,
-          sharepoint_url: @sharepoint_url
+          drive_id:       @drive_id
         },
         display_name:    "Sharepoint (#{folder_name})",
         organization_id: @organization_id,
