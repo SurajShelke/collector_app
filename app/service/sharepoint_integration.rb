@@ -27,7 +27,7 @@ class SharepointIntegration < BaseIntegration
     @options = options
     @source_id               = @credentials["source_id"]
     @organization_id         = @credentials["organization_id"]
-    @sharepoint_url          = @credentials["sharepoint_url"]
+    @drive_id                = @credentials["drive_id"]
     @client_id               = AppConfig.integrations['sharepoint']['client_id']
     @client_secret           = AppConfig.integrations['sharepoint']['client_secret']
     @extract_content         = @credentials["extract_content"]
@@ -43,7 +43,7 @@ class SharepointIntegration < BaseIntegration
   end
 
   def fetch_content(folder_id)
-    response = @sharepoint_communicator.files("/v1.0/sites/#{@sharepoint_url}/drive/items/#{folder_id}/children")
+    response = @sharepoint_communicator.files("/v1.0/drives/#{@drive_id}/items/#{folder_id}/children")
     collect_files(response)
     fetch_next_content(response["@odata.nextLink"]) if response["@odata.nextLink"]
   end

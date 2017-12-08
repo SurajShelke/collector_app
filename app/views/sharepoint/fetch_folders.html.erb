@@ -1,4 +1,6 @@
 <div class="card">
+  <%= render "sites_form" %>
+  <%= render "drives_form" %>
   <%= form_tag(create_sources_sharepoint_index_path) do |f| %>
     <h5 class="card-header">Select Folders</h5>
     <div class="card-body">
@@ -23,7 +25,8 @@
 
       <%= hidden_field_tag 'state', params[:state] %>
       <%= hidden_field_tag 'provider_id', params[:provider_id] %>
-      <%= hidden_field_tag 'sharepoint_url', @sharepoint_url %>
+      <%= hidden_field_tag 'site_id', @site_id %>
+      <%= hidden_field_tag 'drive_id', @drive_id %>
       <div class="pt-3">
         <button type="submit" class="btn btn-secondary">Save</button>
       </div>
