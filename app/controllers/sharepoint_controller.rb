@@ -78,7 +78,7 @@ class SharepointController < ApplicationController
 
   def fetch_folders
     begin
-      decrypt_state
+      decrypt_shtate
       if @unauthorized_parameters
         render json: { message: 'Unauthorized parameters' }, status: :unauthorized
       else
@@ -89,6 +89,7 @@ class SharepointController < ApplicationController
         if @drive_id
           @folders = sharepoint_communicator.folders("/v1.0/drives/#{@drive_id}/root/children")["value"]
           @folders = @folders.select {|folder| folder["folder"]}
+          # Adding root folder to the folders list, so that files inside root folder can be synced. In Sharepoint instance, root folder is typically named as 'Shared Document'.
           @folders.unshift({"id" => @drive_id, "name" => "Shared Documents"})
           @sites = sharepoint_communicator.folders("/v1.0/sites",{:search => '*'})["value"]
           @drives = sharepoint_communicator.folders("/v1.0/sites/#{@site_id}/drives")["value"] if @site_id
