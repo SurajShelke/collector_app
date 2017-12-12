@@ -16,3 +16,9 @@
 //= require popper
 //= require bootstrap
 //= require_tree .
+$(document).ready(function() {
+	$('[name="folders['+ $('[name="drive_id"]')[0].value +']"]').change(function(){
+		$("input:checkbox").prop('disabled', this.checked);
+		this.disabled = false;
+	});
+});

@@ -8,6 +8,7 @@ class SharepointSourceCreationService
     @refresh_token          = options[:refresh_token]
     @folders                = options[:folders]
     @drive_id               = options[:drive_id]
+    @site_name              = options[:site_name]
   end
 
   def create_sources
@@ -22,7 +23,7 @@ class SharepointSourceCreationService
           folder_id:      folder_id,
           drive_id:       @drive_id
         },
-        display_name:    "Sharepoint (#{folder_name})",
+        display_name:    "#{@site_name} (#{folder_name})",
         organization_id: @organization_id,
         is_enabled:      true,
         is_default:      false,

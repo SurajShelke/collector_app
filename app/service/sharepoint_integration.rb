@@ -42,7 +42,11 @@ class SharepointIntegration < BaseIntegration
   end
 
   def fetch_content(folder_id)
-    response = @sharepoint_communicator.files("/v1.0/drives/#{@drive_id}/items/#{folder_id}/children")
+    if folder_id == @drive_id
+      response = @sharepoint_communicator.files("/v1.0/drives/#{@drive_id}/root/children")
+    else
+      response = @sharepoint_communicator.files("/v1.0/drives/#{@drive_id}/items/#{folder_id}/children")
+    end
     collect_files(response)
     fetch_next_content(response["@odata.nextLink"]) if response["@odata.nextLink"]
   end

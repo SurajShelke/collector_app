@@ -59,8 +59,11 @@ class SharepointController < ApplicationController
 
   def fetch_drives
     begin
-      @site_id = source_params[:site_id]
-      if @site_id
+      site = source_params[:site]
+      if site
+        site = JSON.parse(site)
+        @site_id = site["id"]
+        @site_name = site["name"]
         sharepoint_communicator = create_sharepoint_communicator(params[:provider_id])
         @sites = sharepoint_communicator.folders("/v1.0/sites",{:search => '*'})["value"]
         @drives = sharepoint_communicator.folders("/v1.0/sites/#{@site_id}/drives")["value"]
@@ -81,10 +84,12 @@ class SharepointController < ApplicationController
       else
         sharepoint_communicator = create_sharepoint_communicator(params[:provider_id])
         @site_id = source_params[:site_id]
+        @site_name = source_params[:site_name]
         @drive_id = source_params[:drive_id]
         if @drive_id
           @folders = sharepoint_communicator.folders("/v1.0/drives/#{@drive_id}/root/children")["value"]
           @folders = @folders.select {|folder| folder["folder"]}
+          @folders.unshift({"id" => @drive_id, "name" => "Shared Documents"})
           @sites = sharepoint_communicator.folders("/v1.0/sites",{:search => '*'})["value"]
           @drives = sharepoint_communicator.folders("/v1.0/sites/#{@site_id}/drives")["value"] if @site_id
         else
@@ -112,7 +117,8 @@ class SharepointController < ApplicationController
             refresh_token:   record.secret,
             drive_id:        source_params[:drive_id],
             organization_id: @organization_id,
-            source_type_id:  @source_type_id
+            source_type_id:  @source_type_id,
+            site_name:       source_params[:site_name]
           )
           service.create_sources
           redirect_to "#{@client_host}/admin/integrations/eclConfigurations"
@@ -128,7 +134,7 @@ class SharepointController < ApplicationController
   private
 
   def source_params
-    params.permit(:state, :site_id, :drive_id, :provider_id, folders: {})
+    params.permit(:state, :site, :site_id, :site_name, :drive_id, :provider_id, folders: {})
   end
 
   def decrypt_state
