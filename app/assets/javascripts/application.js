@@ -16,3 +16,11 @@
 //= require popper
 //= require bootstrap
 //= require_tree .
+$(document).ready(function() {
+	$("input:checkbox").change(function(){
+			if($( "input:checked" ).length > 0)
+				$('[name="btn_submit_folders"]').prop('disabled', false);
+			else
+				$('[name="btn_submit_folders"]').prop('disabled', true);
+	});
+});
