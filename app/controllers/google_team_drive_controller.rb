@@ -66,6 +66,8 @@ class GoogleTeamDriveController < ApplicationController
 
         @folders.select! { |folder| folder.mime_type == "application/vnd.google-apps.folder" } if @folders
         @drive_id = source_params[:drive_id]
+        # Adding root folder to the folders list, so that files in root folder can be synced.
+        @folders.unshift({"id" => @drive_id, "name" => "Root"})
       end
     end
     # urlsafe_encode64
