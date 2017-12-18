@@ -8,6 +8,7 @@
 	    <%= hidden_field_tag 'state', params[:state] %>
 	    <%= hidden_field_tag 'provider_id', params[:provider_id] %>
 	    <%= hidden_field_tag 'site_id', @site_id %>
+	    <%= hidden_field_tag "site_name", @site_name %>
 	    <%= submit_tag("Select drive", { class: "btn btn-secondary", align: "right" }) %>
 	  </div>
 	<% end %>
