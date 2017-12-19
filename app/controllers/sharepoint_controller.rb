@@ -78,7 +78,7 @@ class SharepointController < ApplicationController
 
   def fetch_folders
     begin
-      decrypt_shtate
+      decrypt_state
       if @unauthorized_parameters
         render json: { message: 'Unauthorized parameters' }, status: :unauthorized
       else
