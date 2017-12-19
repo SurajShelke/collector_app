@@ -23,8 +23,16 @@ $(document).ready(function() {
     else
       $('[name="btn_submit_folders"]').prop('disabled', true);
   });
-  $('[name="folders['+ $('[name="drive_id"]')[0].value +']"]').change(function(){ 
-    $("input:checkbox").prop('disabled', this.checked); 
-      this.disabled = false; 
-  }); 
+  if($('[name="drive_id"]').length>0){
+  	val = $('[name="drive_id"]')[0].value
+  	try {
+    	val = JSON.parse(val);
+    	val = val.id
+		}catch(err) {}
+  	
+  	$('[name="folders['+ val +']"]').change(function(){ 
+	  	$("input:checkbox").prop('disabled', this.checked); 
+	      this.disabled = false; 
+	  }); 	
+  }
 });

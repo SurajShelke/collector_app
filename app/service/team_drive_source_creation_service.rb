@@ -8,6 +8,7 @@ class TeamDriveSourceCreationService
     @refresh_token   = options[:refresh_token]
     @folders         = options[:folders]
     @team_drive_id   = options[:team_drive_id]
+    @team_drive_name = options[:team_drive_name]
   end
 
   def create_sources
@@ -22,7 +23,7 @@ class TeamDriveSourceCreationService
           folder_id:     folder_id,
           team_drive_id: @team_drive_id
         },
-        display_name:    "TeamDrive (#{folder_name})",
+        display_name:    "#{@team_drive_name} (#{folder_name})",
         organization_id: @organization_id,
         is_enabled:      true,
         is_default:      false,

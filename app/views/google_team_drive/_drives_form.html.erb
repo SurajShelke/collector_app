@@ -1,7 +1,7 @@
 <% if @drives %>
   <%= form_tag(fetch_folders_google_team_drive_index_path, method: 'get') do %>
     <h5 class="card-header">Team Drives (Total: <%= @drives.size || 0 %>)</h5>
-    <% drives = @drives.map { |drive| [drive.name, drive.id] } %>
+    <% drives = @drives.map { |drive| [drive.name, {:id => drive.id, :name => drive.name}.to_json] } %>
 
     <div class="styled-select">
       <%= select_tag "drive_id", options_for_select(drives, :selected => @drive_id), style: "height: 50px; max-width: 240px; padding: 13px; align-self: center;" %>

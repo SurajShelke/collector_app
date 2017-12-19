@@ -60,14 +60,17 @@ class GoogleTeamDriveController < ApplicationController
     if refresh_token
       begin
         drive_sesion = authentication_session(refresh_token: refresh_token)
-
+        @drive_id = source_params[:drive_id]
+        @drive_id = JSON.parse(@drive_id)
+        @drive_name = @drive_id["name"]
+        @drive_id = @drive_id["id"]
         @drives = get_team_drives(drive_sesion)
         @folders  = get_team_drive_content(drive_sesion)
 
         @folders.select! { |folder| folder.mime_type == "application/vnd.google-apps.folder" } if @folders
-        @drive_id = source_params[:drive_id]
         # Adding root folder to the folders list, so that files in root folder can be synced.
         @folders.unshift({"id" => @drive_id, "name" => "Root"})
+        @drive_id = source_params[:drive_id]
       end
     end
     # urlsafe_encode64
@@ -81,11 +84,16 @@ class GoogleTeamDriveController < ApplicationController
       if @unauthorized_parameters
         render json: { message: 'Unauthorized parameters' }, status: :unauthorized
       else
+        @drive_id = source_params[:drive_id]
+        @drive_id = JSON.parse(@drive_id)
+        @drive_name = @drive_id["name"]
+        @drive_id = @drive_id["id"]
         service = TeamDriveSourceCreationService.new(
             AppConfig.integrations['team_drive']['ecl_client_id'],
             AppConfig.integrations['team_drive']['ecl_token'],
             folders:          source_params[:folders] || [],
-            team_drive_id:    source_params[:drive_id],
+            team_drive_id:    @drive_id,
+            team_drive_name:  @drive_name,
             refresh_token:    refresh_token,
             organization_id:  @organization_id,
             source_type_id:   @source_type_id
@@ -205,12 +213,12 @@ class GoogleTeamDriveController < ApplicationController
   end
 
   def get_team_drive_content(drive_sesion)
-      query = params[:folder_id] ? "'#{params[:folder_id]}'" : "'#{params[:drive_id]}'"
+      query = params[:folder_id] ? "'#{params[:folder_id]}'" : "'#{@drive_id}'"
       paginated_files = []
       begin
         (files, page_token) = drive_sesion.files(q: "#{query} in parents",
                     supports_team_drives: true,
-                    team_drive_id: params[:drive_id],
+                    team_drive_id: @drive_id,
                     include_team_drive_items: true,
                     corpora: 'teamDrive',
                     orderBy: "folder",
