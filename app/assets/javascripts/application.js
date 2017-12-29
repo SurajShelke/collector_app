@@ -23,7 +23,8 @@ $(document).ready(function() {
     else
       $('[name="btn_submit_folders"]').prop('disabled', true);
   });
-  $('[name="folders['+ $('[name="drive_id"]')[0].value +']"]').change(function(){ 
+  debugger
+  $('[name="folders['+ $('[name="root_id"]')[0].value +']"]').change(function(){ 
     $("input:checkbox").prop('disabled', this.checked); 
       this.disabled = false; 
   }); 

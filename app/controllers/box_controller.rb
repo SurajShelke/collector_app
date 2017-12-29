@@ -9,9 +9,11 @@ class BoxController < ApplicationController
     if refresh_token
       begin
         client = Boxr::Client.new(refresh_token)
+        @root_id = Boxr::ROOT
         user_account = client.current_user(fields: [])
         @folders = client.folder_items(Boxr::ROOT)
         @folders.select! { |folder| folder.type == 'folder' }
+        @folders.unshift({"id" => "#{@root_id}", "name" => "Root"})
       rescue StandardError => he
         redirect_to authorize_box_index_path
       end

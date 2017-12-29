@@ -6,10 +6,11 @@
         <%= render 'folders_listing' %>
         <%= hidden_field_tag "state", params["state"] %>
         <%= hidden_field_tag "provider_id", params["provider_id"] %>
+        <%= hidden_field_tag "root_id", @root_id %>
       </div>
 
       <div class="pt-3">
-        <%= submit_tag("Fetch Content",{ class: "btn btn-secondary" }) %>
+        <%= submit_tag("Fetch Content",{ class: "btn btn-secondary", name: "btn_submit_folders" }) %>
       </div>
     </div>
   <%end%>
