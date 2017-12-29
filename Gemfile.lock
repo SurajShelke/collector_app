@@ -68,6 +68,11 @@ GEM
       autoprefixer-rails (>= 6.0.3)
       popper_js (>= 1.12.3, < 2)
       sass (>= 3.5.2)
+    boxr (1.4.0)
+      addressable (~> 2.3)
+      hashie (~> 3.5)
+      httpclient (~> 2.8)
+      jwt (~> 1.4)
     bugsnag (5.4.1)
     builder (3.2.3)
     byebug (9.1.0)
@@ -320,6 +325,7 @@ PLATFORMS
 
 DEPENDENCIES
   bootstrap
+  boxr
   bugsnag
   byebug
   capybara (~> 2.13)

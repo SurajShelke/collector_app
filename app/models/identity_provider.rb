@@ -1,5 +1,5 @@
 class IdentityProvider < ApplicationRecord
-  enum provider_type: { dropbox: 1 , team_drive: 2, sharepoint: 3 }
+  enum provider_type: { dropbox: 1 , team_drive: 2, sharepoint: 3, box: 4 }
   belongs_to :user
 
   # Methods for Dropbox connector
@@ -50,6 +50,23 @@ class IdentityProvider < ApplicationRecord
   end
 
   def self.get_sharepoint_access_token(provider_id)
+    provider = IdentityProvider.find_by(id: provider_id)
+    provider.try(:token)
+  end
+
+  # Methods for Dropbox connector
+  def self.create_or_update_box(args= {})
+    identity_provider = find_or_initialize_by(
+      provider_type: IdentityProvider.provider_types['box'],
+      user_id:       args[:user_id]
+    )
+
+    identity_provider.uid   = args[:account_id]
+    identity_provider.token = args[:access_token]
+    identity_provider.save! ? identity_provider : nil
+  end
+
+  def self.get_box_refresh_token(provider_id)
     provider = IdentityProvider.find_by(id: provider_id)
     provider.try(:token)
   end

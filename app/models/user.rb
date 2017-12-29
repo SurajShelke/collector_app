@@ -44,4 +44,17 @@ class User < ApplicationRecord
     end
   end
 
+  def self.create_or_update_box_user(account, access_token)
+    user            = find_or_initialize_by(email: account.login)
+    user.first_name = account.name
+
+    if user.save!
+      IdentityProvider.create_or_update_dropbox(
+        user_id: user.id,
+        account_id: account.id,
+        access_token: access_token
+      )
+    end
+  end
+
 end
