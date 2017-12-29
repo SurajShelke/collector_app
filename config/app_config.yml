@@ -16,8 +16,8 @@ defaults: &defaults
     box:
       client_id: <%= ENV['BOX_CLIENT_ID'] || 'iotp53bgk64biyrm8hm8vx5g0paoap5i' %>
       client_secret: <%= ENV['BOX_CLIENT_SECRET'] || 'FukImsYbir9ifPTGdxgZvhh65zviptBN' %>
-      ecl_client_id: <%= ENV['BOX_ECL_CLIENT_ID'] || '9fJcx5yqeg' %>
-      ecl_token: <%= ENV['BOX_ECL_TOKEN'] || 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc19kZXZlbG9wZXIiOnRydWUsImNsaWVudF9pZCI6IjlmSmN4NXlxZWciLCJlbWFpbCI6InlvZ2VuZHJhKzMyNDEyQGVkY2FzdC5jb20ifQ.-C9jUXPslVmdtO0zR8Oz7-i0i7PuWVbKkM9Zu1z0fCc' %>
+      ecl_client_id: <%= ENV['BOX_ECL_CLIENT_ID'] || 'Ej4bAsuYiw' %>
+      ecl_token: <%= ENV['BOX_ECL_TOKEN'] || 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc19kZXZlbG9wZXIiOnRydWUsImNsaWVudF9pZCI6IkVqNGJBc3VZaXciLCJlbWFpbCI6Im5pbGVzaF9uYXZhbGVAcGVyc2lzdGVudC5jby5pbiJ9.t2Tm0-jlF21kBiNpsRmDbpLUQmp8K5qoWviJqbz0bvg' %>
       source_type_id:  <%= ENV['BOX_SOURCE_TYPE_ID'] || '3974e7a3-b466-40b5-a7db-4748ffc8ff4a' %>
     team_drive:
       client_id: <%= ENV['TEAM_DRIVE_CLIENT_ID'] || 'eks77359dcm819n' %>

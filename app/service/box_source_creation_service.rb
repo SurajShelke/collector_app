@@ -27,7 +27,6 @@ class BoxSourceCreationService
         is_featured:     false,
         approved:        true
       }
-      byebug
       response = communicator.create(attributes)
       response.success? ? communicator.response_data["data"] : {}
     end
