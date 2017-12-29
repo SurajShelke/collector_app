@@ -9,6 +9,7 @@ class SharepointSourceCreationService
     @folders                = options[:folders]
     @drive_id               = options[:drive_id]
     @site_name              = options[:site_name]
+    @extract_content = options[:extract_content]
   end
 
   def create_sources

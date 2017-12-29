@@ -1,4 +1,5 @@
 class BoxIntegration < BaseIntegration
+  include ContentExtractionService
   attr_accessor :client
   def self.get_source_name
     'box'
@@ -26,6 +27,7 @@ class BoxIntegration < BaseIntegration
   def get_content(options={})
     @options = options
     @client  = client
+    @extract_content = @credentials["extract_content"]
     fetch_content(@credentials['box'], @credentials['folder_id'])
   end
 
@@ -84,6 +86,7 @@ class BoxIntegration < BaseIntegration
   def create_content_item(entry, last_polled_at=nil)
     #Do not process Trashed file
     return if entry.trashed?
+    content = get_file_content(entry.web_view_link) if @extract_content && @extract_content == "true"
     #collecting parent information
     parent_name = get_parent(entry.parents.first.to_sym) if entry.parents
     attributes = {
@@ -93,6 +96,7 @@ class BoxIntegration < BaseIntegration
       url: entry.web_view_link,
       external_id: entry.id,
       content_type: 'document',
+      content:      content,
       source_id:     @credentials['source_id'],
       organization_id: @credentials['organization_id'],
       resource_metadata: {

@@ -7,6 +7,7 @@ class BoxSourceCreationService
     @organization_id = options[:organization_id]
     @refresh_token   = options[:refresh_token]
     @folders         = options[:folders]
+    @extract_content = options[:extract_content]
   end
 
   def create_sources
@@ -19,6 +20,7 @@ class BoxSourceCreationService
           client_secret: AppConfig.integrations['box']['client_secret'],
           refresh_token:  @refresh_token,
           folder_id:     folder_id,
+          extract_content: @extract_content
         },
         display_name:    "Box (#{folder_name})",
         organization_id: @organization_id,
