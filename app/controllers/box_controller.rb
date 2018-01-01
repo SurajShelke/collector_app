@@ -5,11 +5,14 @@ class BoxController < ApplicationController
   OpenSSL::SSL::VERIFY_PEER = OpenSSL::SSL::VERIFY_NONE
 
   def index
-    refresh_token = IdentityProvider.get_box_refresh_token(params[:provider_id])
-    if refresh_token
+    provider = IdentityProvider.find_by(id: params[:provider_id])
+    if provider
       begin
-        token = get_access_token(refresh_token)
-        client = Boxr::Client.new(token.token)
+        new_tokens = get_new_tokens(provider.token)
+        # Box's refresh tokens are valid for a single refresh, for up to 60 days. So, update refresh_token with recently received one.
+        provider.update_attribute(:token, new_tokens["refresh_token"])
+
+        client = Boxr::Client.new(new_tokens["access_token"])
         @root_id = Boxr::ROOT
         user_account = client.current_user(fields: [])
         @folders = client.folder_items(Boxr::ROOT)
@@ -141,7 +144,7 @@ class BoxController < ApplicationController
   end
 
   # Gets the current access token
-  def get_access_token(refresh_token)
+  def get_new_tokens(refresh_token)
     params = {
                 client_id: AppConfig.integrations['box']['client_id'],
                 client_secret: AppConfig.integrations['box']['client_secret'],
@@ -154,8 +157,7 @@ class BoxController < ApplicationController
       req.headers = { 'Content-Type' => 'application/x-www-form-urlencoded' }
       req.body = params
     end
-    response = JSON.parse(response.body)
-    OAuth2::AccessToken.new(nil, response["access_token"])
+    JSON.parse(response.body)
   end
 
   # Check if token is expired, refresh if so
