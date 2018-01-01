@@ -41,7 +41,7 @@ class BoxIntegration < BaseIntegration
       @boxr_client = get_boxr_client
 
       folder = @boxr_client.folder_from_id(folder_id, fields: [])
-      files =  @boxr_client.folder_items(folder, fields: [], offset: 0, limit: FOLDER_ITEMS_LIMIT)
+      files =  @boxr_client.folder_items(folder, fields: :all)
 
       # if new_page_token.present?
       #   Sidekiq::Client.push(
@@ -90,12 +90,13 @@ class BoxIntegration < BaseIntegration
     # content = get_file_content(entry.web_view_link) if @extract_content && @extract_content == "true"
     # collecting parent information
     # parent_name = get_parent(entry.parents.first.to_sym) if entry.parents
-    download_url = @boxr_client.download_url(entry)
+    # download_url = @boxr_client.download_url(entry)
+    sharable_link = @boxr_client.create_shared_link_for_file(entry)
     attributes = {
       name: entry.name,
       description: entry.description,
       # summary: entry.content_hints,
-      url: download_url,
+      url: sharable_link.shared_link.download_url,
       external_id: entry.id,
       content_type: 'document',
       # content:      content,
@@ -104,10 +105,16 @@ class BoxIntegration < BaseIntegration
       resource_metadata: {
         title: entry.title,
         description: entry.description,
-        url: download_url
+        url: sharable_link.shared_link.download_url
+      },
+      additional_metadata: {
+        parent_name:      entry.parent.name,
+        size:             entry.size,
+        revision:         entry.version_number,
+        mobile_url:       sharable_link.shared_link.download_url,
+        desktop_url:      sharable_link.shared_link.url
       }
     }
-    attributes.merge!(additional_metadata: {"sharable_link" => @boxr_client.create_shared_link_for_file(entry)})
     ContentItemCreationJob.perform_async(self.class.ecl_client_id, self.class.ecl_token, attributes)
   end
 
@@ -155,7 +162,17 @@ class BoxIntegration < BaseIntegration
 
     # Update refresh_token in the integration framework as Box's refresh tokens are valid for a single refresh
     ecl_service = EclDeveloperClient::Source.new(AppConfig.integrations['box']['ecl_client_id'], AppConfig.integrations['box']['ecl_token'])
-    ecl_service.update(@credentials["source_id"], { refresh_token: response["refresh_token"] })
+
+    source_config = {
+          client_id:     @credentials['client_id'],
+          client_secret: @credentials['client_secret'],
+          refresh_token: response["refresh_token"],
+          folder_id:     @credentials['folder_id'],
+          extract_content: @extract_content
+        }
+    
+    ecl_response = ecl_service.update(@credentials["source_id"], { source_config: source_config })
+    @credentials['refresh_token'] = response["refresh_token"] if ecl_response.success?
 
     OAuth2::AccessToken.new(nil, response["access_token"])
   end
