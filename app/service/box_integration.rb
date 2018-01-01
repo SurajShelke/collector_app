@@ -28,19 +28,19 @@ class BoxIntegration < BaseIntegration
     @options = options
     @client  = client
     @extract_content = @credentials["extract_content"]
-    fetch_content(@credentials['box'], @credentials['folder_id'])
+    fetch_content(@credentials['folder_id'])
   end
 
   # Sample `auth_session.files` response from Google Drive API
   # [#<GoogleDrive::File id="1u5_4-NFatQPw9doeL8sZBZgSiDdjhhGn3gbUQARqBac" title="File1">,
   #  #<GoogleDrive::File id="1W8IQH7TeiSA7Exu1vVtDLAbsK3jiNtddBRWtjmbwd5U" title="File2">,
   #  #<GoogleDrive::File id="1pZfz3RRhHJ4k7T-Z2Qgjm06JhZcjmrvO_SttyLyYah0" title="File3.docx">]
-  def fetch_content(box_id, folder_id)
+  def fetch_content(folder_id)
     begin
-      query = folder_id ? "'#{folder_id}'" : "'#{box_id}'"
       page_token = @options[:page] == 0 ? nil : @options[:page]
 
-      files, new_page_token = auth_session.files
+      folder = @client.folder_from_id(folder_id, fields: [])
+      files, new_page_token = @client.folder_items(folder, fields: [], offset: 0, limit: FOLDER_ITEMS_LIMIT)
 
       if new_page_token.present?
         Sidekiq::Client.push(
@@ -65,7 +65,7 @@ class BoxIntegration < BaseIntegration
       #  Create 3 content Item and spawn 3 different job
       # TODO add code for to check last polled at vs server update - 1 days so we will not fetched lot of data
       # time so we will not have multiple jobs to spawn every time
-      if entry.mime_type == "application/vnd.google-apps.folder"
+      if entry.type == "folder"
         @parents[entry.id.to_s.to_sym] = entry.name
         credentials = @credentials
         credentials['folder_id'] = entry.id
@@ -117,9 +117,9 @@ class BoxIntegration < BaseIntegration
     OAuth2::Client.new(@credentials['client_id'],
                        @credentials['client_secret'],
                        :site => "https://api.box.com",
-                       :authorize_url => "/oauth2/authorize",
+                       :authorize_url => "/api/oauth2/authorize",
                        :token_url => "/oauth2/token",
-                       :additional_parameters => {"grant_type" => "authorization_code"})
+                       :grant_type => "authorization_code"})
   end
 
   def auth_session
@@ -127,6 +127,7 @@ class BoxIntegration < BaseIntegration
     if token
       token_hash = JSON.parse(token.to_json)
       access_token = OAuth2::AccessToken.from_hash(@client, token_hash.dup)
+      client = Boxr::Client.new(access_token)
       # access_token.refesh! if Time.now.to_i > access_token.expires_at
       # GoogleDrive.login_with_oauth(access_token)
     end
@@ -134,5 +135,19 @@ class BoxIntegration < BaseIntegration
 
   # Gets the current access token
   def get_refresh_token
+    params = {
+                client_id: @credentials['client_id'],
+                client_secret: @credentials['client_secret'],
+                refresh_token: @credentials["refresh_token"],
+                grant_type: 'refresh_token'
+              }
+    conn = Faraday.new('https://api.box.com')
+    response = conn.post do |req|
+      req.url '/oauth2/token'
+      req.headers = { 'Content-Type' => 'application/x-www-form-urlencoded' }
+      req.body = params
+    end
+    response = JSON.parse(response.body)
+    OAuth2::AccessToken.new(@client, response["access_token"])
   end
 end

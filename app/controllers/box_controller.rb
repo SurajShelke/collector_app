@@ -8,7 +8,8 @@ class BoxController < ApplicationController
     refresh_token = IdentityProvider.get_box_refresh_token(params[:provider_id])
     if refresh_token
       begin
-        client = Boxr::Client.new(refresh_token)
+        access_token = get_access_token(refresh_token)
+        client = Boxr::Client.new(access_token)
         @root_id = Boxr::ROOT
         user_account = client.current_user(fields: [])
         @folders = client.folder_items(Boxr::ROOT)
@@ -63,7 +64,7 @@ class BoxController < ApplicationController
       user_account = client.current_user(fields: [])
       # @folders = client.folder_items(Boxr::ROOT)
       # @folders.select! { |folder| folder.type == 'folder' }
-      @refresh_token = token.token
+      @refresh_token = token.refresh_token
       # fetch user account details
       # save user details with identity provider and redirect to list folder UI
       if user_account.present?
@@ -154,15 +155,33 @@ class BoxController < ApplicationController
     end
   end
 
-  def get_access_token(access_token)
-    begin
-      # Get the current token hash
-      # token_hash = JSON.parse(access_token)
-      token = OAuth2::AccessToken.from_hash(client, access_token) rescue nil
-      renew_token_if_expired(token) if token
-    rescue OAuth2::Error => oe
-      render json: { message: "#{oe.message}" }, status: :unprocessable_entity
+  # def get_access_token(access_token)
+  #   begin
+  #     # Get the current token hash
+  #     # token_hash = JSON.parse(access_token)
+  #     token = OAuth2::AccessToken.from_hash(client, access_token) rescue nil
+  #     renew_token_if_expired(token) if token
+  #   rescue OAuth2::Error => oe
+  #     render json: { message: "#{oe.message}" }, status: :unprocessable_entity
+  #   end
+  # end
+
+  # Gets the current access token
+  def get_access_token(refresh_token)
+    params = {
+                client_id: AppConfig.integrations['box']['client_id'],
+                client_secret: AppConfig.integrations['box']['client_secret'],
+                refresh_token: refresh_token,
+                grant_type: 'refresh_token'
+              }
+    conn = Faraday.new('https://api.box.com')
+    response = conn.post do |req|
+      req.url '/oauth2/token'
+      req.headers = { 'Content-Type' => 'application/x-www-form-urlencoded' }
+      req.body = params
     end
+    response = JSON.parse(response.body)
+    OAuth2::AccessToken.new(@client, response["access_token"])
   end
 
   # Check if token is expired, refresh if so
