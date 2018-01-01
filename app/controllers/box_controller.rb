@@ -8,8 +8,8 @@ class BoxController < ApplicationController
     refresh_token = IdentityProvider.get_box_refresh_token(params[:provider_id])
     if refresh_token
       begin
-        access_token = get_access_token(refresh_token)
-        client = Boxr::Client.new(access_token)
+        token = get_access_token(refresh_token)
+        client = Boxr::Client.new(token.token)
         @root_id = Boxr::ROOT
         user_account = client.current_user(fields: [])
         @folders = client.folder_items(Boxr::ROOT)
@@ -30,11 +30,7 @@ class BoxController < ApplicationController
     }.to_json
     # send client_host, organization_id, and source_type_id in state param
     state_params = Base64.urlsafe_encode64(state_params)
-    client = OAuth2::Client.new(AppConfig.integrations['box']['client_id'],
-                       AppConfig.integrations['box']['client_secret'],
-                       :site => "https://account.box.com",
-                       :authorize_url => "/api/oauth2/authorize")
-    auth_url = client.auth_code.authorize_url(:redirect_uri => callback_box_index_url, 
+    auth_url = code_client.auth_code.authorize_url(:redirect_uri => callback_box_index_url,
       :response_type => "code",
       :scope => "root_readwrite", 
       :state => state_params)
@@ -46,24 +42,13 @@ class BoxController < ApplicationController
     unless params[:code]
       render json: { message: "Invalid user" }, status: :unprocessable_entity
     else
-      klient = OAuth2::Client.new(AppConfig.integrations['box']['client_id'],
-                       AppConfig.integrations['box']['client_secret'],
-                       :site => "https://api.box.com/",
-                       :token_url => "/oauth2/token",
-                       :scope => "root_readwrite",
-                       :grant_type => 'authorization_code')
-      
-
-      token = klient.auth_code.get_token(params[:code], 
+      token = token_client.auth_code.get_token(params[:code],
         :redirect_uri => callback_box_index_url,
         :grant_type => 'authorization_code'
         )
       
-      
       client = Boxr::Client.new(token.token)
       user_account = client.current_user(fields: [])
-      # @folders = client.folder_items(Boxr::ROOT)
-      # @folders.select! { |folder| folder.type == 'folder' }
       @refresh_token = token.refresh_token
       # fetch user account details
       # save user details with identity provider and redirect to list folder UI
@@ -155,17 +140,6 @@ class BoxController < ApplicationController
     end
   end
 
-  # def get_access_token(access_token)
-  #   begin
-  #     # Get the current token hash
-  #     # token_hash = JSON.parse(access_token)
-  #     token = OAuth2::AccessToken.from_hash(client, access_token) rescue nil
-  #     renew_token_if_expired(token) if token
-  #   rescue OAuth2::Error => oe
-  #     render json: { message: "#{oe.message}" }, status: :unprocessable_entity
-  #   end
-  # end
-
   # Gets the current access token
   def get_access_token(refresh_token)
     params = {
@@ -181,7 +155,7 @@ class BoxController < ApplicationController
       req.body = params
     end
     response = JSON.parse(response.body)
-    OAuth2::AccessToken.new(@client, response["access_token"])
+    OAuth2::AccessToken.new(nil, response["access_token"])
   end
 
   # Check if token is expired, refresh if so
@@ -196,6 +170,22 @@ class BoxController < ApplicationController
 
   def source_params
     params.permit(:state, :provider_id, :drive_id, :client_host, :source_type_id, :organization_id, :utf8, :authenticity_token, :commit, folders: {})
+  end
+
+  def code_client
+    OAuth2::Client.new(AppConfig.integrations['box']['client_id'],
+                       AppConfig.integrations['box']['client_secret'],
+                       :site => "https://account.box.com",
+                       :authorize_url => "/api/oauth2/authorize")
+  end
+
+  def token_client
+    OAuth2::Client.new(AppConfig.integrations['box']['client_id'],
+                       AppConfig.integrations['box']['client_secret'],
+                       :site => "https://api.box.com/",
+                       :token_url => "/oauth2/token",
+                       :scope => "root_readwrite",
+                       :grant_type => 'authorization_code')
   end
 
 end

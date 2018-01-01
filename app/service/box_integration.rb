@@ -134,6 +134,24 @@ class BoxIntegration < BaseIntegration
   end
 
   # Gets the current access token
+  def get_access_token(refresh_token)
+    params = {
+                client_id: @credentials['client_id']
+                client_secret: @credentials['client_secret'],
+                refresh_token: refresh_token,
+                grant_type: 'refresh_token'
+              }
+    conn = Faraday.new('https://api.box.com')
+    response = conn.post do |req|
+      req.url '/oauth2/token'
+      req.headers = { 'Content-Type' => 'application/x-www-form-urlencoded' }
+      req.body = params
+    end
+    response = JSON.parse(response.body)
+    OAuth2::AccessToken.new(client, response["access_token"])
+  end
+
+  # Gets the current access token
   def get_refresh_token
     params = {
                 client_id: @credentials['client_id'],
