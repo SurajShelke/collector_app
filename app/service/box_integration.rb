@@ -1,5 +1,4 @@
 class BoxIntegration < BaseIntegration
-  include ContentExtractionService
 
   FOLDER_ITEMS_LIMIT = 1000
 
@@ -30,7 +29,6 @@ class BoxIntegration < BaseIntegration
   def get_content(options={})
     @options = options
     @client  = client
-    @extract_content = @credentials["extract_content"]
     fetch_content(@credentials['folder_id'])
   end
 
@@ -87,7 +85,6 @@ class BoxIntegration < BaseIntegration
   def create_content_item(entry, last_polled_at=nil)
     #Do not process Trashed file
     # return if entry.trashed?
-    # content = get_file_content(entry.web_view_link) if @extract_content && @extract_content == "true"
     # collecting parent information
     # parent_name = get_parent(entry.parents.first.to_sym) if entry.parents
     # download_url = @boxr_client.download_url(entry)
@@ -99,7 +96,6 @@ class BoxIntegration < BaseIntegration
       url: sharable_link.shared_link.download_url,
       external_id: entry.id,
       content_type: 'document',
-      # content:      content,
       source_id:     @credentials['source_id'],
       organization_id: @credentials['organization_id'],
       resource_metadata: {
@@ -167,10 +163,9 @@ class BoxIntegration < BaseIntegration
           client_id:     @credentials['client_id'],
           client_secret: @credentials['client_secret'],
           refresh_token: response["refresh_token"],
-          folder_id:     @credentials['folder_id'],
-          extract_content: @extract_content
+          folder_id:     @credentials['folder_id']
         }
-    
+
     ecl_response = ecl_service.update(@credentials["source_id"], { source_config: source_config })
     @credentials['refresh_token'] = response["refresh_token"] if ecl_response.success?
 
