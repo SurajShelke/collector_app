@@ -23,7 +23,6 @@ $(document).ready(function() {
     else
       $('[name="btn_submit_folders"]').prop('disabled', true);
   });
-  debugger
   $('[name="folders['+ $('[name="root_id"]')[0].value +']"]').change(function(){ 
     $("input:checkbox").prop('disabled', this.checked); 
       this.disabled = false; 
