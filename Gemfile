@@ -7,11 +7,12 @@ end
 
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
-gem 'rails', '~> 5.1.2'
+gem 'rails', '~> 5.1.4'
 # Use sqlite3 as the database for Active Record
-gem 'sqlite3'
-# Use Puma as the app server
-gem 'puma', '~> 3.7'
+gem 'pg'
+
+gem 'faraday'
+gem 'faraday_middleware'
 # Use SCSS for stylesheets
 gem 'sass-rails', '~> 5.0'
 # Use Uglifier as compressor for JavaScript assets
@@ -25,10 +26,6 @@ gem 'coffee-rails', '~> 4.2'
 gem 'turbolinks', '~> 5'
 # Build JSON APIs with ease. Read more: https://github.com/rails/jbuilder
 gem 'jbuilder', '~> 2.5'
-
-gem 'google_drive'
-
-gem 'omniauth-microsoft_v2_auth', git: 'https://github.com/cbales/omniauth-microsoft_graph'
 # Use Redis adapter to run Action Cable in production
 # gem 'redis', '~> 3.0'
 # Use ActiveModel has_secure_password
@@ -54,16 +51,5 @@ group :development do
   gem 'spring-watcher-listen', '~> 2.0.0'
 end
 
-gem 'pry'
-gem 'dropbox_api' # https://github.com/Jesus/dropbox_api
-gem 'faraday'
-gem 'pg'
-gem 'grape'
-gem 'grape_logging'
-gem 'sidekiq'
-gem 'bootstrap'
-gem 'jquery-rails'
-gem 'bugsnag'
-gem 'ecl_developer_client', :git => 'https://github.com/Course-Master/ecl_developer_client'
-gem 'sidekiq-rate-limiter', :require => 'sidekiq-rate-limiter/server'
-gem 'sidekiq-unique-jobs'
+# Windows does not include zoneinfo files, so bundle the tzinfo-data gem
+gem 'tzinfo-data', platforms: [:mingw, :mswin, :x64_mingw, :jruby]

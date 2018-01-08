@@ -1,47 +1,41 @@
+require 'faraday_middleware'
+
 class User < ApplicationRecord
-  has_many :identity_providers
-
-  def self.create_or_update_dropbox_user(account, access_token)
-    user            = find_or_initialize_by(email: account.email)
-    user.first_name = account.name.given_name
-    user.last_name  = account.name.surname
-
-    if user.save!
-      IdentityProvider.create_or_update_dropbox(
-        user_id: user.id,
-        account_id: account.account_id,
-        access_token: access_token
-      )
-    end
+	# OpenSSL::SSL::VERIFY_PEER = OpenSSL::SSL::VERIFY_NONE
+	def job_postings(q, limit)
+		begin
+			q = q.gsub("+", " ")
+	    params = {
+	        filter: {
+							        when: {
+							            start: (Date.today - 2.months).strftime("%Y-%m"),   # Current date MINUS 2 months
+							            end: Date.today.strftime("%Y-%m") # Current date
+							        },
+							        
+							        keywords: {
+							            query: q,
+							            type: "or"
+							        }
+							    },
+							    limit: limit.to_i
+	      }
+	    conn = Faraday.new('https://emsiservices.com') do |b|
+	    	b.use FaradayMiddleware::EncodeJson
+	  		b.adapter Faraday.default_adapter
+	    end
+	    conn.basic_auth(EMSI_USER, EMSI_PASS)
+	    response = conn.post do |req|
+	      req.url '/jpa/samples'
+	      req.headers.update({ 'Content-type' => 'application/json' })
+	      req.body = params
+	    end
+	    JSON.parse(response.body)
+	  rescue Exception => err
+	  	Rails.logger.debug "Exception while fetching job postings for query: #{q}, limit: #{limit}: #{err.message}"
+	  	err.backtrace.each { |ee| Rails.logger.debug ee }
+	  	nil
+	  end
   end
 
-  def self.create_or_update_google_team_drive_user(account, refresh_token)
-    user            = find_or_initialize_by(email: account["email"])
-    user.first_name = account["given_name"]
-    user.last_name  = account["family_name"]
-
-    if user.save!
-      IdentityProvider.create_or_update_google_team_drive(
-        user_id: user.id,
-        account_id: account["id"],
-        refresh_token: refresh_token
-      )
-    end
-  end
-
-  def self.create_or_update_sharepoint_user(access_token, refresh_token, expires_at, email, name)
-    user            = find_or_initialize_by(email: email)
-    user.first_name = name
-
-    if user.save!
-      IdentityProvider.create_or_update_sharepoint(
-        user_id: user.id,
-        account_id:  email,
-        access_token: access_token,
-        refresh_token: refresh_token,
-        expires_at: expires_at
-      )
-    end
-  end
 
 end

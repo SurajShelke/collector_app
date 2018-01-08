@@ -7,4 +7,4 @@ test:
 production:
   adapter: redis
   url: redis://localhost:6379/1
-  channel_prefix: dropbox_ruby_production
+  channel_prefix: rails_emsi_api_production
