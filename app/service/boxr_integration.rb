@@ -75,10 +75,12 @@ class BoxrIntegration < BaseIntegration
 
   def create_content_item(entry, last_polled_at=nil)
     sharable_link = @boxr_client.create_shared_link_for_file(entry)
+    sharable_link_url = sharable_link.shared_link.url
+
     attributes = {
       name: entry.name,
       description: entry.description,
-      url: sharable_link.shared_link.download_url,
+      url: sharable_link_url,
       external_id: entry.id,
       content_type: 'document',
       source_id:     @credentials['source_id'],
@@ -86,14 +88,14 @@ class BoxrIntegration < BaseIntegration
       resource_metadata: {
         title: entry.title,
         description: entry.description,
-        url: sharable_link.shared_link.download_url
+        url: sharable_link_url
       },
       additional_metadata: {
         parent_name:      entry.parent.name,
         size:             entry.size,
         revision:         entry.version_number,
-        mobile_url:       sharable_link.shared_link.download_url,
-        desktop_url:      sharable_link.shared_link.url
+        mobile_url:       sharable_link_url,
+        desktop_url:      sharable_link_url
       }
     }
     ContentItemCreationJob.perform_async(self.class.ecl_client_id, self.class.ecl_token, attributes)
