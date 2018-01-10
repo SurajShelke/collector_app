@@ -1,4 +1,4 @@
-class BoxIntegration < BaseIntegration
+class BoxrIntegration < BaseIntegration
 
   FOLDER_ITEMS_LIMIT = 1000
 
@@ -8,7 +8,7 @@ class BoxIntegration < BaseIntegration
   end
 
   def self.get_fetch_content_job_queue
-    :box
+    :boxr
   end
 
   def self.get_credentials_from_config(source)

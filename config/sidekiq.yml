@@ -26,5 +26,5 @@ production:
   - [linkedin_learning, 3]
   - [sharepoint, 5]
   - [sharepoint_ecl_job, 3]
-  - [box, 5]
-  - [box_ecl_job, 3]
+  - [boxr, 5]
+  - [boxr_ecl_job, 3]
