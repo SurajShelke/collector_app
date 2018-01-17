@@ -41,6 +41,12 @@ defaults: &defaults
       ecl_client_id: <%= ENV['SHAREPOINT_ECL_CLIENT_ID']  || "Y96ZRvXXjA" %>
       ecl_token: <%= ENV['SHAREPOINT_ECL_CLIENT_TOKEN'] || "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc19kZXZlbG9wZXIiOnRydWUsImNsaWVudF9pZCI6Ilk5NlpSdlhYakEiLCJlbWFpbCI6ImRhcnNoYW5fcGF0ZWxAcGVyc2lzdGVudC5jby5pbiJ9.bF638d7ZPiaXTSMZiEb4HgyOEhDN28zS-wXoRDtfa3U" %>
       source_type_id:  <%= ENV['SHAREPOINT_SOURCE_TYPE_ID'] || '1835f385-8e20-4a84-bde4-db8aebc95f8b' %>
+    edx_enterprise:
+      client_id: <%= ENV['EDX_ENTERPRISE_CLIENT_ID'] || 't8haJMHg1yw2e77sydcCT1PqmQcT32ROlrXxU8dO' %>
+      client_secret: <%= ENV['EDX_ENTERPRISE_CLIENT_SECRET'] || 'o3rORn91g3nmQwkhJ3HH2vHNYTHMLlTCw9XMecScQMXId87SBSY5S5A6HhlWUIMXRc8BDulE7RrUUwJViUVb1mAS9JWVbSmYI0HMmJeHXC17k0YeUJQL4Zuhbm0gxOwl' %>
+      ecl_client_id: <%= ENV['EDX_ENTERPRISE_ECL_CLIENT_ID']  || "Y96ZRvXXjA" %>
+      ecl_token: <%= ENV['EDX_EDX_ENTERPRISE_CLIENT_TOKEN'] || "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc19kZXZlbG9wZXIiOnRydWUsImNsaWVudF9pZCI6Ilk5NlpSdlhYakEiLCJlbWFpbCI6ImRhcnNoYW5fcGF0ZWxAcGVyc2lzdGVudC5jby5pbiJ9.bF638d7ZPiaXTSMZiEb4HgyOEhDN28zS-wXoRDtfa3U" %>
+      source_type_id:  <%= ENV['EDX_ENTERPRISE_SOURCE_TYPE_ID'] || 'e88a1136-20b7-426a-94b1-a10e90db17d6' %>
 development:
   <<: *defaults
 
