@@ -45,6 +45,15 @@ Rails.application.routes.draw do
   match '/auth/:provider/callback', to: 'sharepoint#callback', via: %i[get post]
   match "/auth/failure", to: 'sharepoint#failure', via: %i[get post]
 
+  resources :sharepoint_onprem, only: [] do
+    collection do
+      get  'authorize'
+      get  'fetch_sites'
+      get  'fetch_folders'
+      post 'create_sources'
+    end
+  end
+
   namespace :api do
     namespace :v1 do
       resources :source_types, only: [] do

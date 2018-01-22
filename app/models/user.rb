@@ -57,4 +57,17 @@ class User < ApplicationRecord
     end
   end
 
+  def self.create_or_update_sharepoint_onprem_user(id, user_name, auth_data, secret)
+    user            = find_or_initialize_by(email: id)
+    user.first_name = user_name
+    
+    if user.save!
+      IdentityProvider.create_or_update_sharepoint_onprem(
+        user_id: user.id,
+        account_id:  id,
+        secret: secret,
+        auth_info: auth_data
+      )
+    end
+  end
 end

@@ -1,0 +1,55 @@
+<div class="card">
+  <%= render "sites_form" %>
+  <%= form_tag(create_sources_sharepoint_onprem_index_path) do |f| %>
+    <h5 class="card-header">Select Folders</h5>
+    <div class="card-body">
+
+      <div class='row' style="padding: 0px 0px 0px 15px;">
+        <label>Root Folder&nbsp;</label><label style="color: gray;  font-size: 13px;">(Sync files and sub-folders in the 'Shared Documents' folder. 'Shared Documents' is a root directly on SharePoint instance)</label>
+      </div>
+      <div class='row'>
+        <div class='col-sm-6 col-md-4 col-lg-4 pt-3'>
+          <div class="input-group">
+            <div class='form-control'>
+              <%= image_tag("folder.png", height: 20, width: 20, class: 'mr-3') %>
+              <%= @folders[0]['Name']%>
+            </div>
+            <span class="input-group-addon">
+              <label>
+                <%= check_box_tag "folders[#{@folders[0]["ServerRelativeUrl"]}]", @folders[0]["Name"], false, class: 'mr-10'%>
+              </label>
+            </span>
+          </div>
+        </div>
+      </div></br>
+      <div class='row' style="padding: 0px 0px 0px 15px;">
+        <label>Sub Folders</label>
+      </div>
+      <div class='row'>
+        <% @folders[1..-1].each do |folder| %>
+          <div class='col-sm-6 col-md-4 col-lg-4 pt-3'>
+            <div class="input-group">
+              <div class='form-control'>
+                <%= image_tag("folder.png", height: 20, width: 20, class: 'mr-3') %>
+                <%= folder["Name"]%>
+              </div>
+              <span class="input-group-addon">
+                <label>
+                  <%= check_box_tag "folders[#{folder["ServerRelativeUrl"]}]", folder["Name"], false, class: 'mr-10'%>
+                </label>
+              </span>
+            </div>
+          </div>
+        <% end %>
+      </div>
+
+      <%= hidden_field_tag 'provider_id', @provider.id %>
+      <%= hidden_field_tag 'site_name', @site_name %>
+      <%= hidden_field_tag 'root_id', @root_id %>
+      <%= hidden_field_tag 'client_secret', @client_secret %>
+      <div class="pt-3">
+        <button type="submit" name="btn_submit_folders" disabled="true" class="btn btn-secondary">Save</button>
+      </div>
+    </div>
+  <%end%>
+</div>

@@ -30,3 +30,5 @@ production:
   - [edx_enterprise_ecl_job, 3]
   - [boxr, 5]
   - [boxr_ecl_job, 3]
+  - [sharepoint_onprem, 5]
+  - [sharepoint_onprem_ecl_job, 3]

@@ -1,5 +1,5 @@
 class IdentityProvider < ApplicationRecord
-  enum provider_type: { dropbox: 1 , team_drive: 2, sharepoint: 3, box: 4 }
+  enum provider_type: { dropbox: 1 , team_drive: 2, sharepoint: 3, box: 4, sharepoint_onprem: 5 }
   belongs_to :user
 
   # Methods for Dropbox connector
@@ -69,5 +69,21 @@ class IdentityProvider < ApplicationRecord
   def self.get_box_refresh_token(provider_id)
     provider = IdentityProvider.find_by(id: provider_id)
     provider.try(:token)
+  end
+
+  def self.create_or_update_sharepoint_onprem(args= {})
+    identity_provider = find_or_initialize_by(
+      provider_type: IdentityProvider.provider_types['sharepoint_onprem'],
+      user_id:       args[:user_id]
+    )
+
+    identity_provider.uid   = args[:account_id]
+    identity_provider.auth_info = args[:auth_info]
+    identity_provider.secret = args[:secret]
+    identity_provider.save! ? identity_provider : nil
+  end
+
+  def self.get_sharepoint_onprem_provider(provider_id)
+    IdentityProvider.find_by(id: provider_id)
   end
 end
