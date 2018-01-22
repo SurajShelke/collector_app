@@ -48,8 +48,8 @@ defaults: &defaults
       ecl_token: <%= ENV['EDX_EDX_ENTERPRISE_CLIENT_TOKEN'] || "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc19kZXZlbG9wZXIiOnRydWUsImNsaWVudF9pZCI6Ilk5NlpSdlhYakEiLCJlbWFpbCI6ImRhcnNoYW5fcGF0ZWxAcGVyc2lzdGVudC5jby5pbiJ9.bF638d7ZPiaXTSMZiEb4HgyOEhDN28zS-wXoRDtfa3U" %>
       source_type_id:  <%= ENV['EDX_ENTERPRISE_SOURCE_TYPE_ID'] || 'e88a1136-20b7-426a-94b1-a10e90db17d6' %>
     sharepoint_onprem:
-      ecl_client_id: <%= ENV['ECL_APP_CLIENT']  || "Y96ZRvXXjA" %>
-      ecl_token: <%= ENV['ECL_APP_TOKEN'] || "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc19kZXZlbG9wZXIiOnRydWUsImNsaWVudF9pZCI6Ilk5NlpSdlhYakEiLCJlbWFpbCI6ImRhcnNoYW5fcGF0ZWxAcGVyc2lzdGVudC5jby5pbiJ9.bF638d7ZPiaXTSMZiEb4HgyOEhDN28zS-wXoRDtfa3U" %>
+      ecl_client_id: <%= ENV['SHAREPOINT_ONPREM_ECL_CLIENT_ID']  || "Y96ZRvXXjA" %>
+      ecl_token: <%= ENV['SHAREPOINT_ONPREM_ECL_CLIENT_TOKEN'] || "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc19kZXZlbG9wZXIiOnRydWUsImNsaWVudF9pZCI6Ilk5NlpSdlhYakEiLCJlbWFpbCI6ImRhcnNoYW5fcGF0ZWxAcGVyc2lzdGVudC5jby5pbiJ9.bF638d7ZPiaXTSMZiEb4HgyOEhDN28zS-wXoRDtfa3U" %>
       source_type_id:  <%= ENV['SHAREPOINT_ONPREM_SOURCE_TYPE_ID'] || 'b6f2f5c1-9f1e-4841-8fb1-58a9211302ce' %>
 
 development:

@@ -8,7 +8,7 @@ class SharepointOnpremCommunicator
   end
 
   def get_sites
-    site = get_site
+    site = get_site(true)
     response = site.query(:get, "webinfos", nil, true)
     @sites = JSON.parse(response)["d"]["results"]
     @sites.unshift({"Title" => site.url[0..-2], "ServerRelativeUrl" => "/"})
@@ -54,9 +54,10 @@ class SharepointOnpremCommunicator
   #   permissions
   # end
 
-  def get_site
+  def get_site(is_root = false)
+    root_site_name = is_root ? "" : @site_name
     uri = URI(@sharepoint_url)
-    site = Sharepoint::Site.new uri.host, URI.encode(@site_name)
+    site = Sharepoint::Site.new uri.host, URI.encode(root_site_name)
     site.session = Sharepoint::HttpAuth::Session.new site
     site.session.authenticate @user_name, @password
     site.protocole = uri.scheme
