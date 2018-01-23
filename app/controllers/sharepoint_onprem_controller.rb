@@ -18,6 +18,7 @@ class SharepointOnpremController < ApplicationController
       if @unauthorized_parameters
         render json: { message: 'Unauthorized parameters' }, status: :unauthorized
       else
+        @sharepoint_url = source_params[:sharepoint_url]
         auth_data = decode_credentials(source_params['client_secret'])
         @client_secret = source_params['client_secret']
         @site_name = source_params['site_name']
@@ -39,6 +40,7 @@ class SharepointOnpremController < ApplicationController
       render json: { message: 'Unauthorized parameters' }, status: :unauthorized
     else
       begin
+        @sharepoint_url = source_params[:sharepoint_url]
         communicator = SharepointOnpremCommunicator.new(source_params[:user_name], source_params[:password], @sharepoint_url)
         current_user = communicator.current_user
         @provider = User.create_or_update_sharepoint_onprem_user(current_user.id, state_data[:user_name], state_data["auth_data"], state_data['secret'])
@@ -64,6 +66,7 @@ class SharepointOnpremController < ApplicationController
           render json: { message: 'Unauthorized parameters' }, status: :unauthorized
         else
           @site_name = source_params['site_name']
+          @sharepoint_url = source_params[:sharepoint_url]
           auth_data = decode_credentials(source_params['client_secret'])
           communicator = SharepointOnpremCommunicator.new(auth_data['user_name'], auth_data['password'], @sharepoint_url, @site_name)
           folders = communicator.update_relative_url(source_params[:folders])
@@ -73,8 +76,8 @@ class SharepointOnpremController < ApplicationController
             folders:          folders || [],
             organization_id:  @organization_id,
             source_type_id:   @source_type_id,
-            provider_id:      provider.id,
             client_secret:    JWT.encode({user_name: auth_data['user_name'], password: auth_data['password']}, AppConfig.digest_secret, 'HS256' ),
+            sharepoint_url:   @sharepoint_url,
             site_name:        @site_name
           )
           service.create_sources
@@ -91,7 +94,7 @@ class SharepointOnpremController < ApplicationController
   private
 
   def source_params
-    params.permit(:state, :client_secret, :user_name , :password, :auth_data, :site_name, :secret, folders: {})
+    params.permit(:state, :client_secret, :user_name , :password, :sharepoint_url, :auth_data, :site_name, :secret, folders: {})
   end
 
   def decrypt_state(auth_data, secret)
@@ -105,7 +108,6 @@ class SharepointOnpremController < ApplicationController
       @client_host     = decrypted_data['client_host']
       @organization_id = decrypted_data['organization_id']
       @source_type_id  = decrypted_data['source_type_id']
-      @sharepoint_url  = decrypted_data['sharepoint_url']
     else
       @unauthorized_parameters = true
     end

@@ -23,23 +23,6 @@ class SharepointOnpremIntegration < BaseIntegration
     AppConfig.integrations['sharepoint_onprem']['ecl_token']
   end
 
-  def decrypt_state(auth_data, secret)
-    decrypted_data = JSON.parse(Base64.decode64(auth_data))
-
-    digest  = OpenSSL::Digest.new('sha256')
-    calculated_secret = OpenSSL::HMAC.hexdigest(digest, AppConfig.digest_secret, auth_data)
-
-    # check integrity of params passed
-    if calculated_secret == secret
-      @client_host     = decrypted_data['client_host']
-      @organization_id = decrypted_data['organization_id']
-      @source_type_id  = decrypted_data['source_type_id']
-      @sharepoint_url  = decrypted_data['sharepoint_url']
-    else
-      @unauthorized_parameters = true
-    end
-  end
-
   def decode_credentials(auth_data)
     auth_data = JWT.decode(auth_data, AppConfig.digest_secret, algorithm='HS256')[0]
     @user_name  = auth_data['user_name']
@@ -51,13 +34,12 @@ class SharepointOnpremIntegration < BaseIntegration
   #  Whenever pagination is available we can use it
   def get_content(options={})
     @options = options
-    @source_id              = @credentials["source_id"]
-    @organization_id        = @credentials["organization_id"]
-    @provider = IdentityProvider.get_sharepoint_onprem_provider(@credentials["provider_id"])
-    @site_name  = @credentials['site_name']
-    decrypt_state(@provider.auth_info, @provider.secret)
-    
-    @client_secret = @credentials['client_secret']
+    @source_id        = @credentials["source_id"]
+    @organization_id  = @credentials["organization_id"]
+    @sharepoint_url   = @credentials["sharepoint_url"]
+    @site_name        = @credentials["site_name"]
+    @client_secret    = @credentials["client_secret"]
+
     decode_credentials(@client_secret)
     @communicator = SharepointOnpremCommunicator.new(@user_name, @password, @sharepoint_url, @site_name)
     fetch_content(@credentials["folder_relative_url"])

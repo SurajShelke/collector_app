@@ -72,10 +72,14 @@ class SharepointOnpremCommunicator
     site = get_site
     new_folders = {}
     folders.each do |folder_relative_url, folder_name|
-      response = site.query(:get, "GetFolderByServerRelativeUrl('#{URI.encode(folder_relative_url)}')/ListItemAllFields", nil, true)
-      response = JSON.parse(response)
-      if response["d"]["Id"]
-        new_folders[folder_relative_url] = { :name => folder_name, :id => response["d"]["Id"] }
+      if folder_relative_url != "/Shared Documents" 
+        response = site.query(:get, "GetFolderByServerRelativeUrl('#{URI.encode(folder_relative_url)}')/ListItemAllFields", nil, true)
+        response = JSON.parse(response)
+        if response["d"]["Id"]
+          new_folders[folder_relative_url] = { :name => folder_name, :id => response["d"]["Id"] }
+        else
+          new_folders[folder_relative_url] = { :name => folder_name, :id => @site_name }
+        end
       else
         new_folders[folder_relative_url] = { :name => folder_name, :id => @site_name }
       end

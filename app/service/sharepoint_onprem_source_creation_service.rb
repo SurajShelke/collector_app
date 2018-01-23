@@ -6,9 +6,9 @@ class SharepointOnpremSourceCreationService
     @source_type_id         = options[:source_type_id]
     @organization_id        = options[:organization_id]
     @folders                = options[:folders]
-    @provider_id            = options[:provider_id]
     @site_name              = options[:site_name]
     @client_secret          = options[:client_secret]
+    @sharepoint_url         = options[:sharepoint_url]
   end
 
   def create_sources
@@ -17,11 +17,11 @@ class SharepointOnpremSourceCreationService
       attributes = {
         source_type_id:  @source_type_id,
         source_config:   {
-          provider_id:            @provider_id,
           folder_id:              folder[:id],
           folder_relative_url:    folder_relative_url,
           site_name:              @site_name,
-          client_secret:          @client_secret
+          client_secret:          @client_secret,
+          sharepoint_url:         @sharepoint_url
         },
         display_name:    "#{@site_name} (#{folder[:name]})",
         organization_id: @organization_id,
