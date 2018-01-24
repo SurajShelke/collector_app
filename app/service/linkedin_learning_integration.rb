@@ -82,6 +82,11 @@ class LinkedinLearningIntegration < BaseIntegration
     # webLaunch : the launch URL of the learning asset in the LinkedIn Learning web application.
     if details['urls'].present?
       deep_link_url = details['urls']['aiccLaunch'] || details['urls']['webLaunch']
+
+      # Jira ticket EC-109
+      # To construct an SSO URL, you need the account ID and the standard course redirect URL. Here is an example of the format:
+      # https://www.linkedin.com/checkpoint/enterprise/login/<Account-ID>?application=learning&redirect=<course-url>
+      deep_link_url = "https://www.linkedin.com/checkpoint/enterprise/login/#{@credentials['account_id']}?application=learning&redirect=#{deep_link_url}"
     end
 
     {
