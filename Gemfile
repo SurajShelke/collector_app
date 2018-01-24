@@ -29,6 +29,9 @@ gem 'jbuilder', '~> 2.5'
 gem 'google_drive'
 
 gem 'omniauth-microsoft_v2_auth', git: 'https://github.com/cbales/omniauth-microsoft_graph'
+
+gem 'boxr'
+gem 'jwt'
 # Use Redis adapter to run Action Cable in production
 # gem 'redis', '~> 3.0'
 # Use ActiveModel has_secure_password
@@ -36,7 +39,7 @@ gem 'omniauth-microsoft_v2_auth', git: 'https://github.com/cbales/omniauth-micro
 
 # Use Capistrano for deployment
 # gem 'capistrano-rails', group: :development
-
+gem 'sharepoint-ruby'
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
   gem 'byebug', platforms: [:mri, :mingw, :x64_mingw]

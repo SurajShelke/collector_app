@@ -56,3 +56,9 @@ https://blog.codeship.com/managing-private-dependencies-with-bundler/
   # use following URL in the web browser to launch the connector app UI interface
   puts "http://localhost:3000/sharepoint/authorize?auth_data=#{encode_key}&secret=#{digest_key}"
 ```
+ # To run webhook using rails console
+  - Input: For `webhook_type=source`, pass `source_type_id` along with `source_id` as well.
+```
+input = {:webhook_type=>"source", :id=>"c3610d27-05c0-4d36-9c06-8bf38a8be9cc", :source_type_id=>"ba114a89-44ce-44ef-97fa-a88e8219d8d1"}
+Webhook::TriggerService.new(input).run
+```

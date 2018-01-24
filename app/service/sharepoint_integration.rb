@@ -27,7 +27,7 @@ class SharepointIntegration < BaseIntegration
     @options = options
     @source_id               = @credentials["source_id"]
     @organization_id         = @credentials["organization_id"]
-    @sharepoint_url          = @credentials["sharepoint_url"]
+    @drive_id                = @credentials["drive_id"]
     @client_id               = AppConfig.integrations['sharepoint']['client_id']
     @client_secret           = AppConfig.integrations['sharepoint']['client_secret']
     @sharepoint_communicator = SharepointCommunicator.new(
@@ -42,18 +42,24 @@ class SharepointIntegration < BaseIntegration
   end
 
   def fetch_content(folder_id)
-    response = @sharepoint_communicator.files("/v1.0/sites/#{@sharepoint_url}/drive/items/#{folder_id}/children")
-    collect_files(response)
-    fetch_next_content(response["@odata.nextLink"]) if response["@odata.nextLink"]
+    if folder_id == @drive_id
+      parent_url = @sharepoint_communicator.files("/v1.0/drives/#{@drive_id}/root")["webUrl"]
+      response = @sharepoint_communicator.files("/v1.0/drives/#{@drive_id}/root/children")
+    else
+      parent_url = @sharepoint_communicator.files("/v1.0/drives/#{@drive_id}/items/#{folder_id}")["webUrl"]
+      response = @sharepoint_communicator.files("/v1.0/drives/#{@drive_id}/items/#{folder_id}/children")
+    end
+    collect_files(response, parent_url)
+    fetch_next_content(response["@odata.nextLink"], parent_url) if response["@odata.nextLink"]
   end
 
-  def fetch_next_content(url)
+  def fetch_next_content(url, parent_url)
     response = @sharepoint_communicator.next_page_files(url)
-    collect_files(response)
-    fetch_next_content(response["@odata.nextLink"]) if response["@odata.nextLink"]
+    collect_files(response, parent_url)
+    fetch_next_content(response["@odata.nextLink"], parent_url) if response["@odata.nextLink"]
   end
 
-  def collect_files(response)
+  def collect_files(response, parent_url)
     response["value"].each do |entry|
       if entry["folder"]
         credentials = @credentials
@@ -67,16 +73,16 @@ class SharepointIntegration < BaseIntegration
           'at' => self.class.schedule_at
         )
       else
-        create_content_item(entry)
+        create_content_item(entry, parent_url)
       end
     end
   end
 
-  def create_content_item(entry)
+  def create_content_item(entry, parent_url)
     attributes = {
       name:         entry["name"],
       description:  "",
-      url:          entry["webUrl"],
+      url:          "#{parent_url}/#{URI.encode(entry["name"])}",
       content_type: 'document',
       external_id:  entry["id"],
       raw_record:   entry,
@@ -86,9 +92,11 @@ class SharepointIntegration < BaseIntegration
         images:       [{ url: nil }],
         title:        entry["name"],
         description:  "",
-        url:          entry["@microsoft.graph.downloadUrl"]
+        url:          "#{parent_url}/#{URI.encode(entry["name"])}"
       },
       additional_metadata: {
+        desktop_url:     entry["webUrl"],
+        mobile_url:      "#{parent_url}/#{URI.encode(entry["name"])}",
         size:            entry['size'],
         cTag:            entry['cTag'],
         eTag:            entry['eTag']

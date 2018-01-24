@@ -16,3 +16,19 @@
 //= require popper
 //= require bootstrap
 //= require_tree .
+$(document).ready(function() {
+  if ($("input:checkbox")){
+    $("input:checkbox").change(function(){
+      if($( "input:checked" ).length > 0)
+        $('[name="btn_submit_folders"]').prop('disabled', false);
+      else
+        $('[name="btn_submit_folders"]').prop('disabled', true);
+    });
+  }
+  if($("[name='root_id']")[0]){
+    $('[name="folders['+ $('[name="root_id"]')[0].value +']"]').change(function(){ 
+      $("input:checkbox").prop('disabled', this.checked); 
+        this.disabled = false; 
+    });
+  }
+});

@@ -10,6 +10,16 @@ Rails.application.routes.draw do
     end
   end
 
+  resources :box, only: [] do
+    collection do
+      get  'index'
+      get  'authorize'
+      get  'callback'
+      get  'fetch_folders'
+      post 'create_sources'
+    end
+  end
+
   resources :google_team_drive, only: [] do
     collection do
       get  'index'
@@ -25,6 +35,8 @@ Rails.application.routes.draw do
     collection do
       get  'authorize'
       get  'callback'
+      get  'fetch_sites'
+      get  'fetch_drives'
       get  'fetch_folders'
       post 'create_sources'
     end
@@ -42,6 +54,16 @@ Rails.application.routes.draw do
   end
 
   match '/auth/:provider/callback', to: 'sharepoint#callback', via: %i[get post]
+  match "/auth/failure", to: 'sharepoint#failure', via: %i[get post]
+
+  resources :sharepoint_onprem, only: [] do
+    collection do
+      get  'authorize'
+      get  'fetch_sites'
+      get  'fetch_folders'
+      post 'create_sources'
+    end
+  end
 
   namespace :api do
     namespace :v1 do

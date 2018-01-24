@@ -44,4 +44,30 @@ class User < ApplicationRecord
     end
   end
 
+  def self.create_or_update_box_user(account, access_token)
+    user            = find_or_initialize_by(email: account.login)
+    user.first_name = account.name
+
+    if user.save!
+      IdentityProvider.create_or_update_dropbox(
+        user_id: user.id,
+        account_id: account.id,
+        access_token: access_token
+      )
+    end
+  end
+
+  def self.create_or_update_sharepoint_onprem_user(id, user_name, auth_data, secret)
+    user            = find_or_initialize_by(email: id)
+    user.first_name = user_name
+    
+    if user.save!
+      IdentityProvider.create_or_update_sharepoint_onprem(
+        user_id: user.id,
+        account_id:  id,
+        secret: secret,
+        auth_info: auth_data
+      )
+    end
+  end
 end

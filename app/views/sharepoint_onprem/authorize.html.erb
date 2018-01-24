@@ -1,0 +1,42 @@
+<div class="container">
+  <div class="row">
+    <div class="col-md-3 col-md-offset-2 boxStyle" style="padding-right: 0px!important;padding-left: 0px!important;">
+       <div class="panel-body" style="padding-right: 4px!important;padding-left: 4px!important;">
+          <%= form_tag(fetch_sites_sharepoint_onprem_index_path, method: :get) do |f| %>
+            <fieldset class="landscape_nomargin" style="min-width: 0;padding:    .35em .625em .75em!important;margin:0 2px;border: 2px solid silver!important;margin-bottom: 10em;">
+              <legend style="border-bottom: none;width: inherit;!important;padding:inherit;" class="legend">Login</legend>
+              <div class="form-group">
+                <div class="col-sm-3 col-md-3 col-lg-4 col-xs-10 mobileLabel">Host</div>
+                <div class="col-sm-7 col-md-7 col-lg-6 col-xs-9 input-group mobilePad" style="font-weight:600;">
+                  <%= text_field_tag("sharepoint_url", nil, required: true) %>
+                </div>
+              </div>
+              <div class="form-group">
+                <div class="col-sm-3 col-md-3 col-lg-4 col-xs-10 mobileLabel">Username</div>
+                <div class="col-sm-7 col-md-7 col-lg-6 col-xs-9 input-group mobilePad" style="font-weight:600;">
+                  <%= text_field_tag("user_name", nil, required: true) %>
+                </div>
+              </div>
+              <div class="form-group">
+                <div class="col-sm-3 col-md-3 col-lg-4 col-xs-10 mobileLabel" style=" padding-top: 7px; text-align: right;">Password</div>
+                <div class="col-sm-7 col-md-7 col-lg-6 col-xs-9 input-group mobilePad" style="font-weight:600;">
+                  <%= password_field_tag(:password, nil, required: true) %>
+                </div>
+              </div>
+              <% if flash[:error] %>
+                <div class="form-group">
+                  <div class="mobileLabel" style="color: red">
+                    <%= flash[:error] %>
+                  </div>
+                </div>
+              <% end %>
+              <%= hidden_field_tag 'state', @state %>
+              <div class="col-sm-5 col-md-5 col-lg-5 col-xs-5" style="text-align:center;">
+                <button type="submit" class="btn btn-success">Submit</button>
+              </div>
+            </fieldset>
+          <%end%>
+        </div>
+      </div>
+  </div>
+</div>

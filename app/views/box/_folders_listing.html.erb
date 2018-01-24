@@ -1,0 +1,36 @@
+<div style="padding: 0px 0px 0px 15px; width:100%">
+  <h6>Root Folder</h6>
+  <label style="color: gray; font-size: 13px;">Sync files and sub-folders in the root directory(covers all folders listed in next 'Sub Folders' section.</label>
+</div>
+<div class='col-sm-6 col-md-4 col-lg-4 pt-3'>
+  <div class="input-group">
+    <div class='form-control'>
+      <%= image_tag("folder.png", height: 20, width: 20, class: 'mr-3') %>
+      <%= @folders[0]['name']%>
+    </div>
+    <span class="input-group-addon">
+      <label>
+        <%= check_box_tag "folders[#{@folders[0]['id']}]", @folders[0]['name'], false, class: 'mr-10'%>
+      </label>
+    </span>
+  </div>
+</div>
+<br /><br />
+<div style="padding: 25px 0px 0px 15px; width:100%">
+  <label>Sub Folders</label>
+</div>
+<% @folders[1..-1].each do |folder| %>
+  <div class='col-sm-6 col-md-4 col-lg-4 pt-3'>
+    <div class="input-group">
+      <div class='form-control'>
+        <%= image_tag("folder.png", height: 20, width: 20, class: 'mr-3') %>
+        <%= folder.name %>
+      </div>
+      <span class="input-group-addon">
+        <label>
+          <%= check_box_tag "folders[#{folder.id}]", folder.name, false, class: 'mr-10' %>
+        </label>
+      </span>
+    </div>
+  </div>
+<% end %>
