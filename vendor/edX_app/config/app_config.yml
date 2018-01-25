@@ -1,0 +1,28 @@
+defaults: &defaults
+  redis:
+    host: <%= ENV['REDIS_HOST'] || 'localhost' %>
+    port: <%= ENV['REDIS_PORT'] || '6379' %>
+    password: <%= ENV['REDIS_PASSWORD'] || "" %>
+
+  digest_secret: <%= ENV['DIGEST_SECRET'] || 'da4b0aaec42c8a17183b5c52be5cd3b0' %>
+  ecl_app_url: <%= ENV['ECL_APP_URL'] || "http://qa.edcast.io/api/developer/v1" %>
+  integrations:
+    edx:
+      client_id: <%= ENV['EDX_CLIENT_ID'] || '' %>
+      client_secret: <%= ENV['EDX_CLIENT_SECRET'] || '' %>
+      lxp_secret: <%= ENV['LXP_SECRET'] || "ZmU3NzUyZWE1YWZkZDE0NGFlYmQzNzUyMTRkNmU3YWI3YTg2NTdlMzo1ZDA4NjJmN2I4Nzg2NjMxMGE0MmIzMGE5NTdjZGI3MzE0MDk1ZjYw" %>
+development:
+  <<: *defaults
+
+
+test:
+  <<: *defaults
+
+staging:
+  <<: *defaults
+
+qa:
+  <<: *defaults
+
+production:
+  <<: *defaults

@@ -1,0 +1,168 @@
+
+------------- params:statement -----------------
+{:actor=>{:name=>"mtd_learner10", :mbox=>"mailto:mattdrayer+mtd_learner10@edx.org"}, :verb=>{:id=>"http://activitystrea.ms/schema/1.0/start", :display=>{:"en-US"=>"started"}}, :context=>{:registration=>"57c26560-f651-4b7c-97bc-bec19be16fcd", :contextActivities=>{:category=>[{:id=>"http://adlnet.gov/expapi/activities/assessment", :definition=>{:name=>{:en=>"Course"}, :description=>{:en=>"A category of course with Assesment."}}}, {:id=>"http://adlnet.gov/expapi/activities/objective"}, {:id=>"http://activitystrea.ms/schema/1.0/audio"}, {:id=>"http://activitystrea.ms/schema/1.0/video"}]}}, :object=>{:id=>"Get Beyond Work-Life Balance (Inclusive Leadership Training)", :definition=>{:name=>{:"en-US"=>"completed"}, :description=>{:"en-US"=>"completed"}, :type=>"http://adlnet.gov/expapi/activities/course"}, :objectType=>"Activity"}}
+
+Statement reponse:
+{"errorId"=>"1f044b1e-c220-42f3-a267-e47cd8e210b0", "warnings"=>["Problem in 'statements.0.object.id'"]}
+
+------------- params:statement -----------------
+{:actor=>{:name=>"mtd_learner8", :mbox=>"mailto:mattdrayer+mtd_learner8@edx.org"}, :verb=>{:id=>"http://activitystrea.ms/schema/1.0/start", :display=>{:"en-US"=>"started"}}, :context=>{:registration=>"043524b7-1544-41b5-bfae-d186815b3c0d", :contextActivities=>{:category=>[{:id=>"http://adlnet.gov/expapi/activities/assessment", :definition=>{:name=>{:en=>"Course"}, :description=>{:en=>"A category of course with Assesment."}}}, {:id=>"http://adlnet.gov/expapi/activities/objective"}, {:id=>"http://activitystrea.ms/schema/1.0/audio"}, {:id=>"http://activitystrea.ms/schema/1.0/video"}]}}, :object=>{:id=>"Get Beyond Work-Life Balance (Inclusive Leadership Training)", :definition=>{:name=>{:"en-US"=>"completed"}, :description=>{:"en-US"=>"completed"}, :type=>"http://adlnet.gov/expapi/activities/course"}, :objectType=>"Activity"}}
+
+Statement reponse:
+{"errorId"=>"ff64961a-6760-407b-af3e-6d6dc7085711", "warnings"=>["Problem in 'statements.0.object.id'"]}
+
+------------- params:statement -----------------
+{:actor=>{:name=>"mtd_learner7", :mbox=>"mailto:mattdrayer+sf7@edx.org"}, :verb=>{:id=>"http://activitystrea.ms/schema/1.0/start", :display=>{:"en-US"=>"started"}}, :context=>{:registration=>"fa18d6f1-6ed0-46eb-b9fb-29701c10bef9", :contextActivities=>{:category=>[{:id=>"http://adlnet.gov/expapi/activities/assessment", :definition=>{:name=>{:en=>"Course"}, :description=>{:en=>"A category of course with Assesment."}}}, {:id=>"http://adlnet.gov/expapi/activities/objective"}, {:id=>"http://activitystrea.ms/schema/1.0/audio"}, {:id=>"http://activitystrea.ms/schema/1.0/video"}]}}, :object=>{:id=>"Get Beyond Work-Life Balance (Inclusive Leadership Training)", :definition=>{:name=>{:"en-US"=>"completed"}, :description=>{:"en-US"=>"completed"}, :type=>"http://adlnet.gov/expapi/activities/course"}, :objectType=>"Activity"}}
+
+Statement reponse:
+{"errorId"=>"8e136126-cc18-4a77-899c-c0ac3f1cfe1f", "warnings"=>["Problem in 'statements.0.object.id'"]}
+
+------------- params:statement -----------------
+{:actor=>{:name=>"mtd_learner9", :mbox=>"mailto:mattdrayer+mtdlearner9@edx.org"}, :verb=>{:id=>"http://activitystrea.ms/schema/1.0/start", :display=>{:"en-US"=>"started"}}, :context=>{:registration=>"46104548-854e-4a3d-8a95-902b58354b97", :contextActivities=>{:category=>[{:id=>"http://adlnet.gov/expapi/activities/assessment", :definition=>{:name=>{:en=>"Course"}, :description=>{:en=>"A category of course with Assesment."}}}, {:id=>"http://adlnet.gov/expapi/activities/objective"}, {:id=>"http://activitystrea.ms/schema/1.0/audio"}, {:id=>"http://activitystrea.ms/schema/1.0/video"}]}}, :object=>{:id=>"Get Beyond Work-Life Balance (Inclusive Leadership Training)", :definition=>{:name=>{:"en-US"=>"completed"}, :description=>{:"en-US"=>"completed"}, :type=>"http://adlnet.gov/expapi/activities/course"}, :objectType=>"Activity"}}
+
+Statement reponse:
+{"errorId"=>"213517e9-a17c-4848-8aac-e282977b8113", "warnings"=>["Problem in 'statements.0.object.id'"]}
+
+------------- params:statement -----------------
+{:actor=>{:name=>"mtd_learnera423", :mbox=>"mailto:mattdrayer+mtdlearner0928@edx.org"}, :verb=>{:id=>"http://activitystrea.ms/schema/1.0/start", :display=>{:"en-US"=>"started"}}, :context=>{:registration=>"de504fa5-3bfe-4ae6-ac33-63816e7234e2", :contextActivities=>{:category=>[{:id=>"http://adlnet.gov/expapi/activities/assessment", :definition=>{:name=>{:en=>"Course"}, :description=>{:en=>"A category of course with Assesment."}}}, {:id=>"http://adlnet.gov/expapi/activities/objective"}, {:id=>"http://activitystrea.ms/schema/1.0/audio"}, {:id=>"http://activitystrea.ms/schema/1.0/video"}]}}, :object=>{:id=>"Communication Skills for Bridging Divides", :definition=>{:name=>{:"en-US"=>"completed"}, :description=>{:"en-US"=>"completed"}, :type=>"http://adlnet.gov/expapi/activities/course"}, :objectType=>"Activity"}}
+
+Statement reponse:
+{"errorId"=>"2004f2ad-f13f-459f-a1c9-56962fd55cea", "warnings"=>["Problem in 'statements.0.object.id'"]}
+
+------------- params:statement -----------------
+{:actor=>{:name=>"mtd_learner10", :mbox=>"mailto:mattdrayer+mtd_learner10@edx.org"}, :verb=>{:id=>"http://activitystrea.ms/schema/1.0/start", :display=>{:"en-US"=>"started"}}, :context=>{:registration=>"9bb7fea7-6432-4088-9614-b6a05e2408e4", :contextActivities=>{:category=>[{:id=>"http://adlnet.gov/expapi/activities/assessment", :definition=>{:name=>{:en=>"Course"}, :description=>{:en=>"A category of course with Assesment."}}}, {:id=>"http://adlnet.gov/expapi/activities/objective"}, {:id=>"http://activitystrea.ms/schema/1.0/audio"}, {:id=>"http://activitystrea.ms/schema/1.0/video"}]}}, :object=>{:id=>"Communication Skills for Bridging Divides", :definition=>{:name=>{:"en-US"=>"completed"}, :description=>{:"en-US"=>"completed"}, :type=>"http://adlnet.gov/expapi/activities/course"}, :objectType=>"Activity"}}
+
+Statement reponse:
+{"errorId"=>"413c8f6f-880b-4797-ace7-50b28ccc4152", "warnings"=>["Problem in 'statements.0.object.id'"]}
+
+------------- params:statement -----------------
+{:actor=>{:name=>"mtd_learner7", :mbox=>"mailto:mattdrayer+sf7@edx.org"}, :verb=>{:id=>"http://activitystrea.ms/schema/1.0/start", :display=>{:"en-US"=>"started"}}, :context=>{:registration=>"83026355-f298-42d8-bb6a-319eaca864a1", :contextActivities=>{:category=>[{:id=>"http://adlnet.gov/expapi/activities/assessment", :definition=>{:name=>{:en=>"Course"}, :description=>{:en=>"A category of course with Assesment."}}}, {:id=>"http://adlnet.gov/expapi/activities/objective"}, {:id=>"http://activitystrea.ms/schema/1.0/audio"}, {:id=>"http://activitystrea.ms/schema/1.0/video"}]}}, :object=>{:id=>"Communication Skills for Bridging Divides", :definition=>{:name=>{:"en-US"=>"completed"}, :description=>{:"en-US"=>"completed"}, :type=>"http://adlnet.gov/expapi/activities/course"}, :objectType=>"Activity"}}
+
+Statement reponse:
+{"errorId"=>"39d01d17-73fb-46e9-9162-d51a94289095", "warnings"=>["Problem in 'statements.0.object.id'"]}
+
+------------- params:statement -----------------
+{:actor=>{:name=>"mtd_learnera423", :mbox=>"mailto:mattdrayer+mtdlearner0928@edx.org"}, :verb=>{:id=>"http://activitystrea.ms/schema/1.0/start", :display=>{:"en-US"=>"started"}}, :context=>{:registration=>"2509aade-8986-463f-87b1-07989977e0dc", :contextActivities=>{:category=>[{:id=>"http://adlnet.gov/expapi/activities/assessment", :definition=>{:name=>{:en=>"Course"}, :description=>{:en=>"A category of course with Assesment."}}}, {:id=>"http://adlnet.gov/expapi/activities/objective"}, {:id=>"http://activitystrea.ms/schema/1.0/audio"}, {:id=>"http://activitystrea.ms/schema/1.0/video"}]}}, :object=>{:id=>"Becoming a Successful Leader (Inclusive Leadership Training)", :definition=>{:name=>{:"en-US"=>"completed"}, :description=>{:"en-US"=>"completed"}, :type=>"http://adlnet.gov/expapi/activities/course"}, :objectType=>"Activity"}}
+
+Statement reponse:
+{"errorId"=>"b6d06ab3-813a-4b48-a9e1-18af41f9e985", "warnings"=>["Problem in 'statements.0.object.id'"]}
+
+------------- params:statement -----------------
+{:actor=>{:name=>"mtd_learner7", :mbox=>"mailto:mattdrayer+sf7@edx.org"}, :verb=>{:id=>"http://activitystrea.ms/schema/1.0/start", :display=>{:"en-US"=>"started"}}, :context=>{:registration=>"26bee489-439f-432a-b1b8-4348d83c6fbe", :contextActivities=>{:category=>[{:id=>"http://adlnet.gov/expapi/activities/assessment", :definition=>{:name=>{:en=>"Course"}, :description=>{:en=>"A category of course with Assesment."}}}, {:id=>"http://adlnet.gov/expapi/activities/objective"}, {:id=>"http://activitystrea.ms/schema/1.0/audio"}, {:id=>"http://activitystrea.ms/schema/1.0/video"}]}}, :object=>{:id=>"Becoming a Successful Leader (Inclusive Leadership Training)", :definition=>{:name=>{:"en-US"=>"completed"}, :description=>{:"en-US"=>"completed"}, :type=>"http://adlnet.gov/expapi/activities/course"}, :objectType=>"Activity"}}
+
+Statement reponse:
+{"errorId"=>"55998ad7-0b7a-4644-abcb-4e1c224f573e", "warnings"=>["Problem in 'statements.0.object.id'"]}
+
+------------- params:statement -----------------
+{:actor=>{:name=>"mtd_learner4", :mbox=>"mailto:mattdrayer+sf4@edx.org"}, :verb=>{:id=>"http://activitystrea.ms/schema/1.0/start", :display=>{:"en-US"=>"started"}}, :context=>{:registration=>"484474ae-a64e-4f44-aab5-3ba1220ac944", :contextActivities=>{:category=>[{:id=>"http://adlnet.gov/expapi/activities/assessment", :definition=>{:name=>{:en=>"Course"}, :description=>{:en=>"A category of course with Assesment."}}}, {:id=>"http://adlnet.gov/expapi/activities/objective"}, {:id=>"http://activitystrea.ms/schema/1.0/audio"}, {:id=>"http://activitystrea.ms/schema/1.0/video"}]}}, :object=>{:id=>"Becoming a Successful Leader (Inclusive Leadership Training)", :definition=>{:name=>{:"en-US"=>"completed"}, :description=>{:"en-US"=>"completed"}, :type=>"http://adlnet.gov/expapi/activities/course"}, :objectType=>"Activity"}}
+
+Statement reponse:
+{"errorId"=>"1d297a04-ae81-4012-aeef-d7e007077233", "warnings"=>["Problem in 'statements.0.object.id'"]}
+
+------------- params:statement -----------------
+{:actor=>{:name=>"mtd_learner10", :mbox=>"mailto:mattdrayer+mtd_learner10@edx.org"}, :verb=>{:id=>"http://activitystrea.ms/schema/1.0/start", :display=>{:"en-US"=>"started"}}, :context=>{:registration=>"e033d8ca-fb60-43fd-8459-857d7feb64c6", :contextActivities=>{:category=>[{:id=>"http://adlnet.gov/expapi/activities/assessment", :definition=>{:name=>{:en=>"Course"}, :description=>{:en=>"A category of course with Assesment."}}}, {:id=>"http://adlnet.gov/expapi/activities/objective"}, {:id=>"http://activitystrea.ms/schema/1.0/audio"}, {:id=>"http://activitystrea.ms/schema/1.0/video"}]}}, :object=>{:id=>"Leading With Effective Communication (Inclusive Leadership Training)", :definition=>{:name=>{:"en-US"=>"completed"}, :description=>{:"en-US"=>"completed"}, :type=>"http://adlnet.gov/expapi/activities/course"}, :objectType=>"Activity"}}
+
+Statement reponse:
+{"errorId"=>"fe516a29-4a8b-4409-ae4a-f6b63004f41a", "warnings"=>["Problem in 'statements.0.object.id'"]}
+
+------------- params:statement -----------------
+{:actor=>{:name=>"mtd_learner5", :mbox=>"mailto:mattdrayer+sf5@edx.org"}, :verb=>{:id=>"http://activitystrea.ms/schema/1.0/start", :display=>{:"en-US"=>"started"}}, :context=>{:registration=>"465e4230-d695-425f-8672-97ee0dd7f67d", :contextActivities=>{:category=>[{:id=>"http://adlnet.gov/expapi/activities/assessment", :definition=>{:name=>{:en=>"Course"}, :description=>{:en=>"A category of course with Assesment."}}}, {:id=>"http://adlnet.gov/expapi/activities/objective"}, {:id=>"http://activitystrea.ms/schema/1.0/audio"}, {:id=>"http://activitystrea.ms/schema/1.0/video"}]}}, :object=>{:id=>"Robotics: Vision Intelligence and Machine Learning", :definition=>{:name=>{:"en-US"=>"completed"}, :description=>{:"en-US"=>"completed"}, :type=>"http://adlnet.gov/expapi/activities/course"}, :objectType=>"Activity"}}
+
+Statement reponse:
+["745fbcf9-c1b4-4b3a-82b9-8a1797284460"]
+
+------------- params:statement -----------------
+{:actor=>{:name=>"mtd_learner10", :mbox=>"mailto:mattdrayer+mtd_learner10@edx.org"}, :verb=>{:id=>"http://activitystrea.ms/schema/1.0/start", :display=>{:"en-US"=>"started"}}, :context=>{:registration=>"27bad5cf-fc8e-4391-a81a-429993c0e556", :contextActivities=>{:category=>[{:id=>"http://adlnet.gov/expapi/activities/assessment", :definition=>{:name=>{:en=>"Course"}, :description=>{:en=>"A category of course with Assesment."}}}, {:id=>"http://adlnet.gov/expapi/activities/objective"}, {:id=>"http://activitystrea.ms/schema/1.0/audio"}, {:id=>"http://activitystrea.ms/schema/1.0/video"}]}}, :object=>{:id=>"https://courses.edx.org/courses/course-v1:CatalystX+IL4x+2T2017/course", :definition=>{:name=>{:"en-US"=>"completed"}, :description=>{:"en-US"=>"completed"}, :type=>"http://adlnet.gov/expapi/activities/course"}, :objectType=>"Activity"}}
+
+Statement reponse:
+["9bcec034-9646-4102-b83a-0fb1a26dd3cc"]
+
+------------- params:statement -----------------
+{:actor=>{:name=>"mtd_learner8", :mbox=>"mailto:mattdrayer+mtd_learner8@edx.org"}, :verb=>{:id=>"http://activitystrea.ms/schema/1.0/start", :display=>{:"en-US"=>"started"}}, :context=>{:registration=>"6b4c9cf0-f722-4102-b500-e9a7e1097e0a", :contextActivities=>{:category=>[{:id=>"http://adlnet.gov/expapi/activities/assessment", :definition=>{:name=>{:en=>"Course"}, :description=>{:en=>"A category of course with Assesment."}}}, {:id=>"http://adlnet.gov/expapi/activities/objective"}, {:id=>"http://activitystrea.ms/schema/1.0/audio"}, {:id=>"http://activitystrea.ms/schema/1.0/video"}]}}, :object=>{:id=>"https://courses.edx.org/courses/course-v1:CatalystX+IL4x+2T2017/course", :definition=>{:name=>{:"en-US"=>"completed"}, :description=>{:"en-US"=>"completed"}, :type=>"http://adlnet.gov/expapi/activities/course"}, :objectType=>"Activity"}}
+
+Statement reponse:
+["9d2ec909-1799-4677-bf66-b3182d717eb7"]
+
+------------- params:statement -----------------
+{:actor=>{:name=>"mtd_learner7", :mbox=>"mailto:mattdrayer+sf7@edx.org"}, :verb=>{:id=>"http://activitystrea.ms/schema/1.0/start", :display=>{:"en-US"=>"started"}}, :context=>{:registration=>"52c59b90-7232-4cd1-bca1-d93fe96312ee", :contextActivities=>{:category=>[{:id=>"http://adlnet.gov/expapi/activities/assessment", :definition=>{:name=>{:en=>"Course"}, :description=>{:en=>"A category of course with Assesment."}}}, {:id=>"http://adlnet.gov/expapi/activities/objective"}, {:id=>"http://activitystrea.ms/schema/1.0/audio"}, {:id=>"http://activitystrea.ms/schema/1.0/video"}]}}, :object=>{:id=>"https://courses.edx.org/courses/course-v1:CatalystX+IL4x+2T2017/course", :definition=>{:name=>{:"en-US"=>"completed"}, :description=>{:"en-US"=>"completed"}, :type=>"http://adlnet.gov/expapi/activities/course"}, :objectType=>"Activity"}}
+
+Statement reponse:
+["8bee66d9-2381-45ec-a280-61beb961e67c"]
+
+------------- params:statement -----------------
+{:actor=>{:name=>"mtd_learner9", :mbox=>"mailto:mattdrayer+mtdlearner9@edx.org"}, :verb=>{:id=>"http://activitystrea.ms/schema/1.0/start", :display=>{:"en-US"=>"started"}}, :context=>{:registration=>"b26b97a4-5766-4967-a536-cd797cec2e5b", :contextActivities=>{:category=>[{:id=>"http://adlnet.gov/expapi/activities/assessment", :definition=>{:name=>{:en=>"Course"}, :description=>{:en=>"A category of course with Assesment."}}}, {:id=>"http://adlnet.gov/expapi/activities/objective"}, {:id=>"http://activitystrea.ms/schema/1.0/audio"}, {:id=>"http://activitystrea.ms/schema/1.0/video"}]}}, :object=>{:id=>"https://courses.edx.org/courses/course-v1:CatalystX+IL4x+2T2017/course", :definition=>{:name=>{:"en-US"=>"completed"}, :description=>{:"en-US"=>"completed"}, :type=>"http://adlnet.gov/expapi/activities/course"}, :objectType=>"Activity"}}
+
+Statement reponse:
+["ebd68518-3428-45df-9d12-f19d65c30158"]
+
+------------- params:statement -----------------
+{:actor=>{:name=>"mtd_learnera423", :mbox=>"mailto:mattdrayer+mtdlearner0928@edx.org"}, :verb=>{:id=>"http://activitystrea.ms/schema/1.0/start", :display=>{:"en-US"=>"started"}}, :context=>{:registration=>"bbff452c-33be-495d-a516-8ef7e90cbd7c", :contextActivities=>{:category=>[{:id=>"http://adlnet.gov/expapi/activities/assessment", :definition=>{:name=>{:en=>"Course"}, :description=>{:en=>"A category of course with Assesment."}}}, {:id=>"http://adlnet.gov/expapi/activities/objective"}, {:id=>"http://activitystrea.ms/schema/1.0/audio"}, {:id=>"http://activitystrea.ms/schema/1.0/video"}]}}, :object=>{:id=>"https://courses.edx.org/courses/course-v1:CatalystX+ILDIV1x+2T2017/course", :definition=>{:name=>{:"en-US"=>"completed"}, :description=>{:"en-US"=>"completed"}, :type=>"http://adlnet.gov/expapi/activities/course"}, :objectType=>"Activity"}}
+
+Statement reponse:
+["0c664fcc-d630-42a5-805d-75fd9bc517d3"]
+
+------------- params:statement -----------------
+{:actor=>{:name=>"mtd_learner10", :mbox=>"mailto:mattdrayer+mtd_learner10@edx.org"}, :verb=>{:id=>"http://activitystrea.ms/schema/1.0/start", :display=>{:"en-US"=>"started"}}, :context=>{:registration=>"f4b46602-b8f7-4d7d-9639-8a2b04f1a165", :contextActivities=>{:category=>[{:id=>"http://adlnet.gov/expapi/activities/assessment", :definition=>{:name=>{:en=>"Course"}, :description=>{:en=>"A category of course with Assesment."}}}, {:id=>"http://adlnet.gov/expapi/activities/objective"}, {:id=>"http://activitystrea.ms/schema/1.0/audio"}, {:id=>"http://activitystrea.ms/schema/1.0/video"}]}}, :object=>{:id=>"https://courses.edx.org/courses/course-v1:CatalystX+ILDIV1x+2T2017/course", :definition=>{:name=>{:"en-US"=>"completed"}, :description=>{:"en-US"=>"completed"}, :type=>"http://adlnet.gov/expapi/activities/course"}, :objectType=>"Activity"}}
+
+Statement reponse:
+["5527f803-ef78-40fa-b4e3-a45aaed2d94b"]
+
+------------- params:statement -----------------
+{:actor=>{:name=>"mtd_learner7", :mbox=>"mailto:mattdrayer+sf7@edx.org"}, :verb=>{:id=>"http://activitystrea.ms/schema/1.0/start", :display=>{:"en-US"=>"started"}}, :context=>{:registration=>"cc29c6cb-d683-419d-92c2-58046b444e51", :contextActivities=>{:category=>[{:id=>"http://adlnet.gov/expapi/activities/assessment", :definition=>{:name=>{:en=>"Course"}, :description=>{:en=>"A category of course with Assesment."}}}, {:id=>"http://adlnet.gov/expapi/activities/objective"}, {:id=>"http://activitystrea.ms/schema/1.0/audio"}, {:id=>"http://activitystrea.ms/schema/1.0/video"}]}}, :object=>{:id=>"https://courses.edx.org/courses/course-v1:CatalystX+ILDIV1x+2T2017/course", :definition=>{:name=>{:"en-US"=>"completed"}, :description=>{:"en-US"=>"completed"}, :type=>"http://adlnet.gov/expapi/activities/course"}, :objectType=>"Activity"}}
+
+Statement reponse:
+["666b7b3a-d06c-469e-9acf-5bc691ba5bea"]
+
+------------- params:statement -----------------
+{:actor=>{:name=>"mtd_learnera423", :mbox=>"mailto:mattdrayer+mtdlearner0928@edx.org"}, :verb=>{:id=>"http://activitystrea.ms/schema/1.0/start", :display=>{:"en-US"=>"started"}}, :context=>{:registration=>"e133e375-688a-4585-aa0d-022193a01c11", :contextActivities=>{:category=>[{:id=>"http://adlnet.gov/expapi/activities/assessment", :definition=>{:name=>{:en=>"Course"}, :description=>{:en=>"A category of course with Assesment."}}}, {:id=>"http://adlnet.gov/expapi/activities/objective"}, {:id=>"http://activitystrea.ms/schema/1.0/audio"}, {:id=>"http://activitystrea.ms/schema/1.0/video"}]}}, :object=>{:id=>"https://courses.edx.org/courses/course-v1:CatalystX+ILX2+2T2017/course", :definition=>{:name=>{:"en-US"=>"completed"}, :description=>{:"en-US"=>"completed"}, :type=>"http://adlnet.gov/expapi/activities/course"}, :objectType=>"Activity"}}
+
+Statement reponse:
+["341f5340-e2cb-4463-a115-62ee6045ffdf"]
+
+------------- params:statement -----------------
+{:actor=>{:name=>"mtd_learner7", :mbox=>"mailto:mattdrayer+sf7@edx.org"}, :verb=>{:id=>"http://activitystrea.ms/schema/1.0/start", :display=>{:"en-US"=>"started"}}, :context=>{:registration=>"8643e4f0-0c61-41ae-b278-426140870120", :contextActivities=>{:category=>[{:id=>"http://adlnet.gov/expapi/activities/assessment", :definition=>{:name=>{:en=>"Course"}, :description=>{:en=>"A category of course with Assesment."}}}, {:id=>"http://adlnet.gov/expapi/activities/objective"}, {:id=>"http://activitystrea.ms/schema/1.0/audio"}, {:id=>"http://activitystrea.ms/schema/1.0/video"}]}}, :object=>{:id=>"https://courses.edx.org/courses/course-v1:CatalystX+ILX2+2T2017/course", :definition=>{:name=>{:"en-US"=>"completed"}, :description=>{:"en-US"=>"completed"}, :type=>"http://adlnet.gov/expapi/activities/course"}, :objectType=>"Activity"}}
+
+Statement reponse:
+["126a6692-4599-4eaf-a158-df299089abbb"]
+
+------------- params:statement -----------------
+{:actor=>{:name=>"mtd_learner4", :mbox=>"mailto:mattdrayer+sf4@edx.org"}, :verb=>{:id=>"http://activitystrea.ms/schema/1.0/start", :display=>{:"en-US"=>"started"}}, :context=>{:registration=>"a0e01e95-b2d5-4119-9b77-b8f5d2f71c07", :contextActivities=>{:category=>[{:id=>"http://adlnet.gov/expapi/activities/assessment", :definition=>{:name=>{:en=>"Course"}, :description=>{:en=>"A category of course with Assesment."}}}, {:id=>"http://adlnet.gov/expapi/activities/objective"}, {:id=>"http://activitystrea.ms/schema/1.0/audio"}, {:id=>"http://activitystrea.ms/schema/1.0/video"}]}}, :object=>{:id=>"https://courses.edx.org/courses/course-v1:CatalystX+ILX2+2T2017/course", :definition=>{:name=>{:"en-US"=>"completed"}, :description=>{:"en-US"=>"completed"}, :type=>"http://adlnet.gov/expapi/activities/course"}, :objectType=>"Activity"}}
+
+Statement reponse:
+["feda6231-98d2-4997-a81b-ba0de9616567"]
+
+------------- params:statement -----------------
+{:actor=>{:name=>"mtd_learner10", :mbox=>"mailto:mattdrayer+mtd_learner10@edx.org"}, :verb=>{:id=>"http://activitystrea.ms/schema/1.0/start", :display=>{:"en-US"=>"started"}}, :context=>{:registration=>"f9815d47-098a-4e95-b761-bed49719a324", :contextActivities=>{:category=>[{:id=>"http://adlnet.gov/expapi/activities/assessment", :definition=>{:name=>{:en=>"Course"}, :description=>{:en=>"A category of course with Assesment."}}}, {:id=>"http://adlnet.gov/expapi/activities/objective"}, {:id=>"http://activitystrea.ms/schema/1.0/audio"}, {:id=>"http://activitystrea.ms/schema/1.0/video"}]}}, :object=>{:id=>"https://courses.edx.org/courses/course-v1:Catalystx+IL5x+2T2017/course", :definition=>{:name=>{:"en-US"=>"completed"}, :description=>{:"en-US"=>"completed"}, :type=>"http://adlnet.gov/expapi/activities/course"}, :objectType=>"Activity"}}
+
+Statement reponse:
+["ba138488-2d72-4566-a35b-65b179582e7f"]
+
+------------- params:statement -----------------
+{:actor=>{:name=>"mtd_learner5", :mbox=>"mailto:mattdrayer+sf5@edx.org"}, :verb=>{:id=>"http://activitystrea.ms/schema/1.0/start", :display=>{:"en-US"=>"started"}}, :context=>{:registration=>"091d8018-4512-4957-badd-da47646356a6", :contextActivities=>{:category=>[{:id=>"http://adlnet.gov/expapi/activities/assessment", :definition=>{:name=>{:en=>"Course"}, :description=>{:en=>"A category of course with Assesment."}}}, {:id=>"http://adlnet.gov/expapi/activities/objective"}, {:id=>"http://activitystrea.ms/schema/1.0/audio"}, {:id=>"http://activitystrea.ms/schema/1.0/video"}]}}, :object=>{:id=>"https://courses.edx.org/courses/course-v1:PennX+ROBO2x+2T2017/course", :definition=>{:name=>{:"en-US"=>"completed"}, :description=>{:"en-US"=>"completed"}, :type=>"http://adlnet.gov/expapi/activities/course"}, :objectType=>"Activity"}}
+
+Statement reponse:
+["dd7ff554-ef1c-4749-8361-2ecab773fb86"]
+
+------------- params:statement -----------------
+{:actor=>{:name=>"mtd_learner10", :mbox=>"mailto:mattdrayer+mtd_learner10@edx.org"}, :verb=>{:id=>"http://activitystrea.ms/schema/1.0/start", :display=>{:"en-US"=>"started"}}, :context=>{:registration=>"5ecc7898-b862-43fa-a2ac-a41d49491d23", :contextActivities=>{:category=>[{:id=>"http://adlnet.gov/expapi/activities/assessment", :definition=>{:name=>{:en=>"Course"}, :description=>{:en=>"A category of course with Assesment."}}}, {:id=>"http://adlnet.gov/expapi/activities/objective"}, {:id=>"http://activitystrea.ms/schema/1.0/audio"}, {:id=>"http://activitystrea.ms/schema/1.0/video"}]}}, :object=>{:id=>"https://courses.edx.org/enterprise/66b8b0c0-65a9-4c23-97f7-0cda5a8ad55c/course/course-v1:CatalystX+IL4x+2T2017/enroll/?utm_medium=enterprise&utm_source=edcast-sparks", :definition=>{:name=>{:"en-US"=>"completed"}, :description=>{:"en-US"=>"completed"}, :type=>"http://adlnet.gov/expapi/activities/course"}, :objectType=>"Activity"}}
+
+------------- params:statement -----------------
+{:actor=>{:name=>"mtd_learner10", :mbox=>"mailto:mattdrayer+mtd_learner10@edx.org"}, :verb=>{:id=>"http://activitystrea.ms/schema/1.0/start", :display=>{:"en-US"=>"started"}}, :context=>{:registration=>"60953b65-9a8e-424f-866e-0d1b4103e1bc", :contextActivities=>{:category=>[{:id=>"http://adlnet.gov/expapi/activities/assessment", :definition=>{:name=>{:en=>"Course"}, :description=>{:en=>"A category of course with Assesment."}}}, {:id=>"http://adlnet.gov/expapi/activities/objective"}, {:id=>"http://activitystrea.ms/schema/1.0/audio"}, {:id=>"http://activitystrea.ms/schema/1.0/video"}]}}, :object=>{:id=>"https://courses.edx.org/enterprise/66b8b0c0-65a9-4c23-97f7-0cda5a8ad55c/course/course-v1:CatalystX+IL4x+2T2017/enroll/?utm_medium=enterprise&utm_source=edcast-sparks", :definition=>{:name=>{:"en-US"=>"completed"}, :description=>{:"en-US"=>"completed"}, :type=>"http://adlnet.gov/expapi/activities/course"}, :objectType=>"Activity"}}
+
+------------- params:statement -----------------
+{:actor=>{:name=>"mtd_learner10", :mbox=>"mailto:mattdrayer+mtd_learner10@edx.org"}, :verb=>{:id=>"http://activitystrea.ms/schema/1.0/start", :display=>{:"en-US"=>"started"}}, :context=>{:registration=>"8729cb4c-10e3-410e-8eef-cfe42e5bca2e", :contextActivities=>{:category=>[{:id=>"http://adlnet.gov/expapi/activities/assessment", :definition=>{:name=>{:en=>"Course"}, :description=>{:en=>"A category of course with Assesment."}}}, {:id=>"http://adlnet.gov/expapi/activities/objective"}, {:id=>"http://activitystrea.ms/schema/1.0/audio"}, {:id=>"http://activitystrea.ms/schema/1.0/video"}]}}, :object=>{:id=>"https://courses.edx.org/enterprise/66b8b0c0-65a9-4c23-97f7-0cda5a8ad55c/course/course-v1:CatalystX+IL4x+2T2017/enroll/?utm_medium=enterprise&utm_source=edcast-sparks", :definition=>{:name=>{:"en-US"=>"completed"}, :description=>{:"en-US"=>"completed"}, :type=>"http://adlnet.gov/expapi/activities/course"}, :objectType=>"Activity"}}
+** [Bugsnag] No API key has been set, check your configuration
+** [Bugsnag] Bugsnag exception handler 5.4.1 ready
+** [Bugsnag] No API key has been set, check your configuration
+** [Bugsnag] Bugsnag exception handler 5.4.1 ready
+** [Bugsnag] No API key has been set, check your configuration
+** [Bugsnag] Bugsnag exception handler 5.4.1 ready
+
+------------- params:statement -----------------
+{:actor=>{:name=>"mtd_learner10", :mbox=>"mailto:mattdrayer+mtd_learner10@edx.org"}, :verb=>{:id=>"http://activitystrea.ms/schema/1.0/start", :display=>{:"en-US"=>"started"}}, :context=>{:registration=>"e3d5eb4c-f7be-42af-be15-32f56013367e", :contextActivities=>{:category=>[{:id=>"http://adlnet.gov/expapi/activities/assessment", :definition=>{:name=>{:en=>"Course"}, :description=>{:en=>"A category of course with Assesment."}}}, {:id=>"http://adlnet.gov/expapi/activities/objective"}, {:id=>"http://activitystrea.ms/schema/1.0/audio"}, {:id=>"http://activitystrea.ms/schema/1.0/video"}]}}, :object=>{:id=>"https://courses.edx.org/enterprise/66b8b0c0-65a9-4c23-97f7-0cda5a8ad55c/course/course-v1:CatalystX+IL4x+2T2017/enroll/?utm_medium=enterprise&utm_source=edcast-sparks", :definition=>{:name=>{:"en-US"=>"completed"}, :description=>{:"en-US"=>"completed"}, :type=>"http://adlnet.gov/expapi/activities/course"}, :objectType=>"Activity"}}
+
+------------- params:statement -----------------
+{:actor=>{:name=>"mtd_learner10", :mbox=>"mailto:mattdrayer+mtd_learner10@edx.org"}, :verb=>{:id=>"http://activitystrea.ms/schema/1.0/start", :display=>{:"en-US"=>"started"}}, :context=>{:registration=>"27f5f9f4-81fc-4533-999e-6338e172a299", :contextActivities=>{:category=>[{:id=>"http://adlnet.gov/expapi/activities/assessment", :definition=>{:name=>{:en=>"Course"}, :description=>{:en=>"A category of course with Assesment."}}}, {:id=>"http://adlnet.gov/expapi/activities/objective"}, {:id=>"http://activitystrea.ms/schema/1.0/audio"}, {:id=>"http://activitystrea.ms/schema/1.0/video"}]}}, :object=>{:id=>"https://courses.edx.org/enterprise//course/course-v1:CatalystX+IL4x+2T2017/enroll/?utm_medium=enterprise&utm_source=edcast-sparks", :definition=>{:name=>{:"en-US"=>"completed"}, :description=>{:"en-US"=>"completed"}, :type=>"http://adlnet.gov/expapi/activities/course"}, :objectType=>"Activity"}}
+
+------------- params:statement -----------------
+{:actor=>{:name=>"mtd_learner10", :mbox=>"mailto:mattdrayer+mtd_learner10@edx.org"}, :verb=>{:id=>"http://activitystrea.ms/schema/1.0/start", :display=>{:"en-US"=>"started"}}, :context=>{:registration=>"107c38ea-77f5-4717-bcac-113d2550f288", :contextActivities=>{:category=>[{:id=>"http://adlnet.gov/expapi/activities/assessment", :definition=>{:name=>{:en=>"Course"}, :description=>{:en=>"A category of course with Assesment."}}}, {:id=>"http://adlnet.gov/expapi/activities/objective"}, {:id=>"http://activitystrea.ms/schema/1.0/audio"}, {:id=>"http://activitystrea.ms/schema/1.0/video"}]}}, :object=>{:id=>"https://courses.edx.org/enterprise//course/course-v1:CatalystX+IL4x+2T2017/enroll/?utm_medium=enterprise&utm_source=edcast-sparks", :definition=>{:name=>{:"en-US"=>"completed"}, :description=>{:"en-US"=>"completed"}, :type=>"http://adlnet.gov/expapi/activities/course"}, :objectType=>"Activity"}}
