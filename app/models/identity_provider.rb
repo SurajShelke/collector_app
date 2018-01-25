@@ -1,5 +1,5 @@
 class IdentityProvider < ApplicationRecord
-  enum provider_type: { dropbox: 1 , team_drive: 2, sharepoint: 3, box: 4, sharepoint_onprem: 5 }
+  enum provider_type: { dropbox: 1 , team_drive: 2, sharepoint: 3, box: 4, sharepoint_onprem: 5, google_drive: 6 }
   belongs_to :user
 
   # Methods for Dropbox connector
@@ -19,10 +19,10 @@ class IdentityProvider < ApplicationRecord
     provider.try(:token)
   end
 
-  # Methods for Team Drive connector
-  def self.create_or_update_google_team_drive(args= {})
+  # Methods for Google Drive connectors
+  def self.create_or_update_google_drive(args= {})
     identity_provider = find_or_initialize_by(
-      provider_type: IdentityProvider.provider_types['team_drive'],
+      provider_type: IdentityProvider.provider_types[args[:integration_type]],
       user_id:       args[:user_id]
     )
 
@@ -31,7 +31,7 @@ class IdentityProvider < ApplicationRecord
     identity_provider.save! ? identity_provider : nil
   end
 
-  def self.get_team_drive_refresh_token(provider_id)
+  def self.get_google_drive_refresh_token(provider_id)
     provider = IdentityProvider.find_by(id: provider_id)
     provider.try(:token)
   end

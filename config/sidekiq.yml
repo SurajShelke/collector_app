@@ -32,3 +32,6 @@ production:
   - [boxr_ecl_job, 3]
   - [sharepoint_onprem, 5]
   - [sharepoint_onprem_ecl_job, 3]
+  - [google_drive, 5]
+  - [google_drive_ecl_job, 3]
+

@@ -5,6 +5,8 @@ defaults: &defaults
     password: <%= ENV['REDIS_PASSWORD'] || "" %>
 
   digest_secret: <%= ENV['DIGEST_SECRET'] || 'da4b0aaec42c8a17183b5c52be5cd3b0' %>
+  ecl_app_url: <%= ENV['ECL_APP_URL'] || "http://qa.edcast.io/api/developer/v1" %>
+  # maximum file content size in bytes to push file content to ECL
   max_file_content_size: <%= ENV['MAX_FILE_CONTENT_SIZE'] || 31457280 %>
   integrations:
     dropbox:
@@ -13,6 +15,13 @@ defaults: &defaults
       ecl_client_id: <%= ENV['DROPBOX_ECL_CLIENT_ID'] || 'z3M3-yxsyg' %>
       ecl_token: <%= ENV['DROPBOX_ECL_TOKEN'] || 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc19kZXZlbG9wZXIiOnRydWUsImNsaWVudF9pZCI6InozTTMteXhzeWciLCJlbWFpbCI6ImFtYXJAZWRjYXN0LmNvbSJ9.JoPRp0MyvVPIHFd8ZCOygoDackUgFO40y5qtKvMxAs0' %>
       source_type_id:  <%= ENV['DROPBOX_SOURCE_TYPE_ID'] || 'abc' %>
+    google_drive:
+      client_id: <%= ENV['GOOGLE_DRIVE_CLIENT_ID'] || "465977795792-c12240a72drufrtoqu3so9n7btdabgnl.apps.googleusercontent.com" %>
+      client_secret: <%= ENV['GOOGLE_DRIVE_CLIENT_SECRET'] || "zwlT5xGtmietz2TXXpUlCjfm" %>
+      ecl_client_id: <%= ENV['GOOGLE_DRIVE_ECL_CLIENT_ID'] || "Ej4bAsuYiw" %>
+      ecl_token: <%= ENV['GOOGLE_DRIVE_ECL_TOKEN'] || "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc19kZXZlbG9wZXIiOnRydWUsImNsaWVudF9pZCI6IkVqNGJBc3VZaXciLCJlbWFpbCI6Im5pbGVzaF9uYXZhbGVAcGVyc2lzdGVudC5jby5pbiJ9.t2Tm0-jlF21kBiNpsRmDbpLUQmp8K5qoWviJqbz0bvg" %>
+      redirect_uri: <%= ENV['GOOGLE_DRIVE_REDIRECT_URL'] || 'http://localhost:3000/team_drive/callback' %>
+      source_type_id:  <%= ENV['GOOGLE_DRIVE_SOURCE_TYPE_ID'] || '3bd195bc-8526-479f-a8a2-08a1a087868c' %>
     box:
       client_id: <%= ENV['BOX_CLIENT_ID'] || 'iotp53bgk64biyrm8hm8vx5g0paoap5i' %>
       client_secret: <%= ENV['BOX_CLIENT_SECRET'] || 'FukImsYbir9ifPTGdxgZvhh65zviptBN' %>
@@ -20,11 +29,11 @@ defaults: &defaults
       ecl_token: <%= ENV['BOX_ECL_TOKEN'] || 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc19kZXZlbG9wZXIiOnRydWUsImNsaWVudF9pZCI6IkVqNGJBc3VZaXciLCJlbWFpbCI6Im5pbGVzaF9uYXZhbGVAcGVyc2lzdGVudC5jby5pbiJ9.t2Tm0-jlF21kBiNpsRmDbpLUQmp8K5qoWviJqbz0bvg' %>
       source_type_id:  <%= ENV['BOX_SOURCE_TYPE_ID'] || '3974e7a3-b466-40b5-a7db-4748ffc8ff4a' %>
     team_drive:
-      client_id: <%= ENV['TEAM_DRIVE_CLIENT_ID'] || 'eks77359dcm819n' %>
-      client_secret: <%= ENV['TEAM_DRIVE_CLIENT_SECRET'] || 'bfgz7hc0z7vn6b1' %>
-      ecl_client_id: <%= ENV['TEAM_DRIVE_ECL_CLIENT_ID'] || '9fJcx5yqeg' %>
-      ecl_token: <%= ENV['TEAM_DRIVE_ECL_TOKEN'] || 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc19kZXZlbG9wZXIiOnRydWUsImNsaWVudF9pZCI6IjlmSmN4NXlxZWciLCJlbWFpbCI6InlvZ2VuZHJhKzMyNDEyQGVkY2FzdC5jb20ifQ.-C9jUXPslVmdtO0zR8Oz7-i0i7PuWVbKkM9Zu1z0fCc' %>
-      source_type_id:  <%= ENV['TEAM_DRIVE_SOURCE_TYPE_ID'] || 'xyz' %>
+      client_id: <%= ENV['TEAM_DRIVE_CLIENT_ID'] || "465977795792-c12240a72drufrtoqu3so9n7btdabgnl.apps.googleusercontent.com" %>
+      client_secret: <%= ENV['TEAM_DRIVE_CLIENT_SECRET'] || "zwlT5xGtmietz2TXXpUlCjfm" %>
+      ecl_client_id: <%= ENV['TEAM_DRIVE_ECL_CLIENT_ID'] || "Ej4bAsuYiw" %>
+      ecl_token: <%= ENV['TEAM_DRIVE_ECL_TOKEN'] || "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc19kZXZlbG9wZXIiOnRydWUsImNsaWVudF9pZCI6IkVqNGJBc3VZaXciLCJlbWFpbCI6Im5pbGVzaF9uYXZhbGVAcGVyc2lzdGVudC5jby5pbiJ9.t2Tm0-jlF21kBiNpsRmDbpLUQmp8K5qoWviJqbz0bvg" %>
+      source_type_id:  <%= ENV['TEAM_DRIVE_SOURCE_TYPE_ID'] || 'f8ad2ed9-d1eb-4ec5-80d0-7ca0088baa9a' %>
     safari_books_online:
       ecl_client_id: <%= ENV['SAFARI_BOOKS_ONLINE_ECL_CLIENT_ID'] || 'o-m8JtbcSQ' %>
       ecl_token: <%= ENV['SAFARI_BOOKS_ONLINE_ECL_TOKEN'] || 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc19kZXZlbG9wZXIiOnRydWUsImNsaWVudF9pZCI6Im8tbThKdGJjU1EiLCJlbWFpbCI6InBhbGxhdisxQGVkY2FzdC5jb20ifQ.4yURzwX8EPsrdDDu-f5bC2I0PT4lih781MkixduITe8' %>

@@ -10,6 +10,16 @@ Rails.application.routes.draw do
     end
   end
 
+  resources :google_drive, only: [] do
+    collection do
+      get  'index'
+      get  'authorize'
+      get  'callback'
+      get  'fetch_content'
+      post 'create_sources'
+    end
+  end
+
   resources :box, only: [] do
     collection do
       get  'index'

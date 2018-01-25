@@ -1,4 +1,4 @@
-class GoogleTeamDriveController < ApplicationController
+class GoogleDriveController < ApplicationController
 
   skip_before_action :verify_authenticity_token
 
@@ -9,9 +9,10 @@ class GoogleTeamDriveController < ApplicationController
     if refresh_token
       begin
         drive_sesion = authentication_session(refresh_token: refresh_token)
-        @drives = get_team_drives(drive_sesion)
+        @folders = get_google_drive_content(drive_sesion)
+        @folders.unshift({"id" => "root", "name" => "Root"})
       rescue StandardError => he
-        redirect_to authorize_google_team_drive_index_path
+        redirect_to authorize_google_drive_index_path
       end
     else
       render json: { folders: [], provider_id: params[:provider_id], message: 'Invalid user' }, status: :unprocessable_entity
@@ -25,11 +26,10 @@ class GoogleTeamDriveController < ApplicationController
     }.to_json
     # send client_host, organization_id, and source_type_id in state param
     state_params = Base64.urlsafe_encode64(state_params)
-    auth_url = client.auth_code.authorize_url(:redirect_uri => callback_google_team_drive_index_url, :scope => [Google::Apis::DriveV3::AUTH_DRIVE_READONLY, 'https://www.googleapis.com/auth/userinfo.email'].join(' '), :access_type => "offline", :approval_prompt => 'force', :state => state_params)
+    auth_url = client.auth_code.authorize_url(:redirect_uri => callback_google_drive_index_url, :scope => [Google::Apis::DriveV3::AUTH_DRIVE_READONLY, 'https://www.googleapis.com/auth/userinfo.email'].join(' '), :access_type => "offline", :approval_prompt => 'force', :state => state_params)
     redirect_to auth_url
   end
 
-  # mine
   def callback
     unless params[:code]
       render json: { message: "Invalid user" }, status: :unprocessable_entity
@@ -39,10 +39,10 @@ class GoogleTeamDriveController < ApplicationController
       user_account = get_user_info(@access_token)
       # save user details with identity provider and redirect to list folder UI
       if user_account.present?
-        provider = User.create_or_update_google_drive_user(user_account, @refresh_token, 'team_drive')
+        provider = User.create_or_update_google_drive_user(user_account, @refresh_token, 'google_drive')
 
         if provider
-          redirect_to google_team_drive_index_url(
+          redirect_to google_drive_index_url(
             provider_id: provider.id,
             state: params[:state]
           )
@@ -53,25 +53,6 @@ class GoogleTeamDriveController < ApplicationController
     end
   end
 
-  # Fetch folders for selected Team Drive
-  # Input: Drive Id
-  def fetch_folders
-    refresh_token = IdentityProvider.get_google_drive_refresh_token(params[:provider_id])
-    if refresh_token
-      begin
-        drive_sesion = authentication_session(refresh_token: refresh_token)
-
-        @drives = get_team_drives(drive_sesion)
-        @folders  = get_team_drive_content(drive_sesion)
-
-        @folders.select! { |folder| folder.mime_type == "application/vnd.google-apps.folder" } if @folders
-        @drive_id = source_params[:drive_id]
-      end
-    end
-    # urlsafe_encode64
-    render :action => 'index'
-  end
-
   def create_sources
     begin
       decrypt_state
@@ -79,14 +60,14 @@ class GoogleTeamDriveController < ApplicationController
       if @unauthorized_parameters
         render json: { message: 'Unauthorized parameters' }, status: :unauthorized
       else
-        service = TeamDriveSourceCreationService.new(
-            AppConfig.integrations['team_drive']['ecl_client_id'],
-            AppConfig.integrations['team_drive']['ecl_token'],
+        service = GoogleDriveSourceCreationService.new(
+            AppConfig.integrations['google_drive']['ecl_client_id'],
+            AppConfig.integrations['google_drive']['ecl_token'],
             folders:          source_params[:folders] || [],
-            team_drive_id:    source_params[:drive_id],
             refresh_token:    refresh_token,
             organization_id:  @organization_id,
-            source_type_id:   @source_type_id
+            source_type_id:   @source_type_id#,
+            # extract_content:  @extract_content
         )
         begin
           service.create_sources
@@ -102,11 +83,6 @@ class GoogleTeamDriveController < ApplicationController
 
   private
 
-  # Fetch Team Drives list using Google APIs
-  def get_team_drives(drive_sesion)
-    drive_sesion.drive.list_teamdrives.team_drives if drive_sesion
-  end
-
   def decrypt_state
     decoded_params = Base64.decode64(params[:state])
     state_data = JSON.parse(decoded_params)
@@ -120,6 +96,7 @@ class GoogleTeamDriveController < ApplicationController
       @client_host     = decrypted_data['client_host']
       @organization_id = decrypted_data['organization_id']
       @source_type_id  = decrypted_data['source_type_id']
+      # @extract_content = decrypted_data['extract_content']
     else
       @unauthorized_parameters = true
     end
@@ -128,7 +105,7 @@ class GoogleTeamDriveController < ApplicationController
   # Exchanges an authorization code for a token
   def get_token_from_code(code)
     begin
-      auth_bearer = client.auth_code.get_token(code, { :redirect_uri => callback_google_team_drive_index_url, :token_method => :post })
+      auth_bearer = client.auth_code.get_token(code, { :redirect_uri => callback_google_drive_index_url, :token_method => :post })
       session[:google_auth_token] = auth_bearer.to_hash
       @access_token = auth_bearer.token
       @refresh_token = auth_bearer.refresh_token
@@ -138,8 +115,8 @@ class GoogleTeamDriveController < ApplicationController
   end
 
   def client
-    OAuth2::Client.new(AppConfig.integrations['team_drive']['client_id'],
-                       AppConfig.integrations['team_drive']['client_secret'],
+    OAuth2::Client.new(AppConfig.integrations['google_drive']['client_id'],
+                       AppConfig.integrations['google_drive']['client_secret'],
                        :site => "https://accounts.google.com",
                        :authorize_url => "/o/oauth2/auth",
                        :token_url => "/o/oauth2/token",
@@ -176,8 +153,8 @@ class GoogleTeamDriveController < ApplicationController
   # Gets the current access token
   def get_refresh_token(refresh_token)
     params = {
-        client_id: AppConfig.integrations['team_drive']['client_id'],
-        client_secret: AppConfig.integrations['team_drive']['client_secret'],
+        client_id: AppConfig.integrations['google_drive']['client_id'],
+        client_secret: AppConfig.integrations['google_drive']['client_secret'],
         refresh_token: refresh_token,
         grant_type: 'refresh_token',
         additional_parameters: {"access_type" => "offline"}
@@ -202,21 +179,14 @@ class GoogleTeamDriveController < ApplicationController
     end
   end
 
-  def get_team_drive_content(drive_sesion)
-      query = params[:folder_id] ? "'#{params[:folder_id]}'" : "'#{params[:drive_id]}'"
-      paginated_files = []
-      begin
-        (files, page_token) = drive_sesion.files(q: "#{query} in parents",
-                    supports_team_drives: true,
-                    team_drive_id: params[:drive_id],
-                    include_team_drive_items: true,
-                    corpora: 'teamDrive',
-                    orderBy: "folder",
-                    page_token: page_token)
-        paginated_files.concat(files)
-      end while page_token
-      return paginated_files
-    end
+  def get_google_drive_content(drive_sesion)
+    paginated_folders = []
+    begin
+      (folders, page_token) = drive_sesion.collections(q: "mimeType = 'application/vnd.google-apps.folder'", orderBy: "folder", page_token: page_token)
+      paginated_folders.concat(folders)
+    end while page_token
+    return paginated_folders
+  end
 
   def source_params
     params.permit(:state, :provider_id, :drive_id, :client_host, :source_type_id, :organization_id, :utf8, :authenticity_token, :commit, folders: {})
