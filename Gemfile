@@ -56,7 +56,7 @@ group :development do
   gem 'spring'
   gem 'spring-watcher-listen', '~> 2.0.0'
 end
-
+gem 'net-sftp'
 gem 'pry'
 gem 'dropbox_api' # https://github.com/Jesus/dropbox_api
 gem 'faraday'

@@ -49,7 +49,11 @@ defaults: &defaults
       client_secret: <%= ENV['SHAREPOINT_CLIENT_SECRET'] || 'lyoxNNFAU2651])nhhCA2<(' %>
       ecl_client_id: <%= ENV['SHAREPOINT_ECL_CLIENT_ID']  || "Y96ZRvXXjA" %>
       ecl_token: <%= ENV['SHAREPOINT_ECL_CLIENT_TOKEN'] || "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc19kZXZlbG9wZXIiOnRydWUsImNsaWVudF9pZCI6Ilk5NlpSdlhYakEiLCJlbWFpbCI6ImRhcnNoYW5fcGF0ZWxAcGVyc2lzdGVudC5jby5pbiJ9.bF638d7ZPiaXTSMZiEb4HgyOEhDN28zS-wXoRDtfa3U" %>
-      source_type_id:  <%= ENV['SHAREPOINT_SOURCE_TYPE_ID'] || '1835f385-8e20-4a84-bde4-db8aebc95f8b' %>
+      source_type_id:  <%= ENV['SHAREPOINT_SOURCE_TYPE_ID'] || 'c36a0d27-05c0-4d36-9c06-8bf38a8be9cc' %>
+    sftp:
+      ecl_client_id: <%= ENV['SFTP_ECL_CLIENT_ID'] || "Ej4bAsuYiw" %>
+      ecl_token: <%= ENV['SFTP_ECL_TOKEN'] || "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc19kZXZlbG9wZXIiOnRydWUsImNsaWVudF9pZCI6IkVqNGJBc3VZaXciLCJlbWFpbCI6Im5pbGVzaF9uYXZhbGVAcGVyc2lzdGVudC5jby5pbiJ9.t2Tm0-jlF21kBiNpsRmDbpLUQmp8K5qoWviJqbz0bvg" %>
+      source_type_id: <%= ENV['SFTP_SOURCE_TYPE_ID'] || 'f3930917-ba53-45ba-a747-e58b487de310' %>
     edx_enterprise:
       client_id: <%= ENV['EDX_ENTERPRISE_CLIENT_ID'] || 't8haJMHg1yw2e77sydcCT1PqmQcT32ROlrXxU8dO' %>
       client_secret: <%= ENV['EDX_ENTERPRISE_CLIENT_SECRET'] || 'o3rORn91g3nmQwkhJ3HH2vHNYTHMLlTCw9XMecScQMXId87SBSY5S5A6HhlWUIMXRc8BDulE7RrUUwJViUVb1mAS9JWVbSmYI0HMmJeHXC17k0YeUJQL4Zuhbm0gxOwl' %>
