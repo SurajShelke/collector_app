@@ -45,14 +45,12 @@ module Webhook
     # TODO raise exception if no source type or sources has been configured
     def fetch_record
       if @options[:webhook_type] == "source_type"
-        @app_config = AppConfig.integrations.select {|k,v|v["source_type_id"] == @options[:id]}.first
-        app_config_value = @app_config[1]
+        app_config_value = get_app_config_values
         @ecl_client_id = app_config_value["ecl_client_id"]
         @ecl_token = app_config_value["ecl_token"]
         communicator = EclDeveloperClient::SourceType.new(@ecl_client_id, @ecl_token)
       elsif @options[:webhook_type] == "source"
-        @app_config = AppConfig.integrations.select {|k,v|v["source_type_id"] == @options[:source_type_id] }.first
-        app_config_value = @app_config[1]
+        app_config_value = get_app_config_values
         @ecl_client_id = app_config_value["ecl_client_id"]
         @ecl_token = app_config_value["ecl_token"]
         communicator = EclDeveloperClient::Source.new(@ecl_client_id, @ecl_token)
@@ -61,6 +59,14 @@ module Webhook
       response      = communicator.find(@options[:id])
       response_data = communicator.response_data
       @record       = response_data["data"] if response.success?
+    end
+
+    def get_app_config_values
+      app_config = AppConfig.integrations.select {|k,v| v["source_type_id"] == @options[:source_type_id] }.first
+      return app_config[1] if app_config.present?
+
+      app_config = Config.where(source_type_id: @options[:source_type_id]).first
+      app_config.try(:values) || {}
     end
 
     def source_type_name

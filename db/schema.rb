@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170913052104) do
+ActiveRecord::Schema.define(version: 20180205114836) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -29,6 +29,13 @@ ActiveRecord::Schema.define(version: 20170913052104) do
     t.uuid "user_id"
     t.index ["user_id", "provider_type"], name: "index_identity_providers_on_user_id_and_provider_type", unique: true
     t.index ["user_id"], name: "index_identity_providers_on_user_id"
+  end
+
+  create_table "source_type_configs", force: :cascade do |t|
+    t.string "source_type_name", null: false
+    t.uuid "source_type_id", null: false
+    t.json "values"
+    t.index ["source_type_id"], name: "index_source_type_configs_on_source_type_id", unique: true
   end
 
   create_table "users", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|

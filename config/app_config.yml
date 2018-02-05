@@ -64,10 +64,6 @@ defaults: &defaults
       ecl_client_id: <%= ENV['SHAREPOINT_ONPREM_ECL_CLIENT_ID']  || "Y96ZRvXXjA" %>
       ecl_token: <%= ENV['SHAREPOINT_ONPREM_ECL_CLIENT_TOKEN'] || "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc19kZXZlbG9wZXIiOnRydWUsImNsaWVudF9pZCI6Ilk5NlpSdlhYakEiLCJlbWFpbCI6ImRhcnNoYW5fcGF0ZWxAcGVyc2lzdGVudC5jby5pbiJ9.bF638d7ZPiaXTSMZiEb4HgyOEhDN28zS-wXoRDtfa3U" %>
       source_type_id:  <%= ENV['SHAREPOINT_ONPREM_SOURCE_TYPE_ID'] || 'b6f2f5c1-9f1e-4841-8fb1-58a9211302ce' %>
-    nuvepro:
-      ecl_client_id: <%= ENV['NUVEPRO_ECL_CLIENT_ID'] || 'Y96ZRvXXjA' %>
-      ecl_token: <%= ENV['NUVEPRO_ECL_TOKEN'] || "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc19kZXZlbG9wZXIiOnRydWUsImNsaWVudF9pZCI6Ilk5NlpSdlhYakEiLCJlbWFpbCI6ImRhcnNoYW5fcGF0ZWxAcGVyc2lzdGVudC5jby5pbiJ9.bF638d7ZPiaXTSMZiEb4HgyOEhDN28zS-wXoRDtfa3U" %>
-      source_type_id:  <%= ENV['NUVEPRO_SOURCE_TYPE_ID'] || '6989bb10-f6d7-46a0-b002-de5e0e82d4a9' %>
 development:
   <<: *defaults
 

@@ -13,11 +13,11 @@ class NuveproIntegration < BaseIntegration
   end
 
   def self.ecl_client_id
-    AppConfig.integrations['nuvepro']['ecl_client_id']
+    SourceTypeConfig.where(source_type_name: 'nuvepro').first.values['ecl_client_id']
   end
 
   def self.ecl_token
-    AppConfig.integrations['nuvepro']['ecl_token']
+    SourceTypeConfig.where(source_type_name: 'nuvepro').first.values['ecl_token']
   end
 
   def get_all_plans_url

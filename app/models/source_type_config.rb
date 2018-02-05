@@ -1,0 +1,2 @@
+class SourceTypeConfig < ApplicationRecord
+end
