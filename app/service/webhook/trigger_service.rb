@@ -65,7 +65,7 @@ module Webhook
       app_config = AppConfig.integrations.select {|k,v| v["source_type_id"] == @options[:source_type_id] }.first
       return app_config[1] if app_config.present?
 
-      app_config = Config.where(source_type_id: @options[:source_type_id]).first
+      app_config = SourceTypeConfig.where(source_type_id: @options[:source_type_id]).first
       app_config.try(:values) || {}
     end
 
