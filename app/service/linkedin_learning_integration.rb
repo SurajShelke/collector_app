@@ -100,6 +100,7 @@ class LinkedinLearningIntegration < BaseIntegration
       organization_id: @credentials["organization_id"],
 
       additional_metadata: {
+        level: details["level"]
       },
 
       resource_metadata: {
