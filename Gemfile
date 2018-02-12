@@ -32,6 +32,7 @@ gem 'omniauth-microsoft_v2_auth', git: 'https://github.com/cbales/omniauth-micro
 
 gem 'boxr'
 gem 'jwt'
+gem 'savon', '~> 2.0'
 # Use Redis adapter to run Action Cable in production
 # gem 'redis', '~> 3.0'
 # Use ActiveModel has_secure_password

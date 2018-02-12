@@ -38,3 +38,5 @@ production:
   - [google_drive_ecl_job, 3]
   - [nuvepro_ecl_job, 3]
   - [nuvepro, 3]
+  - [skill_soft_ecl_job, 3]
+  - [skill_soft, 3]
