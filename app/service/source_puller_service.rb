@@ -1,7 +1,7 @@
 class SourcePullerService
   attr_accessor :source_type_id, :sources, :source_name
 
-  def initialize(source_name,ecl_client,ecl_secret)
+  def initialize(source_name, ecl_client, ecl_secret)
     @source_name = source_name
     @ecl_client = ecl_client
     @ecl_secret = ecl_secret
@@ -13,9 +13,7 @@ class SourcePullerService
     @response = service.get(name: @source_name)
     response_data = service.response_data
 
-    if @response.success?
-      @source_type_id = response_data["data"].present? && response_data["data"][0]["id"]
-    end
+    @source_type_id = response_data['data'].present? && response_data['data'][0]['id'] if @response.success?
   end
 
   def fetch_sources_by_source_type
@@ -25,7 +23,7 @@ class SourcePullerService
       params = {
         source_type_id: @source_type_id,
         limit: 10,
-        offset: offset*10
+        offset: offset * 10
       }
 
       service = EclDeveloperClient::Source.new(@ecl_client, @ecl_secret)
@@ -33,7 +31,7 @@ class SourcePullerService
       response_data = service.response_data
 
       if @response.success?
-        @sources = response_data["data"]
+        @sources = response_data['data']
         break if @sources.length == 0
 
         @sources.each do |source|

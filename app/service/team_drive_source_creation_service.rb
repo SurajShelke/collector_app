@@ -1,5 +1,5 @@
 class TeamDriveSourceCreationService
-  def initialize(ecl_client_id, ecl_token, options= {})
+  def initialize(ecl_client_id, ecl_token, options = {})
     @ecl_client_id   = ecl_client_id
     @ecl_token       = ecl_token
     @options         = options
@@ -30,7 +30,7 @@ class TeamDriveSourceCreationService
         approved:        true
       }
       response = communicator.create(attributes)
-      response.success? ? communicator.response_data["data"] : {}
+      response.success? ? communicator.response_data['data'] : {}
     end
   end
 end

@@ -10,7 +10,7 @@ class GoogleDriveIntegration < BaseIntegration
   end
 
   def self.get_credentials_from_config(source)
-    source["source_config"]
+    source['source_config']
   end
 
   def self.ecl_client_id
@@ -24,7 +24,7 @@ class GoogleDriveIntegration < BaseIntegration
   #  @options ={start: start, limit: limit, page: page, last_polled_at: @last_polled_at}
   #  We dont need start or limit for this Integration
   #  Whenever pagination is available we can use it
-  def get_content(options={})
+  def get_content(options = {})
     @options = options
     @client  = client
     # @extract_content = @credentials["extract_content"]
@@ -39,12 +39,14 @@ class GoogleDriveIntegration < BaseIntegration
     begin
       # folder_id = 'root' default value configured for Root folder
       q = folder_id == 'root' ? "mimeType != 'application/vnd.google-apps.folder'" : "'#{folder_id}' in parents"
-      page_token = @options[:page] == 0 ? nil : @options[:page]
+      page_token = (@options[:page]).zero? ? nil : @options[:page]
 
-      files, new_page_token = auth_session.files(q: q,
-        orderBy: "folder",
+      files, new_page_token = auth_session.files(
+        q: q,
+        orderBy: 'folder',
         supports_team_drives: false,
-        page_token: page_token)
+        page_token: page_token
+      )
 
       if new_page_token.present?
         Sidekiq::Client.push(
@@ -69,7 +71,7 @@ class GoogleDriveIntegration < BaseIntegration
       #  Create 3 content Item and spawn 3 different job
       # TODO add code for to check last polled at vs server update - 1 days so we will not fetched lot of data
       # time so we will not have multiple jobs to spawn every time
-      if entry.mime_type == "application/vnd.google-apps.folder"
+      if entry.mime_type == 'application/vnd.google-apps.folder'
         @parents[entry.id.to_s.to_sym] = entry.name
         credentials = @credentials
         credentials['folder_id'] = entry.id
@@ -84,17 +86,17 @@ class GoogleDriveIntegration < BaseIntegration
       else
         # permissions = entry.permissions.map{|p| p.to_h}
         # puts "#{entry.id} -- permissions --- \n#{permissions.inspect}"
-        #TODO: Save permissions to DB table
+        # TODO: Save permissions to DB table
         create_content_item(entry)
       end
     end
   end
 
   def create_content_item(entry)
-    #Do not process Trashed file
+    # Do not process Trashed file
     return if entry.trashed?
-    # content = get_file_data(entry) if @extract_content && @extract_content == "true"
-    #collecting parent information
+    # content = get_file_data(entry) if @extract_content && @extract_content == 'true'
+    # collecting parent information
     parent_name = get_parent(entry.parents.first.to_sym) if entry.parents
     attributes = {
       name: entry.name,
@@ -113,7 +115,7 @@ class GoogleDriveIntegration < BaseIntegration
         url: entry.web_view_link
       }
     }
-    attributes.merge!(additional_metadata: {"parent_name" => parent_name}) if parent_name.present?
+    attributes[:additional_metadata] = { 'parent_name' => parent_name } if parent_name.present?
     ContentItemCreationJob.perform_async(self.class.ecl_client_id, self.class.ecl_token, attributes)
   end
 
@@ -124,21 +126,17 @@ class GoogleDriveIntegration < BaseIntegration
   def client
     OAuth2::Client.new(@credentials['client_id'],
                        @credentials['client_secret'],
-                       :site => "https://accounts.google.com",
-                       :authorize_url => "/o/oauth2/auth",
-                       :token_url => "/o/oauth2/token",
-                       :additional_parameters => {"access_type" => "offline"})
+                       site: 'https://accounts.google.com',
+                       authorize_url: '/o/oauth2/auth',
+                       token_url: '/o/oauth2/token',
+                       additional_parameters: { 'access_type' => 'offline' })
   end
 
   def get_file_data(file)
     begin
       # Google document
-      if file.mime_type.include? "application/vnd.google-apps"
-        if file.mime_type == "application/vnd.google-apps.spreadsheet"
-          content_type = "text/csv"
-        else
-          content_type = "text/plain"
-        end
+      if file.mime_type.include? 'application/vnd.google-apps'
+        content_type = file.mime_type == 'application/vnd.google-apps.spreadsheet' ? 'text/csv' : 'text/plain'
         file.export_as_string(content_type)[0...AppConfig.max_file_content_size]
       else
         tmp_file = Tempfile.new(file.name)
@@ -146,7 +144,7 @@ class GoogleDriveIntegration < BaseIntegration
         file.download_to_file(tmp_file.path)
         get_file_content(tmp_file.path)
       end
-    rescue Exception => e
+    rescue StandardError
       Rails.logger.error "unable to get content for file name : #{file.name} \npublic_url : #{file.web_view_link}"
     end
   end
@@ -162,7 +160,7 @@ class GoogleDriveIntegration < BaseIntegration
       end
     rescue StandardError => err
       raise Webhook::Error::IntegrationFailure, "Failed Integration while initializing authentication session, ErrorMessage: #{err.message}"
-     end
+    end
   end
 
   # Gets the current access token
@@ -171,9 +169,9 @@ class GoogleDriveIntegration < BaseIntegration
       params = {
         client_id: @credentials['client_id'],
         client_secret: @credentials['client_secret'],
-        refresh_token: @credentials["refresh_token"],
+        refresh_token: @credentials['refresh_token'],
         grant_type: 'refresh_token',
-        additional_parameters: {"access_type" => "offline"}
+        additional_parameters: { 'access_type' => 'offline' }
       }
       conn = Faraday.new('https://accounts.google.com')
       response = conn.post do |req|
@@ -182,7 +180,7 @@ class GoogleDriveIntegration < BaseIntegration
         req.body = params
       end
       response = JSON.parse(response.body)
-      OAuth2::AccessToken.new(@client, response["access_token"])
+      OAuth2::AccessToken.new(@client, response['access_token'])
     rescue StandardError => err
       raise Webhook::Error::IntegrationFailure, "Failed Integration while accessing refresh_token, ErrorMessage: #{err.message}"
     end

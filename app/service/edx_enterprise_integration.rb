@@ -1,6 +1,5 @@
 class EdxEnterpriseIntegration < BaseIntegration
-
-  EDX_ENTERPRISE_BASE_URL = "https://api.edx.org"
+  EDX_ENTERPRISE_BASE_URL = 'https://api.edx.org'.freeze
 
   def self.get_source_name
     'edx_enterprise'
@@ -11,7 +10,7 @@ class EdxEnterpriseIntegration < BaseIntegration
   end
 
   def self.get_credentials_from_config
-    source["source_config"]
+    source['source_config']
   end
 
   def self.ecl_client_id
@@ -23,22 +22,22 @@ class EdxEnterpriseIntegration < BaseIntegration
   end
 
   def catalog_url
-    "/enterprise/v1/catalogs/"
+    '/enterprise/v1/catalogs/'
   end
 
   def course_url(catalog_id)
     "/enterprise/v1/catalogs/#{catalog_id}/courses"
   end
 
-  def get_content(options={})
+  def get_content(options = {})
     begin
       catalogs = get_catalogs
       catalogs.each do |catalog|
-        courses = get_courses(catalog["id"])
+        courses = get_courses(catalog['id'])
         courses.each do |course|
           begin
             create_content_item(course)
-          rescue Exception => err
+          rescue StandardError => err
             Rails.logger.debug "Exception: #{err.message} while parsing edX course: #{course['uuid']}"
           end
         end
@@ -54,7 +53,7 @@ class EdxEnterpriseIntegration < BaseIntegration
       req.url catalog_url
       req.headers = { 'Authorization' => "JWT #{get_access_token}" }
     end
-    JSON.parse(response.body).try(:[], "results") || []
+    JSON.parse(response.body).try(:[], 'results') || []
   end
 
   def get_courses(catalog_id)
@@ -63,16 +62,16 @@ class EdxEnterpriseIntegration < BaseIntegration
       req.url course_url(catalog_id)
       req.headers = { 'Authorization' => "JWT #{get_access_token}" }
     end
-    JSON.parse(response.body).try(:[], "results") || []
+    JSON.parse(response.body).try(:[], 'results') || []
   end
 
   def get_access_token
     params = {
-        client_id:  AppConfig.integrations['edx_enterprise']['client_id'],
-        client_secret: AppConfig.integrations['edx_enterprise']['client_secret'],
-        grant_type: "client_credentials",
-        token_type: "jwt"
-      }
+      client_id:  AppConfig.integrations['edx_enterprise']['client_id'],
+      client_secret: AppConfig.integrations['edx_enterprise']['client_secret'],
+      grant_type: 'client_credentials',
+      token_type: 'jwt'
+    }
     conn = Faraday.new('https://api.edx.org')
     response = conn.post do |req|
       req.url '/oauth2/v1/access_token'
@@ -80,20 +79,20 @@ class EdxEnterpriseIntegration < BaseIntegration
       req.body = params
     end
     response = JSON.parse(response.body)
-    response["access_token"] if response
+    response['access_token'] if response
   end
 
   def content_item_attributes(entry)
-    enrollment_url = entry["course_runs"].first["enrollment_url"] rescue ''
+    enrollment_url = entry['course_runs'].first['enrollment_url'] rescue ''
     {
       external_id:  entry['uuid'],
-      source_id:    @credentials["source_id"],
+      source_id:    @credentials['source_id'],
       url:          enrollment_url,
       name:         entry['title'],
       description:  sanitize_content(entry['full_description']),
       raw_record:   entry,
       content_type: 'course',
-      organization_id: @credentials["organization_id"],
+      organization_id: @credentials['organization_id'],
 
       additional_metadata: {
       },

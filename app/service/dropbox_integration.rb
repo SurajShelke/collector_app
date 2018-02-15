@@ -9,7 +9,7 @@ class DropboxIntegration < BaseIntegration
   end
 
   def self.get_credentials_from_config(source)
-    source["source_config"]
+    source['source_config']
   end
 
   def self.ecl_client_id
@@ -20,7 +20,7 @@ class DropboxIntegration < BaseIntegration
     AppConfig.integrations['dropbox']['ecl_token']
   end
 
-  def get_content(options={})
+  def get_content(options = {})
     @options         = options
     @client          = DropboxApi::Client.new(@credentials['access_token'])
     fetch_content(@credentials['folder_id'])
@@ -28,21 +28,16 @@ class DropboxIntegration < BaseIntegration
 
   def fetch_content(folder_id)
     begin
-      cursor = @options[:page] == 0 ? nil : @options[:page]
-      if cursor.nil?
-        response = @client.list_folder(folder_id, recursive: true)
-        collect_files(response)
-      else
-        response = @client.list_folder_continue(cursor)
-        collect_files(response)
-      end
+      cursor = @options[:page].zero? ? nil : @options[:page]
+      response = cursor.nil? ? @client.list_folder(folder_id, recursive: true) : @client.list_folder_continue(cursor)
+      collect_files(response)
 
       # send response.cursor as page param in other FetchContentJob
       if response.has_more?
         Sidekiq::Client.push(
           'class' => FetchContentJob,
           'queue' => self.class.get_fetch_content_job_queue.to_s,
-          'args'  => [self.class.to_s, @credentials, @credentials["source_id"],@credentials["organization_id"], options[:last_polled_at], response.cursor],
+          'args'  => [self.class.to_s, @credentials, @credentials['source_id'], @credentials['organization_id'], options[:last_polled_at], response.cursor],
           'at'    => self.class.schedule_at
         )
       end
@@ -58,7 +53,7 @@ class DropboxIntegration < BaseIntegration
       #  Create 3 content Item and spawn 3 different job
       # TODO add code for to check last polled at vs server update - 1 days so we will not fetched lot of data
       # time so we will not have multiple jobs to spawn every time
-      if entry.class.to_s == "DropboxApi::Metadata::Folder"
+      if entry.class.to_s == 'DropboxApi::Metadata::Folder'
         credentials = @credentials
 
         # check for subfolders only
@@ -69,11 +64,11 @@ class DropboxIntegration < BaseIntegration
           Sidekiq::Client.push(
             'class' => FetchContentJob,
             'queue' => self.class.get_fetch_content_job_queue.to_s,
-            'args' => [self.class.to_s, credentials, credentials["source_id"], credentials["organization_id"], @options[:last_polled_at]],
+            'args' => [self.class.to_s, credentials, credentials['source_id'], credentials['organization_id'], @options[:last_polled_at]],
             'at' => self.class.schedule_at
           )
         end
-      elsif entry.class.to_s == "DropboxApi::Metadata::File"
+      elsif entry.class.to_s == 'DropboxApi::Metadata::File'
         create_file_as_content_item(entry.path_lower)
       end
     end
@@ -83,7 +78,7 @@ class DropboxIntegration < BaseIntegration
     links = @client.list_shared_links(path: file_path, direct_only: true)
 
     if links.links.present?
-      links.links.map {|link| create_content_item(link.to_hash) }
+      links.links.map { |link| create_content_item(link.to_hash) }
     else
       Rails.logger.error "unable to get shared link for #{file_path}"
     end
@@ -111,7 +106,7 @@ class DropboxIntegration < BaseIntegration
         size:            link['size'],
         revision:        link['rev'],
         client_modified: link['client_modified'],
-        server_modified: link['server_modified'],
+        server_modified: link['server_modified']
       }
     }
 

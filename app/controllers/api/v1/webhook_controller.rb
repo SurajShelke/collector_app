@@ -3,6 +3,6 @@ class Api::V1::WebhookController < ApplicationController
 
   def fetch_content
     Webhook::TriggerService.new(params).run
-    render json: {success: true}
+    render json: { success: true }
   end
 end

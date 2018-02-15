@@ -1,7 +1,7 @@
 require 'active_support/core_ext/hash'
 require 'nokogiri'
 class SkillSoftIntegration < BaseIntegration
-  attr_accessor :client,:source_id,:organization_id
+  attr_accessor :client, :source_id, :organization_id
   def self.get_source_name
     'skill_soft'
   end
@@ -11,7 +11,7 @@ class SkillSoftIntegration < BaseIntegration
   end
 
   def self.get_credentials_from_config(source)
-    source["source_config"]
+    source['source_config']
   end
 
   def self.ecl_client_id
@@ -25,14 +25,14 @@ class SkillSoftIntegration < BaseIntegration
   #  @options ={start: start, limit: limit, page: page, last_polled_at: @last_polled_at}
   #  We dont need start or limit for this Integration
   #  Whenever pagination is available we can use it
-  def get_content(options={})
+  def get_content(options = {})
     @options = options
-    @source_id               = @credentials["source_id"]
-    @organization_id         = @credentials["organization_id"]
+    @source_id               = @credentials['source_id']
+    @organization_id         = @credentials['organization_id']
 
-    @wsdl = @credentials["wsdl"]
-    @customer_id = @credentials["customer_id"]
-    @shared_secret = @credentials["shared_secret"]
+    @wsdl = @credentials['wsdl']
+    @customer_id = @credentials['customer_id']
+    @shared_secret = @credentials['shared_secret']
 
     @client = Savon.client(
                             wsdl: @wsdl,
@@ -61,20 +61,20 @@ class SkillSoftIntegration < BaseIntegration
 
   def fetch_content
     begin
-      response = @client.call(:ai_initiate_full_course_listing_report, message: { customer_id: @customer_id, report_format: "XML", mode: "summary" })
+      response = @client.call(:ai_initiate_full_course_listing_report, message: { customer_id: @customer_id, report_format: 'XML', mode: 'summary' })
       report_url = get_report_url(response.body[:handle_response][:handle])
 
       conn = Faraday.new(report_url)
       response = conn.get
-      
-      doc = Nokogiri::XML(response.body.gsub("\n", "").gsub("\r", ""))
+
+      doc = Nokogiri::XML(response.body.gsub('\n', '').gsub('\r', ''))
       full_listing_summary = Hash.from_xml(doc.to_s)
 
-      full_listing_summary = full_listing_summary["full_listing_summary"]
-      assets = full_listing_summary["asset"].class == Array ?  full_listing_summary['asset'] : [full_listing_summary['asset']]
+      full_listing_summary = full_listing_summary['full_listing_summary']
+      assets = full_listing_summary['asset'].class == Array ?  full_listing_summary['asset'] : [full_listing_summary['asset']]
 
       assets.each do |asset|
-        response = @client.call(:ai_get_xml_asset_meta_data, message: { customer_id: @customer_id, asset_id: asset["id"], format: "XML" }) rescue nil
+        response = @client.call(:ai_get_xml_asset_meta_data, message: { customer_id: @customer_id, asset_id: asset['id'], format: 'XML' }) rescue nil
         create_content_item(response.body) if response
       end
     rescue Exception => e
@@ -84,19 +84,19 @@ class SkillSoftIntegration < BaseIntegration
 
   def create_content_item(entry)
     attributes = {
-      name:         entry["title"],
-      description:  "",
-      url:          entry["launchurl"],
+      name:         entry['title'],
+      description:  '',
+      url:          entry['launchurl'],
       content_type: 'document',
-      external_id:  entry["identifier"],
+      external_id:  entry['identifier'],
       raw_record:   entry,
       source_id:    @source_id,
       organization_id: @organization_id,
       resource_metadata: {
         images:       [{ url: nil }],
-        title:        entry["title"],
-        description:  "",
-        url:          entry["launchurl"]
+        title:        entry['title'],
+        description:  '',
+        url:          entry['launchurl']
       },
       additional_metadata: {
         size:            entry['size'],

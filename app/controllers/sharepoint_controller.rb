@@ -22,39 +22,36 @@ class SharepointController < ApplicationController
             state: @state
           )
         else
-          render json: { message: "Record cannot be processed" }, status: :unprocessable_entity
+          render json: { message: 'Record cannot be processed' }, status: :unprocessable_entity
         end
       end
-    rescue Exception => he
-      render json: { message: "#{he.message}" }, status: :unprocessable_entity
+    rescue StandardError => he
+      render json: { message: he.message }, status: :unprocessable_entity
     end
   end
 
   def failure
-    render json: { message: "#{params[:message]}" }, status: :unprocessable_entity
+    render json: { message: params[:message] }, status: :unprocessable_entity
   end
 
   def fetch_sites
     begin
       sharepoint_communicator = create_sharepoint_communicator(params[:provider_id])
-      @sites = sharepoint_communicator.folders("/v1.0/sites",{:search => '*'})["value"]
-    rescue Exception => he
+      @sites = sharepoint_communicator.folders('/v1.0/sites', { search: '*' })['value']
+    rescue StandardError => he
       Rails.logger.error "Invalid Oauth2 token, #{he.message}"
       redirect_to authorize_sharepoint_index_path
     end
   end
-  
+
   def create_sharepoint_communicator(provider_id)
     record = IdentityProvider.find_by(id: provider_id)
-    if record
-      sharepoint_communicator = SharepointCommunicator.new(
-                client_id:     AppConfig.integrations['sharepoint']['client_id'],
-                client_secret: AppConfig.integrations['sharepoint']['client_secret'],
-                token:         record.token
-              )
-    else
-      raise "Invalid token, please contact administrator."
-    end
+    raise 'Invalid token, please contact administrator.' unless record
+    SharepointCommunicator.new(
+      client_id:     AppConfig.integrations['sharepoint']['client_id'],
+      client_secret: AppConfig.integrations['sharepoint']['client_secret'],
+      token:         record.token
+    )
   end
 
   def fetch_drives
@@ -62,15 +59,15 @@ class SharepointController < ApplicationController
       site = source_params[:site]
       if site
         site = JSON.parse(site)
-        @site_id = site["id"]
-        @site_name = site["name"]
+        @site_id = site['id']
+        @site_name = site['name']
         sharepoint_communicator = create_sharepoint_communicator(params[:provider_id])
-        @sites = sharepoint_communicator.folders("/v1.0/sites",{:search => '*'})["value"]
-        @drives = sharepoint_communicator.folders("/v1.0/sites/#{@site_id}/drives")["value"]
+        @sites = sharepoint_communicator.folders('/v1.0/sites', { search: '*' })['value']
+        @drives = sharepoint_communicator.folders("/v1.0/sites/#{@site_id}/drives")['value']
       else
         render json: { message: 'Failed to get site information, Please contact administrator' }, status: :unprocessable_entity
       end
-    rescue Exception => he
+    rescue StandardError => he
       Rails.logger.error "Invalid Oauth2 token, #{he.message}"
       redirect_to authorize_sharepoint_index_path
     end
@@ -87,17 +84,17 @@ class SharepointController < ApplicationController
         @site_name = source_params[:site_name]
         @drive_id = source_params[:drive_id]
         if @drive_id
-          @folders = sharepoint_communicator.folders("/v1.0/drives/#{@drive_id}/root/children")["value"]
-          @folders = @folders.select {|folder| folder["folder"]}
+          @folders = sharepoint_communicator.folders("/v1.0/drives/#{@drive_id}/root/children")['value']
+          @folders = @folders.select { |folder| folder['folder'] }
           # Adding root folder to the folders list, so that files inside root folder can be synced. In Sharepoint instance, root folder is typically named as 'Shared Document'.
-          @folders.unshift({"id" => @drive_id, "name" => "Shared Documents"})
-          @sites = sharepoint_communicator.folders("/v1.0/sites",{:search => '*'})["value"]
-          @drives = sharepoint_communicator.folders("/v1.0/sites/#{@site_id}/drives")["value"] if @site_id
+          @folders.unshift({ 'id' => @drive_id, 'name' => 'Shared Documents' })
+          @sites = sharepoint_communicator.folders('/v1.0/sites', { search: '*' })['value']
+          @drives = sharepoint_communicator.folders("/v1.0/sites/#{@site_id}/drives")['value'] if @site_id
         else
           render json: { message: 'Failed to get drive information, Please contact administrator' }, status: :unprocessable_entity
         end
       end
-    rescue Exception => he
+    rescue StandardError => he
       Rails.logger.error "Invalid Oauth2 token, #{he.message}"
       redirect_to authorize_sharepoint_index_path
     end
@@ -124,7 +121,7 @@ class SharepointController < ApplicationController
           service.create_sources
           redirect_to "#{@client_host}/admin/integrations/eclConfigurations"
         end
-      rescue => e
+      rescue StandardError
         render json: { message: 'Invalid or bad parameters' }, status: :unprocessable_entity
       end
     else
@@ -140,9 +137,9 @@ class SharepointController < ApplicationController
 
   def decrypt_state
     state_data = JSON.parse(source_params[:state])
-    decrypted_data = JSON.parse(Base64.decode64(state_data["auth_data"]))
+    decrypted_data = JSON.parse(Base64.decode64(state_data['auth_data']))
 
-    digest  = OpenSSL::Digest.new('sha256')
+    digest = OpenSSL::Digest.new('sha256')
     calculated_secret = OpenSSL::HMAC.hexdigest(digest, AppConfig.digest_secret, state_data['auth_data'])
 
     # check integrity of params passed
@@ -160,12 +157,12 @@ class SharepointController < ApplicationController
       data   = request.env['omniauth.auth']
       @email = data.extra.raw_info.userPrincipalName
       @name  = data.extra.raw_info.displayName
-      @access_token = data['credentials']["token"]
-      @refresh_token = data['credentials']["refresh_token"]
+      @access_token = data['credentials']['token']
+      @refresh_token = data['credentials']['refresh_token']
       @expires_at = data['credentials']['expires_at']
       @state = request.env['omniauth.params']['state_params']
     rescue OAuth2::Error => oe
-      render json: { message: "#{oe.message}" }, status: :unprocessable_entity
+      render json: { message: oe.message }, status: :unprocessable_entity
     end
   end
 

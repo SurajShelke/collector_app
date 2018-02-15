@@ -5,7 +5,7 @@ class BaseIntegration
     @credentials = credentials
   end
 
-  def get_content(options={})
+  def get_content(options = {})
     raise NotImplementedError
   end
 
@@ -49,7 +49,7 @@ class BaseIntegration
     strip_tags content
   end
 
-  def json_request(url, method, params:{}, headers:{}, basic_auth:{}, bearer:nil, body: nil)
+  def json_request(url, method, params: {}, headers: {}, basic_auth: {}, bearer: nil, body: nil)
     # Initialize connection
     connection = Faraday.new(url: url) do |f|
       f.response :logger
@@ -57,9 +57,7 @@ class BaseIntegration
     end
 
     # Check for basic auth
-    if !basic_auth.empty?
-      connection.basic_auth(basic_auth[:key], basic_auth[:secret])
-    end
+    connection.basic_auth(basic_auth[:key], basic_auth[:secret]) unless basic_auth.empty?
 
     # Make request
     response = connection.send(method) do |request|
@@ -81,9 +79,8 @@ class BaseIntegration
     end
 
     # If no content, then raise a no content exception
-    if response.status == 204
-      raise Webhook::NoContentException
-    end
+    raise Webhook::NoContentException if response.status == 204
+
     # Return json body
     ActiveSupport::JSON.decode(response.body)
   end
@@ -96,7 +93,7 @@ class BaseIntegration
     end
   end
 
-  def get_cached_content(options={})
+  def get_cached_content(options = {})
     limit = get_option(options, :limit, 100)
     start = get_option(options, :start, 0)
 

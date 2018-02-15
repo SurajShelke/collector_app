@@ -2,7 +2,7 @@ require 'sharepoint-http-auth'
 require 'jwt'
 
 class SharepointOnpremIntegration < BaseIntegration
-  attr_accessor :client,:source_id,:organization_id
+  attr_accessor :client, :source_id, :organization_id
   def self.get_source_name
     'sharepoint_onprem'
   end
@@ -12,7 +12,7 @@ class SharepointOnpremIntegration < BaseIntegration
   end
 
   def self.get_credentials_from_config(source)
-    source["source_config"]
+    source['source_config']
   end
 
   def self.ecl_client_id
@@ -34,15 +34,15 @@ class SharepointOnpremIntegration < BaseIntegration
   #  Whenever pagination is available we can use it
   def get_content(options={})
     @options = options
-    @source_id        = @credentials["source_id"]
-    @organization_id  = @credentials["organization_id"]
-    @sharepoint_url   = @credentials["sharepoint_url"]
-    @site_name        = @credentials["site_name"]
-    @client_secret    = @credentials["client_secret"]
+    @source_id        = @credentials['source_id']
+    @organization_id  = @credentials['organization_id']
+    @sharepoint_url   = @credentials['sharepoint_url']
+    @site_name        = @credentials['site_name']
+    @client_secret    = @credentials['client_secret']
 
     decode_credentials(@client_secret)
     @communicator = SharepointOnpremCommunicator.new(@user_name, @password, @sharepoint_url, @site_name)
-    fetch_content(@credentials["folder_relative_url"])
+    fetch_content(@credentials['folder_relative_url'])
   end
 
   def fetch_content(folder_relative_url)
@@ -55,7 +55,7 @@ class SharepointOnpremIntegration < BaseIntegration
       create_content_item(entry.data)
     end
 
-    folders = response.folders.select {|f| f unless ["Attachments", "Item", "Forms"].include?(f.name)}
+    folders = response.folders.select {|f| f unless ['Attachments', 'Item', 'Forms'].include?(f.name)}
     folders.each do |folder|
       credentials = @credentials
       credentials['folder_relative_url'] = folder.server_relative_url
@@ -71,28 +71,28 @@ class SharepointOnpremIntegration < BaseIntegration
   end
 
   def create_content_item(entry)
-    all_fields = @communicator.get_file_meta_data(entry["ServerRelativeUrl"])
+    all_fields = @communicator.get_file_meta_data(entry['ServerRelativeUrl'])
     # entry["permission"] = @communicator.get_file_permission(all_fields["d"]["RoleAssignments"]["__deferred"]["uri"])
-    entry["Id"] = all_fields["d"]["Id"]
+    entry["Id"] = all_fields['d']['Id']
     attributes = {
-      name:         entry["Name"],
-      description:  entry["CheckInComment"],
-      url:          entry["__metadata"]["uri"],
+      name:         entry['Name'],
+      description:  entry['CheckInComment'],
+      url:          entry['__metadata']['uri'],
       content_type: 'document',
-      external_id:  entry["Id"],
+      external_id:  entry['Id'],
       raw_record:   entry,
       source_id:    @source_id,
       organization_id: @organization_id,
       resource_metadata: {
         images:       [{ url: nil }],
-        title:        entry["Name"],
-        description:  entry["CheckInComment"],
-        url:          entry["__metadata"]["uri"]
+        title:        entry['Name'],
+        description:  entry['CheckInComment'],
+        url:          entry['__metadata']['uri']
       },
       additional_metadata: {
         # permission:      entry["permission"],
-        path_lower:      entry["ServerRelativeUrl"],
-        parent_name:     entry["parent_name"]
+        path_lower:      entry['ServerRelativeUrl'],
+        parent_name:     entry['parent_name']
       }
     }
     ContentItemCreationJob.perform_async(self.class.ecl_client_id, self.class.ecl_token, attributes)

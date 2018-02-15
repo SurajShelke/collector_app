@@ -1,5 +1,5 @@
 class DropboxSourceCreationService
-  def initialize(ecl_client_id, ecl_token, options= {})
+  def initialize(ecl_client_id, ecl_token, options = {})
     @ecl_client_id   = ecl_client_id
     @ecl_token       = ecl_token
     @options         = options
@@ -20,7 +20,7 @@ class DropboxSourceCreationService
           access_token:  @access_token,
           folder_id:     folder_id
         },
-        display_name:    folder_name.gsub("/", "_").sub("_", ""),
+        display_name:    folder_name.gsub('/', '_').sub('_', ''),
         organization_id: @organization_id,
         is_enabled:      true,
         is_default:      false,
@@ -28,7 +28,7 @@ class DropboxSourceCreationService
         approved:        true
       }
       response = communicator.create(attributes)
-      response.success? ? communicator.response_data["data"] : {}
+      response.success? ? communicator.response_data['data'] : {}
     end
   end
 end

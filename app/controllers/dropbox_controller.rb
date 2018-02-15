@@ -30,11 +30,11 @@ class DropboxController < ApplicationController
             state: params[:state]
           )
         else
-          render json: { message: "Record cannot be processed" }, status: :unprocessable_entity
+          render json: { message: 'Record cannot be processed' }, status: :unprocessable_entity
         end
       end
     rescue DropboxApi::Errors::HttpError => he
-      render json: { message: "#{he.message}" }, status: :unprocessable_entity
+      render json: { message: he.message.to_s }, status: :unprocessable_entity
     end
   end
 
@@ -49,9 +49,9 @@ class DropboxController < ApplicationController
 
         if result.instance_values['data']
           # show only folders list
-          @folders = result.instance_values['data']['entries'].select{|c| c[".tag"] == 'folder'}
+          @folders = result.instance_values['data']['entries'].select { |c| c['.tag'] == 'folder' }
         end
-      rescue DropboxApi::Errors::HttpError => he
+      rescue DropboxApi::Errors::HttpError
         redirect_to authorize_dropbox_index_path
       end
     else
@@ -76,12 +76,12 @@ class DropboxController < ApplicationController
             access_token:    dropbox_access_token,
             organization_id: @organization_id,
             source_type_id:  @source_type_id
-            )
+          )
           service.create_sources
           redirect_to "#{@client_host}/admin/integrations/eclConfigurations"
         end
-      rescue => e
-        render json: { message: 'Invalid or bad parameters' }, status: :unprocessable_entity
+      rescue StandardError => e
+        render json: { message: "Invalid or bad parameters, #{e.message}" }, status: :unprocessable_entity
       end
     else
       render json: { message: 'Invalid access token' }, status: :unprocessable_entity
@@ -96,9 +96,9 @@ class DropboxController < ApplicationController
 
   def decrypt_state
     state_data = JSON.parse(source_params[:state])
-    decrypted_data = JSON.parse(Base64.decode64(state_data["auth_data"]))
+    decrypted_data = JSON.parse(Base64.decode64(state_data['auth_data']))
 
-    digest  = OpenSSL::Digest.new('sha256')
+    digest = OpenSSL::Digest.new('sha256')
     calculated_secret = OpenSSL::HMAC.hexdigest(digest, AppConfig.digest_secret, state_data['auth_data'])
 
     # check integrity of params passed
@@ -117,7 +117,7 @@ class DropboxController < ApplicationController
       auth_bearer = authenticator.get_token(params[:code], redirect_uri: callback_dropbox_index_url)
       @access_token = auth_bearer.token
     rescue OAuth2::Error => oe
-      render json: { message: "#{oe.message}" }, status: :unprocessable_entity
+      render json: { message: oe.message.to_s }, status: :unprocessable_entity
     end
   end
 

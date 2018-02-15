@@ -1,9 +1,9 @@
 class IdentityProvider < ApplicationRecord
-  enum provider_type: { dropbox: 1 , team_drive: 2, sharepoint: 3, box: 4, sharepoint_onprem: 5, google_drive: 6 }
+  enum provider_type: { dropbox: 1, team_drive: 2, sharepoint: 3, box: 4, sharepoint_onprem: 5, google_drive: 6 }
   belongs_to :user
 
   # Methods for Dropbox connector
-  def self.create_or_update_dropbox(args= {})
+  def self.create_or_update_dropbox(args = {})
     identity_provider = find_or_initialize_by(
       provider_type: IdentityProvider.provider_types['dropbox'],
       user_id:       args[:user_id]
@@ -20,7 +20,7 @@ class IdentityProvider < ApplicationRecord
   end
 
   # Methods for Google Drive connectors
-  def self.create_or_update_google_drive(args= {})
+  def self.create_or_update_google_drive(args = {})
     identity_provider = find_or_initialize_by(
       provider_type: IdentityProvider.provider_types[args[:integration_type]],
       user_id:       args[:user_id]
@@ -36,7 +36,7 @@ class IdentityProvider < ApplicationRecord
     provider.try(:token)
   end
 
-  def self.create_or_update_sharepoint(args= {})
+  def self.create_or_update_sharepoint(args = {})
     identity_provider = find_or_initialize_by(
       provider_type: IdentityProvider.provider_types['sharepoint'],
       user_id:       args[:user_id]
@@ -55,7 +55,7 @@ class IdentityProvider < ApplicationRecord
   end
 
   # Methods for Dropbox connector
-  def self.create_or_update_box(args= {})
+  def self.create_or_update_box(args = {})
     identity_provider = find_or_initialize_by(
       provider_type: IdentityProvider.provider_types['box'],
       user_id:       args[:user_id]
@@ -71,13 +71,13 @@ class IdentityProvider < ApplicationRecord
     provider.try(:token)
   end
 
-  def self.create_or_update_sharepoint_onprem(args= {})
+  def self.create_or_update_sharepoint_onprem(args = {})
     identity_provider = find_or_initialize_by(
       provider_type: IdentityProvider.provider_types['sharepoint_onprem'],
       user_id:       args[:user_id]
     )
 
-    identity_provider.uid   = args[:account_id]
+    identity_provider.uid = args[:account_id]
     identity_provider.auth_info = args[:auth_info]
     identity_provider.secret = args[:secret]
     identity_provider.save! ? identity_provider : nil

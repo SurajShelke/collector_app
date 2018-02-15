@@ -1,5 +1,5 @@
 class SharepointIntegration < BaseIntegration
-  attr_accessor :client,:source_id,:organization_id
+  attr_accessor :client, :source_id, :organization_id
   def self.get_source_name
     'sharepoint'
   end
@@ -9,7 +9,7 @@ class SharepointIntegration < BaseIntegration
   end
 
   def self.get_credentials_from_config(source)
-    source["source_config"]
+    source['source_config']
   end
 
   def self.ecl_client_id
@@ -25,9 +25,9 @@ class SharepointIntegration < BaseIntegration
   #  Whenever pagination is available we can use it
   def get_content(options={})
     @options = options
-    @source_id               = @credentials["source_id"]
-    @organization_id         = @credentials["organization_id"]
-    @drive_id                = @credentials["drive_id"]
+    @source_id               = @credentials['source_id']
+    @organization_id         = @credentials['organization_id']
+    @drive_id                = @credentials['drive_id']
     @client_id               = AppConfig.integrations['sharepoint']['client_id']
     @client_secret           = AppConfig.integrations['sharepoint']['client_secret']
     @sharepoint_communicator = SharepointCommunicator.new(
@@ -38,32 +38,32 @@ class SharepointIntegration < BaseIntegration
 
     # this will update @sharepoint_communicator @token variable
     @sharepoint_communicator.get_access_token
-    fetch_content(@credentials["folder_id"])
+    fetch_content(@credentials['folder_id'])
   end
 
   def fetch_content(folder_id)
     if folder_id == @drive_id
-      parent_url = @sharepoint_communicator.files("/v1.0/drives/#{@drive_id}/root")["webUrl"]
+      parent_url = @sharepoint_communicator.files("/v1.0/drives/#{@drive_id}/root")['webUrl']
       response = @sharepoint_communicator.files("/v1.0/drives/#{@drive_id}/root/children")
     else
-      parent_url = @sharepoint_communicator.files("/v1.0/drives/#{@drive_id}/items/#{folder_id}")["webUrl"]
+      parent_url = @sharepoint_communicator.files("/v1.0/drives/#{@drive_id}/items/#{folder_id}")['webUrl']
       response = @sharepoint_communicator.files("/v1.0/drives/#{@drive_id}/items/#{folder_id}/children")
     end
     collect_files(response, parent_url)
-    fetch_next_content(response["@odata.nextLink"], parent_url) if response["@odata.nextLink"]
+    fetch_next_content(response['@odata.nextLink'], parent_url) if response['@odata.nextLink']
   end
 
   def fetch_next_content(url, parent_url)
     response = @sharepoint_communicator.next_page_files(url)
     collect_files(response, parent_url)
-    fetch_next_content(response["@odata.nextLink"], parent_url) if response["@odata.nextLink"]
+    fetch_next_content(response['@odata.nextLink'], parent_url) if response['@odata.nextLink']
   end
 
   def collect_files(response, parent_url)
-    response["value"].each do |entry|
-      if entry["folder"]
+    response['value'].each do |entry|
+      if entry['folder']
         credentials = @credentials
-        credentials['folder_id'] = entry["id"]
+        credentials['folder_id'] = entry['id']
 
         # Call again background job so current job is finish faster
         Sidekiq::Client.push(
@@ -80,22 +80,22 @@ class SharepointIntegration < BaseIntegration
 
   def create_content_item(entry, parent_url)
     attributes = {
-      name:         entry["name"],
-      description:  "",
+      name:         entry['name'],
+      description:  '',
       url:          "#{parent_url}/#{URI.encode(entry["name"])}",
       content_type: 'document',
-      external_id:  entry["id"],
+      external_id:  entry['id'],
       raw_record:   entry,
       source_id:    @source_id,
       organization_id: @organization_id,
       resource_metadata: {
         images:       [{ url: nil }],
-        title:        entry["name"],
-        description:  "",
+        title:        entry['name'],
+        description:  '',
         url:          "#{parent_url}/#{URI.encode(entry["name"])}"
       },
       additional_metadata: {
-        desktop_url:     entry["webUrl"],
+        desktop_url:     entry['webUrl'],
         mobile_url:      "#{parent_url}/#{URI.encode(entry["name"])}",
         size:            entry['size'],
         cTag:            entry['cTag'],
