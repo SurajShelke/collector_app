@@ -1,4 +1,4 @@
-<% if @drives %>
+<% unless @drives.empty? %>
   <%= form_tag(fetch_folders_google_team_drive_index_path, method: 'get') do %>
     <h5 class="card-header">Team Drives (Total: <%= @drives.size || 0 %>)</h5>
     <% drives = @drives.map { |drive| [drive.name, drive.id] } %>
@@ -11,5 +11,8 @@
     </div>
   <% end %>
 <% else %>
-  No Team Drives found.
+  <p>
+    No Team Drives found. Please check if selected Google account having 'Team Drive' feature enabled. <br />
+    For more details on the Google team drive account, you may visit <%= link_to "page", "https://gsuite.google.com/learning-center/products/drive/get-started-team-drive/" %>.
+  </p>
 <% end %>
