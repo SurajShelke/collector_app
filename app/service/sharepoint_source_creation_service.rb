@@ -8,7 +8,8 @@ class SharepointSourceCreationService
     @refresh_token          = options[:refresh_token]
     @folders                = options[:folders]
     @drive_id               = options[:drive_id]
-    @site_name              = options[:site_name]
+    @site_name              = options[:site_name] || ""
+    @site_name = "one_drive" if @site_name.empty?
   end
 
   def create_sources
@@ -22,6 +23,7 @@ class SharepointSourceCreationService
           refresh_token:  @refresh_token,
           folder_id:      folder_id,
           drive_id:       @drive_id
+          # extract_content: @extract_content,
         },
         display_name:    "#{@site_name} (#{folder_name})",
         organization_id: @organization_id,

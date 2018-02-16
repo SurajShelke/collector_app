@@ -1,4 +1,5 @@
 class SharepointCommunicator
+  # include ContentExtractionService
 
   GRAPH_RESOURCE = 'https://graph.microsoft.com'.freeze
   GRAPH_AUTH_URL = 'https://login.microsoftonline.com'.freeze

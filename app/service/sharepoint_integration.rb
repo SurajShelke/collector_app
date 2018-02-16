@@ -1,3 +1,4 @@
+require 'sharepoint_communicator'
 class SharepointIntegration < BaseIntegration
   attr_accessor :client,:source_id,:organization_id
   def self.get_source_name
@@ -30,6 +31,7 @@ class SharepointIntegration < BaseIntegration
     @drive_id                = @credentials["drive_id"]
     @client_id               = AppConfig.integrations['sharepoint']['client_id']
     @client_secret           = AppConfig.integrations['sharepoint']['client_secret']
+    # @extract_content         = @credentials["extract_content"]
     @sharepoint_communicator = SharepointCommunicator.new(
       client_id:      @client_id,
       client_secret:  @client_secret,
@@ -79,11 +81,13 @@ class SharepointIntegration < BaseIntegration
   end
 
   def create_content_item(entry, parent_url)
+    # content = @sharepoint_communicator.get_file_content(entry["@microsoft.graph.downloadUrl"]) if @extract_content && @extract_content == "true"
     attributes = {
       name:         entry["name"],
       description:  "",
       url:          "#{parent_url}/#{URI.encode(entry["name"])}",
       content_type: 'document',
+      # content:      content,
       external_id:  entry["id"],
       raw_record:   entry,
       source_id:    @source_id,
