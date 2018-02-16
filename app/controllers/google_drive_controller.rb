@@ -9,7 +9,7 @@ class GoogleDriveController < ApplicationController
       begin
         drive_sesion = authentication_session(refresh_token: refresh_token)
         @folders = get_google_drive_content(drive_sesion)
-        @folders.unshift({ 'id' => 'root', 'name' => 'Root' })
+        @folders.unshift('id' => 'root', 'name' => 'Root')
       rescue StandardError
         redirect_to authorize_google_drive_index_path
       end
@@ -66,12 +66,12 @@ class GoogleDriveController < ApplicationController
         render json: { message: 'Unauthorized parameters' }, status: :unauthorized
       else
         service = GoogleDriveSourceCreationService.new(
-            AppConfig.integrations['google_drive']['ecl_client_id'],
-            AppConfig.integrations['google_drive']['ecl_token'],
-            folders:          source_params[:folders] || [],
-            refresh_token:    refresh_token,
-            organization_id:  @organization_id,
-            source_type_id:   @source_type_id # ,
+          AppConfig.integrations['google_drive']['ecl_client_id'],
+          AppConfig.integrations['google_drive']['ecl_token'],
+          folders:          source_params[:folders] || [],
+          refresh_token:    refresh_token,
+          organization_id:  @organization_id,
+          source_type_id:   @source_type_id # ,
           # extract_content:  @extract_content
         )
         begin
@@ -110,7 +110,7 @@ class GoogleDriveController < ApplicationController
   # Exchanges an authorization code for a token
   def get_token_from_code(code)
     begin
-      auth_bearer = client.auth_code.get_token(code, { redirect_uri: callback_google_drive_index_url, token_method: :post })
+      auth_bearer = client.auth_code.get_token(code, redirect_uri: callback_google_drive_index_url, token_method: :post)
       session[:google_auth_token] = auth_bearer.to_hash
       @access_token = auth_bearer.token
       @refresh_token = auth_bearer.refresh_token
@@ -120,12 +120,14 @@ class GoogleDriveController < ApplicationController
   end
 
   def client
-    OAuth2::Client.new(AppConfig.integrations['google_drive']['client_id'],
-                       AppConfig.integrations['google_drive']['client_secret'],
-                       site: 'https://accounts.google.com',
-                       authorize_url: '/o/oauth2/auth',
-                       token_url: '/o/oauth2/token',
-                       additional_parameters: { 'access_type' => 'offline' })
+    OAuth2::Client.new(
+      AppConfig.integrations['google_drive']['client_id'],
+      AppConfig.integrations['google_drive']['client_secret'],
+      site: 'https://accounts.google.com',
+      authorize_url: '/o/oauth2/auth',
+      token_url: '/o/oauth2/token',
+      additional_parameters: { 'access_type' => 'offline' }
+    )
   end
 
   def get_user_info(access_token)
@@ -188,7 +190,7 @@ class GoogleDriveController < ApplicationController
     loop do
       (folders, page_token) = drive_sesion.collections(q: "mimeType = 'application/vnd.google-apps.folder'", orderBy: 'folder', page_token: page_token)
       paginated_folders.concat(folders)
-      break if page_token
+      break unless page_token
     end
     paginated_folders
   end

@@ -23,7 +23,7 @@ class SharepointIntegration < BaseIntegration
   #  @options ={start: start, limit: limit, page: page, last_polled_at: @last_polled_at}
   #  We dont need start or limit for this Integration
   #  Whenever pagination is available we can use it
-  def get_content(options={})
+  def get_content(options = {})
     @options = options
     @source_id               = @credentials['source_id']
     @organization_id         = @credentials['organization_id']
@@ -82,7 +82,7 @@ class SharepointIntegration < BaseIntegration
     attributes = {
       name:         entry['name'],
       description:  '',
-      url:          "#{parent_url}/#{URI.encode(entry["name"])}",
+      url:          "#{parent_url}/#{URI.encode(entry['name'])}",
       content_type: 'document',
       external_id:  entry['id'],
       raw_record:   entry,
@@ -92,11 +92,11 @@ class SharepointIntegration < BaseIntegration
         images:       [{ url: nil }],
         title:        entry['name'],
         description:  '',
-        url:          "#{parent_url}/#{URI.encode(entry["name"])}"
+        url:          "#{parent_url}/#{URI.encode(entry['name'])}"
       },
       additional_metadata: {
         desktop_url:     entry['webUrl'],
-        mobile_url:      "#{parent_url}/#{URI.encode(entry["name"])}",
+        mobile_url:      "#{parent_url}/#{URI.encode(entry['name'])}",
         size:            entry['size'],
         cTag:            entry['cTag'],
         eTag:            entry['eTag']

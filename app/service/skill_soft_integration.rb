@@ -35,11 +35,11 @@ class SkillSoftIntegration < BaseIntegration
     @shared_secret = @credentials['shared_secret']
 
     @client = Savon.client(
-                            wsdl: @wsdl,
-                            wsse_timestamp: true,
-                            wsse_auth: [@customer_id, @shared_secret, :digest],
-                            soap_version: 1
-                          )
+      wsdl: @wsdl,
+      wsse_timestamp: true,
+      wsse_auth: [@customer_id, @shared_secret, :digest],
+      soap_version: 1
+    )
     fetch_content
   end
 
@@ -48,14 +48,11 @@ class SkillSoftIntegration < BaseIntegration
     begin
       response = @client.call(:util_poll_for_report, message: { customer_id: @customer_id, report_id: report_id })
       return response.body[:url_response][:olsa_url]
-    rescue Exception => e
+    rescue StandardError => e
       tries -= 1
-      if tries > 0
-        sleep 5
-        retry
-      else
-        raise Webhook::Error::IntegrationFailure, "[SkillSoftIntegration] Unable to get Report. #{e.message}"
-      end
+      raise Webhook::Error::IntegrationFailure, "[SkillSoftIntegration] Unable to get Report. #{e.message}" if tries.zero?
+      sleep 5
+      retry
     end
   end
 
@@ -71,13 +68,13 @@ class SkillSoftIntegration < BaseIntegration
       full_listing_summary = Hash.from_xml(doc.to_s)
 
       full_listing_summary = full_listing_summary['full_listing_summary']
-      assets = full_listing_summary['asset'].class == Array ?  full_listing_summary['asset'] : [full_listing_summary['asset']]
+      assets = full_listing_summary['asset'].class == Array ? full_listing_summary['asset'] : [full_listing_summary['asset']]
 
       assets.each do |asset|
         response = @client.call(:ai_get_xml_asset_meta_data, message: { customer_id: @customer_id, asset_id: asset['id'], format: 'XML' }) rescue nil
         create_content_item(response.body) if response
       end
-    rescue Exception => e
+    rescue StandardError => e
       raise Webhook::Error::IntegrationFailure, "[SkillSoftIntegration] Unable to get assests. #{e.message}"
     end
   end

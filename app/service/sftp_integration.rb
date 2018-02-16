@@ -5,8 +5,7 @@ OpenURI::Buffer.send :remove_const, 'StringMax' if OpenURI::Buffer.const_defined
 OpenURI::Buffer.const_set 'StringMax', 0
 
 class SftpIntegration < BaseIntegration
-
-  REQUIRED_KEYS = [:id, :title, :description, :deeplink_url, :keywords, :image_url]
+  REQUIRED_KEYS = %i[id title description deeplink_url keywords image_url].freeze
 
   def self.get_source_name
     'sftp'
@@ -16,8 +15,8 @@ class SftpIntegration < BaseIntegration
     :sftp
   end
 
-  def self.get_credentials_from_config(config)
-    source["source_config"]
+  def self.get_credentials_from_config(source)
+    source['source_config']
   end
 
   def self.ecl_client_id
@@ -32,18 +31,19 @@ class SftpIntegration < BaseIntegration
     20
   end
 
-  def get_content(options={})
-    data = SftpCsvParser.new(server_ip:                 @credentials['server_ip'],
-                             server_encrypted_password: @credentials['server_encrypted_password'],
-                             server_username:           @credentials['server_username'],
-                             server_folder_path:        @credentials['server_folder_path'],
-                             delimiter: ',').fetch_courses
-    data.each{|row| create_content_item(row)} if data
+  def get_content(options = {})
+    data = SftpCsvParser.new(
+      server_ip:                 @credentials['server_ip'],
+      server_encrypted_password: @credentials['server_encrypted_password'],
+      server_username:           @credentials['server_username'],
+      server_folder_path:        @credentials['server_folder_path'],
+      delimiter: ','
+    ).fetch_courses
+    data.each { |row| create_content_item(row) } if data
   end
 
   def content_item_attributes(entry)
-
-    entry[:keywords].gsub!("\"", "") if entry[:keywords].present?
+    entry[:keywords].delete!('"', '') if entry[:keywords].present?
 
     {
       name:         sanitize_content(entry[:title]),
@@ -53,7 +53,7 @@ class SftpIntegration < BaseIntegration
       external_id:  entry[:id].present? ? entry[:id] : entry[:deeplink_url],
       raw_record:   entry,
       tags:         get_tags(entry[:keywords]),
-      source_id:       @credentials["source_id"],
+      source_id:       @credentials['source_id'],
 
       resource_metadata:  {
         title:         sanitize_content(entry[:title]),
@@ -73,23 +73,21 @@ class SftpIntegration < BaseIntegration
     keys.each do |key|
       metadata[key] = entry[key]
     end
-    metadata = metadata.reject{|k,v| v.blank?}
+    metadata = metadata.reject { |_k, v| v.blank? }
     metadata.presence
   end
 
   def course_image(image_url)
-    if image_url.present?
-      urls = image_url.split(',')
-      urls.collect{ |url| { url: image_url.squish } }
-    end
+    return unless tags.present?
+    urls = image_url.split(',')
+    urls.collect { |url| { url: url.squish } }
   end
 
   def get_tags(tags)
-    if tags.present?
-      tags = tags.split(',')
-      tags.collect do |tag|
-        { source: 'native', tag_type: 'keyword', tag: tag.squish }
-      end
+    return unless tags.present?
+    tags = tags.split(',')
+    tags.collect do |tag|
+      { source: 'native', tag_type: 'keyword', tag: tag.squish }
     end
   end
 
@@ -97,7 +95,7 @@ class SftpIntegration < BaseIntegration
     re = /<("[^"]*"|'[^']*'|[^'">])*>/
 
     # Check iso-8859-1 encoding for unrecognised characters
-    content.gsub(re, '').encode("iso-8859-1", invalid: :replace, undef: :replace, replace: '').force_encoding('utf-8') if content.present?
+    content.gsub(re, '').encode('iso-8859-1', invalid: :replace, undef: :replace, replace: '').force_encoding('utf-8') if content.present?
   end
 
   def create_content_item(entry)

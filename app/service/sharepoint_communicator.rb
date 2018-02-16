@@ -1,9 +1,8 @@
 class SharepointCommunicator
-
   GRAPH_RESOURCE = 'https://graph.microsoft.com'.freeze
   GRAPH_AUTH_URL = 'https://login.microsoftonline.com'.freeze
 
-  def initialize(options= {})
+  def initialize(options = {})
     @options                = options
     @client_id              = options[:client_id]
     @client_secret          = options[:client_secret]
@@ -17,7 +16,7 @@ class SharepointCommunicator
       client_secret: @client_secret,
       refresh_token: @refresh_token,
       grant_type: 'refresh_token',
-      additional_parameters: {"access_type" => "offline"}
+      additional_parameters: { 'access_type' => 'offline' }
     }
 
     conn = Faraday.new(GRAPH_AUTH_URL)
@@ -26,7 +25,7 @@ class SharepointCommunicator
       req.headers = { 'Content-Type' => 'application/x-www-form-urlencoded' }
       req.body = params
     end
-    @token = response_data["access_token"]
+    @token = response_data['access_token']
   end
 
   def get(relative_url, params = {})
@@ -46,16 +45,16 @@ class SharepointCommunicator
     response_data
   end
 
-  #created alias to provide appropriate call while calling method
+  # created alias to provide appropriate call while calling method
   alias_method :folders, :get
   alias_method :files, :get
   alias_method :root_site, :get
 
   def headers
     {
-      "content_type" => 'application/json;odata.metadata=minimal;odata.streaming=true',
-      "accept" => 'application/json;odata.metadata=minimal;odata.streaming=true',
-      "Authorization" => "Bearer #{@token}"
+      'content_type' => 'application/json;odata.metadata=minimal;odata.streaming=true',
+      'accept' => 'application/json;odata.metadata=minimal;odata.streaming=true',
+      'Authorization' => "Bearer #{@token}"
     }
   end
 

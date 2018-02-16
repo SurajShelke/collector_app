@@ -37,7 +37,7 @@ class SharepointController < ApplicationController
   def fetch_sites
     begin
       sharepoint_communicator = create_sharepoint_communicator(params[:provider_id])
-      @sites = sharepoint_communicator.folders('/v1.0/sites', { search: '*' })['value']
+      @sites = sharepoint_communicator.folders('/v1.0/sites', search: '*')['value']
     rescue StandardError => he
       Rails.logger.error "Invalid Oauth2 token, #{he.message}"
       redirect_to authorize_sharepoint_index_path
@@ -62,7 +62,7 @@ class SharepointController < ApplicationController
         @site_id = site['id']
         @site_name = site['name']
         sharepoint_communicator = create_sharepoint_communicator(params[:provider_id])
-        @sites = sharepoint_communicator.folders('/v1.0/sites', { search: '*' })['value']
+        @sites = sharepoint_communicator.folders('/v1.0/sites', search: '*')['value']
         @drives = sharepoint_communicator.folders("/v1.0/sites/#{@site_id}/drives")['value']
       else
         render json: { message: 'Failed to get site information, Please contact administrator' }, status: :unprocessable_entity
@@ -87,8 +87,8 @@ class SharepointController < ApplicationController
           @folders = sharepoint_communicator.folders("/v1.0/drives/#{@drive_id}/root/children")['value']
           @folders = @folders.select { |folder| folder['folder'] }
           # Adding root folder to the folders list, so that files inside root folder can be synced. In Sharepoint instance, root folder is typically named as 'Shared Document'.
-          @folders.unshift({ 'id' => @drive_id, 'name' => 'Shared Documents' })
-          @sites = sharepoint_communicator.folders('/v1.0/sites', { search: '*' })['value']
+          @folders.unshift('id' => @drive_id, 'name' => 'Shared Documents')
+          @sites = sharepoint_communicator.folders('/v1.0/sites', search: '*')['value']
           @drives = sharepoint_communicator.folders("/v1.0/sites/#{@site_id}/drives")['value'] if @site_id
         else
           render json: { message: 'Failed to get drive information, Please contact administrator' }, status: :unprocessable_entity

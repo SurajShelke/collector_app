@@ -30,17 +30,15 @@ class SourcePullerService
       @response = service.get(params)
       response_data = service.response_data
 
-      if @response.success?
-        @sources = response_data['data']
-        break if @sources.length == 0
+      break unless @response.success?
 
-        @sources.each do |source|
-          yield source
-        end
-        offset += 1
-      else
-        break
+      @sources = response_data['data']
+      break if @sources.length.zero?
+
+      @sources.each do |source|
+        yield source
       end
+      offset += 1
     end
   end
 end

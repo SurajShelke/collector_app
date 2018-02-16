@@ -1,5 +1,4 @@
 class SharepointOnpremCommunicator
-
   def initialize(user_name, password, sharepoint_url, site_name = "")
     @user_name = user_name
     @password = password
@@ -9,16 +8,16 @@ class SharepointOnpremCommunicator
 
   def get_sites
     site = get_site(true)
-    response = site.query(:get, "webinfos", nil, true)
-    @sites = JSON.parse(response)["d"]["results"]
-    @sites.unshift({"Title" => site.url[0..-2], "ServerRelativeUrl" => "/"})
+    response = site.query(:get, 'webinfos', nil, true)
+    @sites = JSON.parse(response)['d']['results']
+    @sites.unshift('Title' => site.url[0..-2], 'ServerRelativeUrl' => '/')
   end
 
   def get_root_folders
     site = get_site
     response = site.query(:get, "GetFolderByServerRelativeUrl('#{URI.encode('Shared Documents')}')?$expand=Folders", nil, true)
-    folders = JSON.parse(response)["d"]["Folders"]["results"].select {|f| f unless ["Attachments", "Item", "Forms"].include?(f["Name"])}
-    folders.unshift({"ServerRelativeUrl" => "/Shared Documents", "Name" => "Shared Documents"})
+    folders = JSON.parse(response)['d']['Folders']['results'].select { |f| f unless ['Attachments', 'Item', 'Forms'].include?(f['Name']) }
+    folders.unshift('ServerRelativeUrl' => '/Shared Documents', 'Name' => 'Shared Documents')
   end
 
   def get_content_by_folder_relative_url(folder_relative_url)
@@ -55,7 +54,7 @@ class SharepointOnpremCommunicator
   # end
 
   def get_site(is_root = false)
-    root_site_name = is_root ? "" : @site_name
+    root_site_name = is_root ? '' : @site_name
     uri = URI(@sharepoint_url)
     site = Sharepoint::Site.new uri.host, URI.encode(root_site_name)
     site.session = Sharepoint::HttpAuth::Session.new site
@@ -65,26 +64,25 @@ class SharepointOnpremCommunicator
   end
 
   def current_user
-    get_site.query(:get, "CurrentUser")
+    get_site.query(:get, 'CurrentUser')
   end
 
   def update_relative_url(folders)
     site = get_site
     new_folders = {}
     folders.each do |folder_relative_url, folder_name|
-      if folder_relative_url != "/Shared Documents" 
+      if folder_relative_url != '/Shared Documents'
         response = site.query(:get, "GetFolderByServerRelativeUrl('#{URI.encode(folder_relative_url)}')/ListItemAllFields", nil, true)
         response = JSON.parse(response)
-        if response["d"]["Id"]
-          new_folders[folder_relative_url] = { :name => folder_name, :id => response["d"]["Id"] }
+        if response['d']['Id']
+          new_folders[folder_relative_url] = { name: folder_name, id: response['d']['Id'] }
         else
-          new_folders[folder_relative_url] = { :name => folder_name, :id => @site_name }
+          new_folders[folder_relative_url] = { name: folder_name, id: @site_name }
         end
       else
-        new_folders[folder_relative_url] = { :name => folder_name, :id => @site_name }
+        new_folders[folder_relative_url] = { name: folder_name, id: @site_name }
       end
     end
     new_folders
   end
-
 end

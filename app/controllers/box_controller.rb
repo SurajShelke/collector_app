@@ -16,7 +16,7 @@ class BoxController < ApplicationController
         @root_id = Boxr::ROOT
         @folders = client.folder_items(@root_id)
         @folders.select! { |folder| folder.type == 'folder' }
-        @folders.unshift({ 'id' => @root_id, 'name' => 'Root' })
+        @folders.unshift('id' => @root_id, 'name' => 'Root')
       rescue StandardError
         redirect_to authorize_box_index_path
       end
@@ -134,7 +134,7 @@ class BoxController < ApplicationController
   # Exchanges an authorization code for a token
   def get_token_from_code(code)
     begin
-      auth_bearer = client.auth_code.get_token(code, { redirect_uri: callback_box_index_url, token_method: :post })
+      auth_bearer = client.auth_code.get_token(code, redirect_uri: callback_box_index_url, token_method: :post)
       session[:box_auth_token] = auth_bearer.to_hash
       @access_token = auth_bearer.token
       @refresh_token = auth_bearer.refresh_token

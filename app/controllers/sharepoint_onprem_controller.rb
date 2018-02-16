@@ -44,9 +44,7 @@ class SharepointOnpremController < ApplicationController
         communicator = SharepointOnpremCommunicator.new(source_params[:user_name], source_params[:password], @sharepoint_url)
         current_user = communicator.current_user
         @provider = User.create_or_update_sharepoint_onprem_user(current_user.id, state_data[:user_name], state_data['auth_data'], state_data['secret'])
-        if @provider
-          @sites = communicator.get_sites
-        end
+        @sites = communicator.get_sites if @provider
       rescue StandardError
         flash[:error] = 'username or password is invalid'
         redirect_to authorize_sharepoint_onprem_index_path(
@@ -121,7 +119,7 @@ class SharepointOnpremController < ApplicationController
   end
 
   def decode_credentials(auth_data)
-    JWT.decode(auth_data, AppConfig.digest_secret, { algorithm: 'HS256' })[0]
+    JWT.decode(auth_data, AppConfig.digest_secret, algorithm: 'HS256')[0]
   end
 
   def verify_referer

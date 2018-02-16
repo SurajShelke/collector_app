@@ -9,6 +9,6 @@ class FetchContentJob
     integration = content_integration_str.constantize
 
     ecl_service = EclDeveloperClient::Source.new(integration.ecl_client_id, integration.ecl_token)
-    ecl_service.update(source_id, { last_polled_at: Time.now })
+    ecl_service.update(source_id, last_polled_at: Time.now)
   end
 end

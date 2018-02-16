@@ -133,7 +133,7 @@ class GoogleTeamDriveController < ApplicationController
   # Exchanges an authorization code for a token
   def get_token_from_code(code)
     begin
-      auth_bearer = client.auth_code.get_token(code, { redirect_uri: callback_google_team_drive_index_url, token_method: :post })
+      auth_bearer = client.auth_code.get_token(code, redirect_uri: callback_google_team_drive_index_url, token_method: :post)
       session[:google_auth_token] = auth_bearer.to_hash
       @access_token = auth_bearer.token
       @refresh_token = auth_bearer.refresh_token
@@ -220,7 +220,7 @@ class GoogleTeamDriveController < ApplicationController
         page_token: page_token
       )
       paginated_files.concat(files)
-      break if page_token
+      break unless page_token
     end
     paginated_files
   end

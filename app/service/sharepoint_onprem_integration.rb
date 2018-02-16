@@ -24,15 +24,15 @@ class SharepointOnpremIntegration < BaseIntegration
   end
 
   def decode_credentials(auth_data)
-    auth_data = JWT.decode(auth_data, AppConfig.digest_secret, algorithm='HS256')[0]
-    @user_name  = auth_data['user_name']
-    @password  = auth_data['password']
+    auth_data = JWT.decode(auth_data, AppConfig.digest_secret, algorithm = 'HS256')[0]
+    @user_name = auth_data['user_name']
+    @password = auth_data['password']
   end
   #
   #  @options ={start: start, limit: limit, page: page, last_polled_at: @last_polled_at}
   #  We dont need start or limit for this Integration
   #  Whenever pagination is available we can use it
-  def get_content(options={})
+  def get_content(options = {})
     @options = options
     @source_id        = @credentials['source_id']
     @organization_id  = @credentials['organization_id']
@@ -55,7 +55,7 @@ class SharepointOnpremIntegration < BaseIntegration
       create_content_item(entry.data)
     end
 
-    folders = response.folders.select {|f| f unless ['Attachments', 'Item', 'Forms'].include?(f.name)}
+    folders = response.folders.select { |f| f unless ['Attachments', 'Item', 'Forms'].include?(f.name) }
     folders.each do |folder|
       credentials = @credentials
       credentials['folder_relative_url'] = folder.server_relative_url
@@ -72,8 +72,8 @@ class SharepointOnpremIntegration < BaseIntegration
 
   def create_content_item(entry)
     all_fields = @communicator.get_file_meta_data(entry['ServerRelativeUrl'])
-    # entry["permission"] = @communicator.get_file_permission(all_fields["d"]["RoleAssignments"]["__deferred"]["uri"])
-    entry["Id"] = all_fields['d']['Id']
+    # entry['permission'] = @communicator.get_file_permission(all_fields['d']['RoleAssignments']['__deferred']['uri'])
+    entry['Id'] = all_fields['d']['Id']
     attributes = {
       name:         entry['Name'],
       description:  entry['CheckInComment'],
@@ -90,7 +90,7 @@ class SharepointOnpremIntegration < BaseIntegration
         url:          entry['__metadata']['uri']
       },
       additional_metadata: {
-        # permission:      entry["permission"],
+        # permission:      entry['permission'],
         path_lower:      entry['ServerRelativeUrl'],
         parent_name:     entry['parent_name']
       }

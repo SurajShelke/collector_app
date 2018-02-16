@@ -20,7 +20,7 @@ class DropboxSourceCreationService
           access_token:  @access_token,
           folder_id:     folder_id
         },
-        display_name:    folder_name.gsub('/', '_').sub('_', ''),
+        display_name:    folder_name.tr('/', '_').sub('_', ''),
         organization_id: @organization_id,
         is_enabled:      true,
         is_default:      false,

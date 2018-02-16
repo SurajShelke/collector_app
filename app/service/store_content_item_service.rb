@@ -23,10 +23,10 @@ class StoreContentItemService
         start = page * @content_integration.per_page
         limit = @content_integration.per_page
       end
-      @client.get_content({ start: start, limit: limit, page: page, last_polled_at: @last_polled_at })
+      @client.get_content(start: start, limit: limit, page: page, last_polled_at: @last_polled_at)
     rescue Webhook::NoContentException => _
       # Ignored
-    rescue => e
+    rescue StandardError => e
       raise Webhook::Error::IntegrationFailure, "Failed Integration #{@source_id} => Page: #{page}, ErrorMessage: #{e.message}"
     end
   end

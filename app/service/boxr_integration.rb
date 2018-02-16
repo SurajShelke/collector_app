@@ -145,7 +145,7 @@ class BoxrIntegration < BaseIntegration
       folder_id:     @credentials['folder_id']
     }
 
-    ecl_response = ecl_service.update(@credentials['source_id'], { source_config: source_config })
+    ecl_response = ecl_service.update(@credentials['source_id'], source_config: source_config)
     @credentials['refresh_token'] = response['refresh_token'] if ecl_response.success?
 
     OAuth2::AccessToken.new(nil, response['access_token'])

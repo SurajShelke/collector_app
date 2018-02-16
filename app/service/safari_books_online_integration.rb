@@ -1,6 +1,5 @@
 class SafariBooksOnlineIntegration < BaseIntegration
-
-  SAFARI_BOOKS_ONLINE_URL = 'https://www.safaribooksonline.com/api/v2/search/'
+  SAFARI_BOOKS_ONLINE_URL = 'https://www.safaribooksonline.com/api/v2/search/'.freeze
 
   def self.get_source_name
     'safari_books_online'
@@ -10,8 +9,8 @@ class SafariBooksOnlineIntegration < BaseIntegration
     :safari_books_online
   end
 
-  def self.get_credentials_from_config(config)
-    source["source_config"]
+  def self.get_credentials_from_config(source)
+    source['source_config']
   end
 
   def self.ecl_client_id
@@ -22,30 +21,30 @@ class SafariBooksOnlineIntegration < BaseIntegration
     AppConfig.integrations['safari_books_online']['ecl_token']
   end
 
-  def get_content(options={})
+  def get_content(options = {})
     begin
       current_page = options[:page].to_i + 1
-      data = json_request(SAFARI_BOOKS_ONLINE_URL, :get,params: {page: current_page})
-      if data["results"].present?
-        data["results"].map {|entry| create_content_item(entry)}
+      data = json_request(SAFARI_BOOKS_ONLINE_URL, :get, params: { page: current_page })
+      if data['results'].present?
+        data['results'].map { |entry| create_content_item(entry) }
         if current_page == 1
-          (1..(data['total']/10)).each do |page|
+          (1..(data['total'] / 10)).each do |page|
             Sidekiq::Client.push(
               'class' => FetchContentJob,
               'queue' => self.class.get_fetch_content_job_queue.to_s,
-              'args' => [self.class.to_s, @credentials, @credentials["source_id"],@credentials["organization_id"], options[:last_polled_at], page],
+              'args' => [self.class.to_s, @credentials, @credentials['source_id'], @credentials['organization_id'], options[:last_polled_at], page],
               # 'at' => (Time.now + rand(0..120)).to_f,
               'rate' => {
-                :name   => 'safari_books_online_50_rpm_rate_limit',
-                :limit  => 50,
-                :period => 60, ## A minute
+                name:   'safari_books_online_50_rpm_rate_limit',
+                limit:  50,
+                period: 60, ## A minute
               }
             )
           end
-
         end
       end
-    rescue=>e
+    rescue StandardError => err
+      raise Webhook::Error::IntegrationFailure, "[SafariBooksOnlineIntegration] Failed Integration for source #{@credentials['source_id']} => Page: #{options[:page]}, ErrorMessage: #{err.message}"
     end
   end
 
@@ -56,7 +55,7 @@ class SafariBooksOnlineIntegration < BaseIntegration
   def content_item_attributes(entry)
     {
       external_id:  entry['id'], # This is the unique ID (as far as the search API is concerned) of the result.
-      source_id:  @credentials["source_id"],
+      source_id:  @credentials['source_id'],
       url:          get_url(entry['web_url']),
       name:         sanitize_content(entry['title']),
       description:  sanitize_content(entry['description']),

@@ -13,7 +13,7 @@ class User < ApplicationRecord
     )
   end
 
-  def self.create_or_update_google_drive_user(account, refresh_token, integration_type) # integration_type = 'google_drive' or 'team_drive'
+  def self.create_or_update_google_drive_user(account, refresh_token, integration_type)
     user            = find_or_initialize_by(email: account['email'])
     user.first_name = account['given_name']
     user.last_name  = account['family_name']
