@@ -40,5 +40,7 @@ production:
   - [nuvepro, 3]
   - [one_drive, 5]
   - [one_drive_ecl_job, 3]
-  - [skill_soft_ecl_job, 3]
   - [skill_soft, 3]
+  - [skill_soft_ecl_job, 3]
+  - [lynda, 5]
+  - [lynda_ecl_job, 3]
