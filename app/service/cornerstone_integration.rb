@@ -75,9 +75,7 @@ class CornerstoneIntegration < BaseIntegration
       @secret_key = @credentials['secret_key']
       @access_token = access_token
       catalogs = get_catalogs
-      byebug
       catalogs.map { |entry| create_content_item(entry) }
-      puts catalogs.size
     rescue StandardError => err
       raise Webhook::Error::IntegrationFailure, "[CornerstoneIntegration] Failed Integration for source #{@credentials['source_id']} => Page: #{options[:page]}, ErrorMessage: #{err.message}"
     end
@@ -104,7 +102,6 @@ class CornerstoneIntegration < BaseIntegration
   end
 
   def content_item_attributes(entry)
-    byebug
     {
       external_id:     entry["ObjectId"],
       source_id:       @credentials["source_id"],
