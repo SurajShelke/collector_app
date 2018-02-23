@@ -25,3 +25,16 @@ SourceTypeConfig.create!(
 		'ecl_token' => "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc19kZXZlbG9wZXIiOnRydWUsImNsaWVudF9pZCI6Ilk5NlpSdlhYakEiLCJlbWFpbCI6ImRhcnNoYW5fcGF0ZWxAcGVyc2lzdGVudC5jby5pbiJ9.bF638d7ZPiaXTSMZiEb4HgyOEhDN28zS-wXoRDtfa3U"
 	}
 )
+
+SourceTypeConfig.create!(
+	source_type_id: '333b18d7-db6e-4f7e-bded-dfffa8edef30',
+	source_type_name: 'cornerstone',
+	values: {
+		'ecl_client_id' => 'Y96ZRvXXjA',
+		'ecl_token' => 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc19kZXZlbG9wZXIiOnRydWUsImNsaWVudF9pZCI6Ilk5NlpSdlhYakEiLCJlbWFpbCI6ImRhcnNoYW5fcGF0ZWxAcGVyc2lzdGVudC5jby5pbiJ9.bF638d7ZPiaXTSMZiEb4HgyOEhDN28zS-wXoRDtfa3U',
+		'host_name' => 'schneider-electric-pilot',
+		'user_name' => 'digitalpoctester',
+		'api_key' => '1ljl94sfjk0k9',
+		'secret_key' => '5hGnAStFyKDiDMbZJWCr/hkDSoCT6GcScOOpEwIK56MWHTBVLuxurjYAWsChAon2GuUAQ24mOqDGanqAO4gxnw=='
+	}
+)
