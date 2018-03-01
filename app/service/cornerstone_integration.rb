@@ -99,9 +99,7 @@ class CornerstoneIntegration < BaseIntegration
       raise Webhook::Error::IntegrationFailure, "[CornerstoneIntegration] Failed to get catalogs, ErrorMessage: #{err.message}" unless catalogs.key?('data')
       break if catalogs['data'].count.zero?
       catalogs['data'].map do |entry|
-        puts "#{entry['ObjectId']}----->#{entry['Title']}"
         lo = fetch_lo_details(entry['ObjectId'])
-        puts lo
         if lo['status'].to_i == 200 && lo['data'].count > 0
           create_content_item(lo['data'][0]['trainingItem'])
         else
