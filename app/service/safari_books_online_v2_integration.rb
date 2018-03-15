@@ -1,5 +1,4 @@
 class SafariBooksOnlineV2Integration < BaseIntegration
-
   def self.get_source_name
     'safari_books_online_v2'
   end
@@ -9,7 +8,7 @@ class SafariBooksOnlineV2Integration < BaseIntegration
   end
 
   def self.get_credentials_from_config(config)
-    config["source_config"]
+    config['source_config']
   end
 
   def self.ecl_client_id
@@ -23,23 +22,22 @@ class SafariBooksOnlineV2Integration < BaseIntegration
   def base_url
     "https://www.#{@credentials['host_name']}.com"
   end
-  
+
   def search_url
     "#{base_url}/api/v2/search/"
-    #{}"#{base_url}/api/v2/search/"
   end
 
-  def get_content(options={})
+  def get_content(options = {})
     begin
-      data = json_request(search_url, :get,params: {page: options[:page], limit: 200})
-      if data["results"].present?
-        data["results"].map {|entry| create_content_item(entry)}
+      data = json_request(search_url, :get,params: { page: options[:page], limit: 200 })
+      if data['results'].present?
+        data['results'].map { |entry| create_content_item(entry) }
         if options[:page] == 0
-          (1..(data['total']/200)).each do |page|  # 500 results per page
+          (1..(data['total']/200)).each do |page|  # 200 results per page
             Sidekiq::Client.push(
               'class' => FetchContentJob,
               'queue' => self.class.get_fetch_content_job_queue.to_s,
-              'args' => [self.class.to_s, @credentials, @credentials["source_id"],@credentials["organization_id"], options[:last_polled_at], page],
+              'args' => [self.class.to_s, @credentials, @credentials['source_id'],@credentials['organization_id'], options[:last_polled_at], page],
               # 'at' => (Time.now + rand(0..120)).to_f,
               'rate' => {
                 :name   => 'safari_books_online_v2_50_rpm_rate_limit',
@@ -50,8 +48,8 @@ class SafariBooksOnlineV2Integration < BaseIntegration
           end
         end
       end
-    rescue=>e
-      
+    rescue StandardError => e
+      raise Webhook::Error::IntegrationFailure, "[SafariBooksOnlineV2Integration] , ErrorMessage: #{e.message}"
     end
   end
 
