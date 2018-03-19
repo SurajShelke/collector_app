@@ -1,10 +1,10 @@
-class SafariBooksOnlineV2Integration < BaseIntegration
+class SafariBooksOnlinePublicIntegration < BaseIntegration
   def self.get_source_name
-    'safari_books_online_v2'
+    'safari_books_online_public'
   end
 
   def self.get_fetch_content_job_queue
-    :safari_books_online_v2
+    :safari_books_online_public
   end
 
   def self.get_credentials_from_config(config)
@@ -12,15 +12,15 @@ class SafariBooksOnlineV2Integration < BaseIntegration
   end
 
   def self.ecl_client_id
-    SourceTypeConfig.where(source_type_name: 'safari_books_online_v2').first.values['ecl_client_id']
+    SourceTypeConfig.where(source_type_name: 'safari_books_online_public').first.values['ecl_client_id']
   end
 
   def self.ecl_token
-    SourceTypeConfig.where(source_type_name: 'safari_books_online_v2').first.values['ecl_token']
+    SourceTypeConfig.where(source_type_name: 'safari_books_online_public').first.values['ecl_token']
   end
 
   def base_url
-    "https://www.#{@credentials['host_name']}.com"
+    "https://www.safaribooksonline.com"
   end
 
   def search_url
@@ -40,7 +40,7 @@ class SafariBooksOnlineV2Integration < BaseIntegration
               'args' => [self.class.to_s, @credentials, @credentials['source_id'],@credentials['organization_id'], options[:last_polled_at], page],
               # 'at' => (Time.now + rand(0..120)).to_f,
               'rate' => {
-                :name   => 'safari_books_online_v2_50_rpm_rate_limit',
+                :name   => 'safari_books_online_public_50_rpm_rate_limit',
                 :limit  => 50,
                 :period => 60, ## A minute
               }
@@ -49,7 +49,7 @@ class SafariBooksOnlineV2Integration < BaseIntegration
         end
       end
     rescue StandardError => e
-      raise Webhook::Error::IntegrationFailure, "[SafariBooksOnlineV2Integration] , ErrorMessage: #{e.message}"
+      raise Webhook::Error::IntegrationFailure, "[SafariBooksOnlinePublicIntegration] , ErrorMessage: #{e.message}"
     end
   end
 
