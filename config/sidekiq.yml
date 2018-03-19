@@ -42,3 +42,5 @@ production:
   - [one_drive_ecl_job, 3]
   - [skill_soft_ecl_job, 3]
   - [skill_soft, 3]
+  - [safari_books_online_public_ecl_job, 3]
+  - [safari_books_online_public, 3]
