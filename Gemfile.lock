@@ -1,18 +1,18 @@
 GIT
-  remote: https://github.com/Course-Master/ecl_developer_client
-  revision: 335fa4b696cff1ebea3cd32ed4efcd8041f12945
-  specs:
-    ecl_developer_client (0.1.0)
-      faraday
-      json
-      jwt
-
-GIT
   remote: https://github.com/cbales/omniauth-microsoft_graph
   revision: f3a96241baf40b9019097b922690da9359933e41
   specs:
     omniauth-microsoft_v2_auth (0.1.0)
       omniauth-oauth2
+
+GIT
+  remote: https://github.com/edcast/ecl_developer_client
+  revision: c0d511435a66e4d6b8d323af7d8f821cdd5b0bc2
+  specs:
+    ecl_developer_client (0.1.0)
+      faraday
+      json
+      jwt
 
 GEM
   remote: https://rubygems.org/

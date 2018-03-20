@@ -27,6 +27,15 @@ SourceTypeConfig.create!(
 )
 
 SourceTypeConfig.create!(
+	source_type_id: "6b3d4393-fe52-43f9-898d-f4894f3bf7ed",
+	source_type_name: "safari_books_online_public",
+	values: {
+		'ecl_client_id' => "Ej4bAsuYiw",
+		'ecl_token' => "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc19kZXZlbG9wZXIiOnRydWUsImNsaWVudF9pZCI6IkVqNGJBc3VZaXciLCJlbWFpbCI6Im5pbGVzaF9uYXZhbGVAcGVyc2lzdGVudC5jby5pbiJ9.t2Tm0-jlF21kBiNpsRmDbpLUQmp8K5qoWviJqbz0bvg"
+	}
+)
+
+SourceTypeConfig.create!(
 	source_type_id: '333b18d7-db6e-4f7e-bded-dfffa8edef30',
 	source_type_name: 'cornerstone',
 	values: {
