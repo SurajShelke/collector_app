@@ -11,7 +11,7 @@ class LinkedinLearningIntegration < BaseIntegration
   end
 
   def self.get_credentials_from_config(config)
-    source["source_config"]
+    config["source_config"]
   end
 
   def self.ecl_client_id
@@ -30,32 +30,44 @@ class LinkedinLearningIntegration < BaseIntegration
     "#{LINKEDIN_LEARNING_BASE_URL}/learningAssets"
   end
 
+  def get_content_type
+    assetType = "COURSE,VIDEO" #Value to be fetched from Source Config
+    assetType.upcase!
+    assetType.tr!(' ','')
+    assetTypeArr = assetType.split(',')
+  end
+
   def get_content(options={})
-    begin
-      per_page = options[:limit]
-      param = { "q": "localeAndType",
-              "assetType": "COURSE",
-              "sourceLocale.language": "en",
-              "sourceLocale.country": "US",
-              "expandDepth": "1",
-              "includeRetired": "false",
-              "start": options[:start],
-              "count": per_page }
-      data = json_request(courses_url, :get, params: param, headers: { 'Authorization' => "Bearer #{get_access_token}", 'referer' => 'urn:li:partner:edcast' })
-      if data["elements"].present?
-        data["elements"].map { |entry| create_content_item(entry) }
-        if options[:page] == 0
-          (1..(data['paging']['total']/per_page)).each do |page|
-            Sidekiq::Client.push(
-              'class' => FetchContentJob,
-              'queue' => self.class.get_fetch_content_job_queue.to_s,
-              'args' => [ self.class.to_s, @credentials, @credentials["source_id"], @credentials["organization_id"], options[:last_polled_at], page]
-            )
+    assetTypeArr = get_content_type # Fetching assetType
+
+    for assetType in assetTypeArr do
+      begin
+        per_page = options[:limit]
+        param = { "q": "localeAndType",
+                "assetType": assetType,
+                "sourceLocale.language": "en",
+                "sourceLocale.country": "US",
+                "expandDepth": "1",
+                "includeRetired": "false",
+                "start": options[:start],
+                "count": per_page }
+        data = json_request(courses_url, :get, params: param, headers: { 'Authorization' => "Bearer #{get_access_token}", 'referer' => 'urn:li:partner:edcast' })
+        if data["elements"].present?
+          data["elements"].map { |entry| create_content_item(entry) }
+          if options[:page] == 0
+            (1..(data['paging']['total']/per_page)).each do |page|
+              Sidekiq::Client.push(
+                'class' => FetchContentJob,
+                'queue' => self.class.get_fetch_content_job_queue.to_s,
+                'args' => [ self.class.to_s, @credentials, @credentials["source_id"], @credentials["organization_id"], options[:last_polled_at], page]
+              )
+              break
+            end
           end
         end
+      rescue StandardError => err
+        raise Webhook::Error::IntegrationFailure, "[LinkedinLearningIntegration] Failed Integration for source #{@credentials['source_id']} => Page: #{options[:page]}, ErrorMessage: #{err.message}"
       end
-    rescue StandardError => err
-      raise Webhook::Error::IntegrationFailure, "[LinkedinLearningIntegration] Failed Integration for source #{@credentials['source_id']} => Page: #{options[:page]}, ErrorMessage: #{err.message}"
     end
   end
 
@@ -88,7 +100,7 @@ class LinkedinLearningIntegration < BaseIntegration
       # https://www.linkedin.com/checkpoint/enterprise/login/<Account-ID>?application=learning&redirect=<course-url>
       deep_link_url = "https://www.linkedin.com/checkpoint/enterprise/login/#{@credentials['account_id']}?application=learning&redirect=#{deep_link_url}"
     end
-
+    puts entry['type']
     {
       external_id:  entry['urn'],
       source_id:    @credentials["source_id"],
@@ -96,7 +108,7 @@ class LinkedinLearningIntegration < BaseIntegration
       name:         sanitize_content(entry['title']['value']),
       description:  sanitize_content(details['description']['value']),
       raw_record:   entry,
-      content_type: 'course',
+      content_type: entry['assetType'].downcase,
       organization_id: @credentials["organization_id"],
 
       additional_metadata: {
@@ -115,6 +127,7 @@ class LinkedinLearningIntegration < BaseIntegration
   end
 
   def create_content_item(entry)
-    ContentItemCreationJob.perform_async(self.class.ecl_client_id, self.class.ecl_token, content_item_attributes(entry))
+    content_item_attributes(entry)
+    # ContentItemCreationJob.perform_async(self.class.ecl_client_id, self.class.ecl_token, content_item_attributes(entry))
   end
 end
