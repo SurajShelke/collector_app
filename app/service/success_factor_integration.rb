@@ -49,7 +49,7 @@ class SuccessFactorIntegration < BaseIntegration
       body_params = {
         grant_type: 'client_credentials',
         scope: {
-          userId: user_id,
+          userId: @user_id,
           companyId: @company_id,
           userType: user_type,
           resourceType: 'learning_public_api'
