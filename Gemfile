@@ -72,3 +72,5 @@ gem 'bugsnag'
 gem 'ecl_developer_client', :git => 'https://github.com/edcast/ecl_developer_client'
 gem 'sidekiq-rate-limiter', :require => 'sidekiq-rate-limiter/server'
 gem 'sidekiq-unique-jobs'
+gem 'chronic_duration'
+
