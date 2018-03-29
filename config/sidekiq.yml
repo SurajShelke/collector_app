@@ -44,3 +44,5 @@ production:
   - [skill_soft_ecl_job, 3]
   - [lynda, 5]
   - [lynda_ecl_job, 3]
+  - [get_abstract, 5]
+  - [get_abstract_ecl_job, 3]
