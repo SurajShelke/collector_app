@@ -33,6 +33,7 @@ gem 'omniauth-microsoft_v2_auth', git: 'https://github.com/cbales/omniauth-micro
 gem 'boxr'
 gem 'jwt'
 gem 'savon', '~> 2.0'
+gem 'rest-client'
 # Use Redis adapter to run Action Cable in production
 # gem 'redis', '~> 3.0'
 # Use ActiveModel has_secure_password
@@ -68,6 +69,8 @@ gem 'sidekiq'
 gem 'bootstrap'
 gem 'jquery-rails'
 gem 'bugsnag'
-gem 'ecl_developer_client', :git => 'https://github.com/Course-Master/ecl_developer_client'
+gem 'ecl_developer_client', :git => 'https://github.com/edcast/ecl_developer_client'
 gem 'sidekiq-rate-limiter', :require => 'sidekiq-rate-limiter/server'
 gem 'sidekiq-unique-jobs'
+gem 'chronic_duration'
+
