@@ -36,7 +36,7 @@ class EdutubeIntegration < BaseIntegration
     begin
       headers = {
         'Content-Type' => 'application/json',
-        'API_Key' => @credentials['API_Key']
+        'API_Key' => @credentials['api_key']
       }
       data = json_request(
         "#{@credentials['host']}#{relative_url}",
