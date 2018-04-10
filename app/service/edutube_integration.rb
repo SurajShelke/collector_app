@@ -34,17 +34,20 @@ class EdutubeIntegration < BaseIntegration
 
   def get_content(options = {})
     begin
-      headers = {
-        'Content-Type' => 'application/json',
-        'API_Key' => @credentials['api_key']
-      }
-      data = json_request(
-        "#{@credentials['host']}#{relative_url}",
-        :get,
-        headers: headers,
-        basic_auth:{ key: @credentials['client_id'], secret: @credentials['client_secret']}
-      )
-      JSON.parse(data).each{|entry| create_content_item(entry)}
+      relative_url = get_relative_url
+      if relative_url.present?
+        headers = {
+          'Content-Type' => 'application/json',
+          'API_Key' => @credentials['api_key']
+        }
+        data = json_request(
+          "#{@credentials['host']}#{relative_url}",
+          :get,
+          headers: headers,
+          basic_auth:{ key: @credentials['client_id'], secret: @credentials['client_secret']}
+        )
+        JSON.parse(data).each{|entry| create_content_item(entry)}
+      end
     rescue StandardError => err
       raise Webhook::Error::IntegrationFailure, "[EdutubeIntegration] Failed Integration for source #{@credentials['source_id']}, ErrorMessage: #{err.message}"
     end
@@ -93,7 +96,7 @@ class EdutubeIntegration < BaseIntegration
   end
 
   # TODO: if last_polled_at present then use delta changes api
-  def relative_url
+  def get_relative_url
     '/html5/edutube/bulkfeed' if @credentials['last_polled_at'].blank?
   end
 end
