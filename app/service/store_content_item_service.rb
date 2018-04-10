@@ -9,6 +9,7 @@ class StoreContentItemService
     credentials ||= {}
     credentials["source_id"] = source_id
     credentials["organization_id"] = organization_id
+    credentials["last_polled_at"] = last_polled_at
     @client = @content_integration.new(credentials)
 
     @source_name = @content_integration.get_source_name

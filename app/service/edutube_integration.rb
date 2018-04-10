@@ -32,28 +32,24 @@ class EdutubeIntegration < BaseIntegration
     source_type_config_values['ecl_token']
   end
 
-  def get_content(options= {})
-    relative_url = get_relative_url
-
-    if relative_url.present?
-      begin
-        data = call_api(relative_url)
-        JSON.parse(data).each{|entry| create_content_item(entry)}
-      rescue StandardError => err
-        raise Webhook::Error::IntegrationFailure, "[EdutubeIntegration] Failed Integration for source #{@credentials['source_id']}, ErrorMessage: #{err.message}"
-      end
+  def get_content(options = {})
+    begin
+      headers = {
+        'Content-Type' => 'application/json',
+        'API_Key' => @credentials['API_Key']
+      }
+      data = json_request(
+        "#{@credentials['host']}#{relative_url}",
+        :get,
+        headers: headers,
+        basic_auth:{ key: @credentials['client_id'], secret: @credentials['client_secret']}
+      )
+      JSON.parse(data).each{|entry| create_content_item(entry)}
+    rescue StandardError => err
+      raise Webhook::Error::IntegrationFailure, "[EdutubeIntegration] Failed Integration for source #{@credentials['source_id']}, ErrorMessage: #{err.message}"
     end
   end
 
-  def call_api(relative_url)
-    conn = Faraday.new(@credentials['host'])
-    response = conn.get do |req|
-      req.url relative_url
-      req.headers['API_Key'] = @credentials['api_key']
-    end
-    JSON.parse(response.body)
-  end
-  
   def content_item_attributes(entry)
     duration_in_seconds = ChronicDuration.parse(entry['duration'])
 
@@ -64,7 +60,7 @@ class EdutubeIntegration < BaseIntegration
       name:            sanitize_content(entry['videoname']),
       description:     sanitize_content(entry['videodescription']),
       raw_record:      entry,
-      content_type:    entry['contenttype']&.downcase,
+      content_type:    entry['contenttype'].try(:downcase),
       organization_id: @credentials['organization_id'],
 
       duration_metadata: {
@@ -97,7 +93,7 @@ class EdutubeIntegration < BaseIntegration
   end
 
   # TODO: if last_polled_at present then use delta changes api
-  def get_relative_url
+  def relative_url
     '/html5/edutube/bulkfeed' if @credentials['last_polled_at'].blank?
   end
 end
