@@ -25,6 +25,7 @@ SourceTypeConfig.create!(
 		'ecl_token' => "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc19kZXZlbG9wZXIiOnRydWUsImNsaWVudF9pZCI6Ilk5NlpSdlhYakEiLCJlbWFpbCI6ImRhcnNoYW5fcGF0ZWxAcGVyc2lzdGVudC5jby5pbiJ9.bF638d7ZPiaXTSMZiEb4HgyOEhDN28zS-wXoRDtfa3U"
 	}
 )
+
 SourceTypeConfig.create!(
 	source_type_id: "6b3d4393-fe52-43f9-898d-f4894f3bf7ed",
 	source_type_name: "safari_books_online_public",
