@@ -68,8 +68,8 @@ class EdxEnterpriseIntegration < BaseIntegration
 
   def get_access_token
     params = {
-        client_id:  AppConfig.integrations['edx_enterprise']['client_id'],
-        client_secret: AppConfig.integrations['edx_enterprise']['client_secret'],
+        client_id: @credentials['client_id'],
+        client_secret: @credentials['client_secret'],
         grant_type: "client_credentials",
         token_type: "jwt"
       }
