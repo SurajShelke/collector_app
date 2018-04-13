@@ -91,7 +91,6 @@ class EdxEnterpriseIntegration < BaseIntegration
       url:          enrollment_url,
       name:         entry['title'],
       description:  sanitize_content(entry['full_description']),
-      raw_record:   entry,
       content_type: 'course',
       organization_id: @credentials["organization_id"],
 
@@ -101,7 +100,7 @@ class EdxEnterpriseIntegration < BaseIntegration
       resource_metadata: {
         title:       entry['title'],
         description: sanitize_content(entry['full_description']),
-        url:         entry['enrollment_url'],
+        url:         enrollment_url,
         marketing_url: entry['marketing_url'],
         images:      [{ url: entry['image']['src'] }],
         video_url:   (entry['video']['src'] rescue ''),
