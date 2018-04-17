@@ -32,9 +32,9 @@ class EdxEnterpriseIntegration < BaseIntegration
 
   def get_content(options={})
     begin
-      catalogs = get_catalogs
+      catalogs = paginated_data(catalog_url)
       catalogs.each do |catalog|
-        courses = get_courses(catalog["id"])
+        courses = paginated_data(course_url(catalog["id"]))
         courses.each do |course|
           begin
             create_content_item(course)
@@ -48,22 +48,29 @@ class EdxEnterpriseIntegration < BaseIntegration
     end
   end
 
-  def get_catalogs
+  def get(relative_url, params = {})
     conn = Faraday.new(EDX_ENTERPRISE_BASE_URL)
     response = conn.get do |req|
-      req.url catalog_url
+      req.url relative_url
       req.headers = { 'Authorization' => "JWT #{get_access_token}" }
+      req.params = params
     end
-    JSON.parse(response.body).try(:[], "results") || []
+    JSON.parse(response.body)
   end
 
-  def get_courses(catalog_id)
-    conn = Faraday.new(EDX_ENTERPRISE_BASE_URL)
-    response = conn.get do |req|
-      req.url course_url(catalog_id)
-      req.headers = { 'Authorization' => "JWT #{get_access_token}" }
+  def paginated_data(relative_url)
+    params = {
+      :limit => self.class.per_page,
+      :offset => 0
+    }
+    results = []
+    loop do
+      response = get(relative_url, params)
+      results.push(*response['results'])
+      params[:offset] = params[:offset] + params[:limit]
+      break if params[:offset] > response['count']
     end
-    JSON.parse(response.body).try(:[], "results") || []
+    results
   end
 
   def get_access_token
@@ -95,6 +102,7 @@ class EdxEnterpriseIntegration < BaseIntegration
       organization_id: @credentials["organization_id"],
 
       additional_metadata: {
+        level: entry['level_type']
       },
 
       resource_metadata: {
