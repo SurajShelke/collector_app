@@ -23,18 +23,15 @@ class EdxEnterpriseIntegration < BaseIntegration
   end
 
   def catalog_url
-    "/enterprise/v1/catalogs/"
-  end
-
-  def course_url(catalog_id)
-    "/enterprise/v1/catalogs/#{catalog_id}/courses"
+    "/enterprise/v1/enterprise-catalogs"
   end
 
   def get_content(options={})
     begin
-      catalogs = get_catalogs
+      catalogs = paginated_data(catalog_url)
       catalogs.each do |catalog|
-        courses = get_courses(catalog["id"])
+        courses = paginated_data("#{catalog_url}/#{catalog['uuid']}")
+        next if courses.empty? || courses.first['content_type'] != 'course'
         courses.each do |course|
           begin
             create_content_item(course)
@@ -48,22 +45,17 @@ class EdxEnterpriseIntegration < BaseIntegration
     end
   end
 
-  def get_catalogs
-    conn = Faraday.new(EDX_ENTERPRISE_BASE_URL)
-    response = conn.get do |req|
-      req.url catalog_url
-      req.headers = { 'Authorization' => "JWT #{get_access_token}" }
+  def paginated_data(relative_url)
+    results = []
+    url = "#{EDX_ENTERPRISE_BASE_URL}#{relative_url}"
+    loop do
+      puts url
+      response = json_request(url, :get, headers: { 'Authorization' => "JWT #{get_access_token}" })
+      results.push(*response['results'])
+      break if response['next'].nil? || response['next'].empty? || response['results'].first['content_type'] != 'course'
+      url = response['next']
     end
-    JSON.parse(response.body).try(:[], "results") || []
-  end
-
-  def get_courses(catalog_id)
-    conn = Faraday.new(EDX_ENTERPRISE_BASE_URL)
-    response = conn.get do |req|
-      req.url course_url(catalog_id)
-      req.headers = { 'Authorization' => "JWT #{get_access_token}" }
-    end
-    JSON.parse(response.body).try(:[], "results") || []
+    results
   end
 
   def get_access_token
@@ -84,28 +76,21 @@ class EdxEnterpriseIntegration < BaseIntegration
   end
 
   def content_item_attributes(entry)
-    enrollment_url = entry["course_runs"].first["enrollment_url"] rescue ''
+    puts entry
     {
-      external_id:  entry['uuid'],
+      external_id:  entry['key'],
       source_id:    @credentials["source_id"],
-      url:          enrollment_url,
+      url:          entry['enrollment_url'],
       name:         entry['title'],
       description:  sanitize_content(entry['full_description']),
       raw_record:   entry,
       content_type: 'course',
       organization_id: @credentials["organization_id"],
 
-      additional_metadata: {
-      },
-
       resource_metadata: {
         title:       entry['title'],
         description: sanitize_content(entry['full_description']),
-        url:         entry['enrollment_url'],
-        marketing_url: entry['marketing_url'],
-        images:      [{ url: entry['image']['src'] }],
-        video_url:   (entry['video']['src'] rescue ''),
-        level:       entry['level_type']
+        url:         entry['enrollment_url']
       }
     }
   end
