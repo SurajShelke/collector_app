@@ -28,16 +28,18 @@ class EdxEnterpriseIntegration < BaseIntegration
 
   def get_content(options={})
     begin
+      byebug
+      @credentials['catalog_title'] = 'NASSCOM: All Courses'
       catalogs = paginated_data(catalog_url)
-      catalogs.each do |catalog|
-        courses = paginated_data("#{catalog_url}/#{catalog['uuid']}")
-        next if courses.empty? || courses.first['content_type'] != 'course'
-        courses.each do |course|
-          begin
-            create_content_item(course)
-          rescue Exception => err
-            Rails.logger.debug "Exception: #{err.message} while parsing edX course: #{course['uuid']}"
-          end
+      catalog = catalogs.find { |c| c['title'] == @credentials['catalog_title'] }
+      raise Webhook::Error::ContentCreationFailure, "ECL Content Creation Error - Catalog Title: #{@credentials['catalog_title']}, ErrorMessage: No catalog found" unless catalog
+      courses = paginated_data("#{catalog_url}/#{catalog['uuid']}")
+      courses.uniq!
+      courses.each do |course|
+        begin
+          create_content_item(json_request("#{EDX_ENTERPRISE_BASE_URL}#{catalog_url}/#{catalog['uuid']}/courses/#{course['key']}", :get, headers: { 'Authorization' => "JWT #{get_access_token}" }))
+        rescue Exception => err
+          Rails.logger.debug "Exception: #{err.message} while parsing edX course: #{course['uuid']}"
         end
       end
     rescue StandardError => err
@@ -49,7 +51,6 @@ class EdxEnterpriseIntegration < BaseIntegration
     results = []
     url = "#{EDX_ENTERPRISE_BASE_URL}#{relative_url}"
     loop do
-      puts url
       response = json_request(url, :get, headers: { 'Authorization' => "JWT #{get_access_token}" })
       results.push(*response['results'])
       break if response['next'].nil? || response['next'].empty? || response['results'].first['content_type'] != 'course'
@@ -76,7 +77,6 @@ class EdxEnterpriseIntegration < BaseIntegration
   end
 
   def content_item_attributes(entry)
-    puts entry
     {
       external_id:  entry['key'],
       source_id:    @credentials["source_id"],
@@ -87,10 +87,19 @@ class EdxEnterpriseIntegration < BaseIntegration
       content_type: 'course',
       organization_id: @credentials["organization_id"],
 
+      additional_metadata: {
+        level: entry['level_type'],
+        uuid: entry['uuid']
+      },
+
       resource_metadata: {
         title:       entry['title'],
         description: sanitize_content(entry['full_description']),
-        url:         entry['enrollment_url']
+        url:         entry['enrollment_url'],
+        marketing_url: entry['marketing_url'],
+        images:      [{ url: entry['image']['src'] }],
+        video_url:   (entry['video']['src'] rescue ''),
+        level:       entry['level_type']
       }
     }
   end
