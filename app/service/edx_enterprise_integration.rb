@@ -28,7 +28,6 @@ class EdxEnterpriseIntegration < BaseIntegration
 
   def get_content(options={})
     begin
-      byebug
       @credentials['catalog_title'] = 'NASSCOM: All Courses'
       catalogs = paginated_data(catalog_url)
       catalog = catalogs.find { |c| c['title'] == @credentials['catalog_title'] }
