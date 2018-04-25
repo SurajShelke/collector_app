@@ -28,6 +28,7 @@ class EdxEnterpriseIntegration < BaseIntegration
 
   def get_content(options={})
     begin
+      # TODO add catalog_title in configuration and remove hardcoded value
       @credentials['catalog_title'] = 'NASSCOM: All Courses'
       catalogs = paginated_data(catalog_url)
       catalog = catalogs.find { |c| c['title'] == @credentials['catalog_title'] }
@@ -77,7 +78,7 @@ class EdxEnterpriseIntegration < BaseIntegration
 
   def content_item_attributes(entry)
     {
-      external_id:  entry['key'],
+      external_id:  entry['uuid'],
       source_id:    @credentials["source_id"],
       url:          entry['enrollment_url'],
       name:         entry['title'],
@@ -88,7 +89,8 @@ class EdxEnterpriseIntegration < BaseIntegration
 
       additional_metadata: {
         level: entry['level_type'],
-        uuid: entry['uuid']
+        uuid: entry['uuid'],
+        key: entry['key']
       },
 
       resource_metadata: {
