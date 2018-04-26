@@ -25,15 +25,19 @@ class EdxEnterpriseIntegration < BaseIntegration
   def catalog_url
     "/enterprise/v1/enterprise-catalogs"
   end
+  
+  def self.per_page
+    4000
+  end
 
   def get_content(options={})
     begin
       # TODO add catalog_title in configuration and remove hardcoded value
       @credentials['catalog_title'] = 'NASSCOM: All Courses'
-      catalogs = paginated_data(catalog_url)
+      catalogs = paginated_data(catalog_url, options)
       catalog = catalogs.find { |c| c['title'] == @credentials['catalog_title'] }
       raise Webhook::Error::ContentCreationFailure, "ECL Content Creation Error - Catalog Title: #{@credentials['catalog_title']}, ErrorMessage: No catalog found" unless catalog
-      courses = paginated_data("#{catalog_url}/#{catalog['uuid']}")
+      courses = paginated_data("#{catalog_url}/#{catalog['uuid']}", options)
       courses.uniq!
       courses.each do |course|
         begin
@@ -47,11 +51,12 @@ class EdxEnterpriseIntegration < BaseIntegration
     end
   end
 
-  def paginated_data(relative_url)
+  def paginated_data(relative_url, options)
     results = []
+    params = { "page_size" => options[:limit] }
     url = "#{EDX_ENTERPRISE_BASE_URL}#{relative_url}"
     loop do
-      response = json_request(url, :get, headers: { 'Authorization' => "JWT #{get_access_token}" })
+      response = json_request(url, :get, params: params, headers: { 'Authorization' => "JWT #{get_access_token}" })
       results.push(*response['results'])
       break if response['next'].nil? || response['next'].empty? || response['results'].first['content_type'] != 'course'
       url = response['next']
