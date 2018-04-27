@@ -15,11 +15,11 @@ class SkillSoftIntegration < BaseIntegration
   end
 
   def self.ecl_client_id
-    AppConfig.integrations['skill_soft']['ecl_client_id']
+    SourceTypeConfig.where(source_type_name: 'skill_soft').first.values['ecl_client_id']
   end
 
   def self.ecl_token
-    AppConfig.integrations['skill_soft']['ecl_token']
+    SourceTypeConfig.where(source_type_name: 'skill_soft').first.values['ecl_token']
   end
 
   #  @options ={start: start, limit: limit, page: page, last_polled_at: @last_polled_at}
@@ -75,33 +75,30 @@ class SkillSoftIntegration < BaseIntegration
 
       assets.each do |asset|
         response = @client.call(:ai_get_xml_asset_meta_data, message: { customer_id: @customer_id, asset_id: asset["id"], format: "XML" }) rescue nil
-        create_content_item(response.body) if response
+        create_content_item(response.body[:get_xml_asset_meta_data_response][:metadata][:asset]) if response && response.body[:get_xml_asset_meta_data_response]&.dig(:metadata)&.dig(:asset)
       end
-    rescue Exception => e
+    rescue StandardError => e
       raise Webhook::Error::IntegrationFailure, "[SkillSoftIntegration] Unable to get assests. #{e.message}"
     end
   end
 
   def create_content_item(entry)
+    response = @client.call(:so_get_multi_action_sign_on_url_extended, message: {customer_id: @customer_id, asset_id: entry[:identifier], action_type: 'launch', username: @credentials['user_name']})
+    launchurl = response.body[:url_response][:olsa_url]
     attributes = {
-      name:         entry["title"],
+      name:         entry[:title],
       description:  "",
-      url:          entry["launchurl"],
+      url:          launchurl,
       content_type: 'document',
-      external_id:  entry["identifier"],
+      external_id:  entry[:identifier],
       raw_record:   entry,
       source_id:    @source_id,
       organization_id: @organization_id,
       resource_metadata: {
         images:       [{ url: nil }],
-        title:        entry["title"],
+        title:        entry[:title],
         description:  "",
-        url:          entry["launchurl"]
-      },
-      additional_metadata: {
-        size:            entry['size'],
-        cTag:            entry['cTag'],
-        eTag:            entry['eTag']
+        url:          launchurl
       }
     }
 
