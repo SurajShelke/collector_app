@@ -42,10 +42,22 @@ SourceTypeConfig.create!(
 		'ecl_token' => 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc19kZXZlbG9wZXIiOnRydWUsImNsaWVudF9pZCI6Ilk5NlpSdlhYakEiLCJlbWFpbCI6ImRhcnNoYW5fcGF0ZWxAcGVyc2lzdGVudC5jby5pbiJ9.bF638d7ZPiaXTSMZiEb4HgyOEhDN28zS-wXoRDtfa3U',
 		'host_url' => 'https://tata-stage.plateau.com',
 		'user_id' => 'edcast',
-    'company_id' => 'tata',
-    'company_name' => 'TATACommQA',
-    'client_id' => 'tata',
-    'client_secret' => '5f6841c490227dcb438fdc80c5227b5850881a0575ac52c0b88c679e40337d97'
+		'company_id' => 'tata',
+		'company_name' => 'TATACommQA',
+		'client_id' => 'tata',
+		'client_secret' => '5f6841c490227dcb438fdc80c5227b5850881a0575ac52c0b88c679e40337d97'
+	}
+)
+
+SourceTypeConfig.create!(
+	source_type_id: 'a9a55b7e-3d1a-4908-a509-065bf1b2844b',
+	source_type_name: 'bright_cove',
+	values: {
+		'ecl_client_id' => 'mF335fGMbw',
+		'ecl_token' => 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc19kZXZlbG9wZXIiOnRydWUsImNsaWVudF9pZCI6Im1GMzM1ZkdNYnciLCJlbWFpbCI6InZpbmF5X2d1cHRhMUBwZXJzaXN0ZW50LmNvLmluIn0.xyjdJqKPaTwHTu_RlHTeWFhzI4YBO9h0tmVs0kp6fdE',
+		'client_id' => '970cf4a1-5152-4d8f-8bd1-bd65b342e136',
+		'client_secret' => 'fA_XW9de2N801Lx4Fg2jXxO6W54YvwZE8t1x4TC4v24QV06LdZne9GdkzX2z68MNbJaqsqxv9h_C93ykRUTDcQ',
+		'account_id' => '5762013514001'
 	}
 )
 

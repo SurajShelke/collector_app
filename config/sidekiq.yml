@@ -47,4 +47,5 @@ production:
   - [edutube, 5]
   - [edutube_ecl_job, 3]
   - [success_factor_ecl_job, 3]
-  - [success_factor, 5]
+  - [bright_cove, 5]
+  - [bright_cove_ecl_job, 3]
