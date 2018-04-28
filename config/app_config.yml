@@ -39,8 +39,8 @@ defaults: &defaults
       ecl_token: <%= ENV['SAFARI_BOOKS_ONLINE_ECL_TOKEN'] || 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc19kZXZlbG9wZXIiOnRydWUsImNsaWVudF9pZCI6Im8tbThKdGJjU1EiLCJlbWFpbCI6InBhbGxhdisxQGVkY2FzdC5jb20ifQ.4yURzwX8EPsrdDDu-f5bC2I0PT4lih781MkixduITe8' %>
       source_type_id:  <%= ENV['SAFARI_BOOKS_ONLINE_SOURCE_TYPE_ID'] || 'foo' %>
     linkedin_learning:
-      client_id: <%= ENV['LINKEDIN_LEARNING_CLIENT_ID'] || '7828s2gqfyjvp0' %>
-      client_secret: <%= ENV['LINKEDIN_LEARNING_CLIENT_SECRET'] || 'F8LpE0oCB7oJ71ia' %>
+      client_id: <%= ENV['LINKEDIN_LEARNING_CLIENT_ID'] || '78nfln5fz1jwww' %>
+      client_secret: <%= ENV['LINKEDIN_LEARNING_CLIENT_SECRET'] || '7kclEVmUnAycfjUj' %>
       ecl_client_id: <%= ENV['LINKEDIN_LEARNING_ECL_CLIENT_ID'] || 'Ej4bAsuYiw' %>
       ecl_token: <%= ENV['LINKEDIN_LEARNING_ECL_TOKEN'] || 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc19kZXZlbG9wZXIiOnRydWUsImNsaWVudF9pZCI6IkVqNGJBc3VZaXciLCJlbWFpbCI6Im5pbGVzaF9uYXZhbGVAcGVyc2lzdGVudC5jby5pbiJ9.t2Tm0-jlF21kBiNpsRmDbpLUQmp8K5qoWviJqbz0bvg' %>
       source_type_id:  <%= ENV['LINKEDIN_LEARNING_SOURCE_TYPE_ID'] || '0a5b5557-a22e-44d7-be50-7996cd8504d6' %>
