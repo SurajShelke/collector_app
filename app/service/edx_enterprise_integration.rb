@@ -32,8 +32,6 @@ class EdxEnterpriseIntegration < BaseIntegration
 
   def get_content(options={})
     begin
-      # TODO add catalog_title in configuration and remove hardcoded value
-      @credentials['catalog_title'] = 'NASSCOM: All Courses'
       catalogs = paginated_data(catalog_url, options)
       catalog = catalogs.find { |c| c['title'] == @credentials['catalog_title'] }
       raise Webhook::Error::ContentCreationFailure, "ECL Content Creation Error - Catalog Title: #{@credentials['catalog_title']}, ErrorMessage: No catalog found" unless catalog
