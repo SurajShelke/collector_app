@@ -11,7 +11,7 @@ class LinkedinLearningIntegration < BaseIntegration
   end
 
   def self.get_credentials_from_config(config)
-    source["source_config"]
+    config["source_config"]
   end
 
   def self.ecl_client_id
@@ -23,39 +23,65 @@ class LinkedinLearningIntegration < BaseIntegration
   end
 
   def self.per_page
-    50
+    100
   end
 
   def courses_url
     "#{LINKEDIN_LEARNING_BASE_URL}/learningAssets"
   end
 
+  def asset_types
+    (@credentials['asset_type'] || '').upcase.split(',')
+  end
+
   def get_content(options={})
-    begin
-      per_page = options[:limit]
-      param = { "q": "localeAndType",
-              "assetType": "COURSE",
-              "sourceLocale.language": "en",
-              "sourceLocale.country": "US",
-              "expandDepth": "1",
-              "includeRetired": "false",
-              "start": options[:start],
-              "count": per_page }
-      data = json_request(courses_url, :get, params: param, headers: { 'Authorization' => "Bearer #{get_access_token}", 'referer' => 'urn:li:partner:edcast' })
-      if data["elements"].present?
-        data["elements"].map { |entry| create_content_item(entry) }
-        if options[:page] == 0
-          (1..(data['paging']['total']/per_page)).each do |page|
-            Sidekiq::Client.push(
-              'class' => FetchContentJob,
-              'queue' => self.class.get_fetch_content_job_queue.to_s,
-              'args' => [ self.class.to_s, @credentials, @credentials["source_id"], @credentials["organization_id"], options[:last_polled_at], page]
-            )
+    asset_types.each do |asset_type|
+      begin
+        per_page = options[:limit]
+        param = { "q": "localeAndType",
+                "assetType": asset_type,
+                "sourceLocale.language": "en",
+                "sourceLocale.country": "US",
+                "expandDepth": "1",
+                "includeRetired": "false",
+                "start": options[:start],
+                "count": per_page }
+        data = json_request(courses_url, :get, params: param, headers: { 'Authorization' => "Bearer #{get_access_token}", 'referer' => 'urn:li:partner:edcast' })
+        if data["elements"].present?
+          data["elements"].map do |entry|
+            if push_content_item?(options[:last_polled_at], entry['details']['lastUpdatedAt'])
+              create_content_item(entry)
+            end
+          end
+          if options[:page].zero?
+            paginate_courses(data['paging']['total'], options)
           end
         end
+      rescue StandardError => err
+        raise Webhook::Error::IntegrationFailure, "[LinkedinLearningIntegration] Failed Integration for source #{@credentials['source_id']} => Page: #{options[:page]}, ErrorMessage: #{err.message}"
       end
-    rescue StandardError => err
-      raise Webhook::Error::IntegrationFailure, "[LinkedinLearningIntegration] Failed Integration for source #{@credentials['source_id']} => Page: #{options[:page]}, ErrorMessage: #{err.message}"
+    end
+  end
+
+  # Description:
+  # 1. When user sets is_delta == 'true' check for last_polled_at and last_updated_at attributes
+  #    to find whether to push data or not
+  # 2. When user sets is_delta == 'false' push data
+  def push_content_item?(last_polled_at, last_updated_at)
+    (
+      (@credentials['is_delta'].presence || 'true') == 'false' ||
+      last_polled_at.nil? ||
+      (Time.parse(last_polled_at).to_time.to_i < (last_updated_at /1000))
+    )
+  end
+
+  def paginate_courses(count, options)
+    (1..((count.to_f / options[:limit]).ceil)).each do |page|
+      Sidekiq::Client.push(
+        'class' => FetchContentJob,
+        'queue' => self.class.get_fetch_content_job_queue.to_s,
+        'args' => [ self.class.to_s, @credentials, @credentials["source_id"], @credentials["organization_id"], options[:last_polled_at], page]
+      )
     end
   end
 
@@ -79,14 +105,15 @@ class LinkedinLearningIntegration < BaseIntegration
   def content_item_attributes(entry)
     details = entry['details']
     deep_link_url = details['urls'][deep_link_type] || details['urls']['webLaunch'] if details['urls'].present?
+    description = sanitize_content(entry['description']['value']) if entry['description']
     {
       external_id:  entry['urn'],
       source_id:    @credentials["source_id"],
       url:          deep_link_url,
       name:         sanitize_content(entry['title']['value']),
-      description:  sanitize_content(details['description']['value']),
+      description:  description,
       raw_record:   entry,
-      content_type: 'course',
+      content_type: entry['type'].try(:downcase),
       organization_id: @credentials["organization_id"],
 
       additional_metadata: {
@@ -95,7 +122,7 @@ class LinkedinLearningIntegration < BaseIntegration
 
       resource_metadata: {
         title:       sanitize_content(entry['title']['value']),
-        description: sanitize_content(details['description']['value']),
+        description: description,
         url:         deep_link_url,
         images:      [{ url: details['images']['primary'] }],
         level:       details['level'],
