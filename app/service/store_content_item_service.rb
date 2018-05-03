@@ -7,6 +7,7 @@ class StoreContentItemService
     @last_polled_at = last_polled_at
 
     credentials ||= {}
+
     credentials["source_id"] = source_id
     credentials["organization_id"] = organization_id
     credentials["last_polled_at"] = last_polled_at

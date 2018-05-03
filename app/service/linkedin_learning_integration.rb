@@ -68,11 +68,12 @@ class LinkedinLearningIntegration < BaseIntegration
   #    to find whether to push data or not
   # 2. When user sets is_delta == 'false' push data
   def push_content_item?(last_polled_at, last_updated_at)
-    (
-      (@credentials['is_delta'].presence || 'true') == 'false' ||
-      last_polled_at.nil? ||
-      (Time.parse(last_polled_at).to_time.to_i < (last_updated_at /1000))
-    )
+    if @credentials['is_delta'] == 'false'
+      true
+    else
+      polled_at = last_polled_at.present? ? Time.parse(last_polled_at).to_i : Time.now.to_i
+      polled_at < (last_updated_at / 1000)
+    end
   end
 
   def paginate_courses(count, options)
@@ -83,6 +84,21 @@ class LinkedinLearningIntegration < BaseIntegration
         'args' => [ self.class.to_s, @credentials, @credentials["source_id"], @credentials["organization_id"], options[:last_polled_at], page]
       )
     end
+
+    reset_is_delta
+  end
+
+  def reset_is_delta
+    ecl_service = EclDeveloperClient::Source.new(self.class.ecl_client_id, self.class.ecl_token)
+
+    if @credentials['is_delta'].present? && @credentials['is_delta'] == 'false'
+      @credentials['is_delta'] = 'true'
+    end
+
+    ecl_service.update(@credentials["source_id"], {
+      source_config: @credentials.except("source_id", "organization_id", "last_polled_at"),
+      last_polled_at: Time.now
+    })
   end
 
   def get_access_token
