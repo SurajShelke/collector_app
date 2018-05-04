@@ -9,7 +9,7 @@ class FetchContentJob
 
     integration = content_integration_str.constantize
 
-    if integration != LinkedinLearningIntegration
+    if !credentials.has_key?('is_delta')
       ecl_service = EclDeveloperClient::Source.new(integration.ecl_client_id,integration.ecl_token)
       ecl_service.update(source_id, { last_polled_at: Time.now })
     end
