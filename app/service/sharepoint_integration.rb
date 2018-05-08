@@ -1,6 +1,7 @@
 require 'sharepoint_communicator'
 class SharepointIntegration < BaseIntegration
   attr_accessor :client,:source_id,:organization_id
+
   def self.get_source_name
     'sharepoint'
   end
@@ -82,6 +83,9 @@ class SharepointIntegration < BaseIntegration
 
   def create_content_item(entry, parent_url)
     # content = @sharepoint_communicator.get_file_content(entry["@microsoft.graph.downloadUrl"]) if @extract_content && @extract_content == "true"
+    
+    image_url = thumbnail_url(entry["id"])
+
     attributes = {
       name:         entry["name"],
       description:  "",
@@ -93,7 +97,7 @@ class SharepointIntegration < BaseIntegration
       source_id:    @source_id,
       organization_id: @organization_id,
       resource_metadata: {
-        images:       [{ url: nil }],
+        images:       image_url,
         title:        entry["name"],
         description:  "",
         url:          "#{parent_url}/#{URI.encode(entry["name"])}"
@@ -108,5 +112,21 @@ class SharepointIntegration < BaseIntegration
     }
 
     ContentItemCreationJob.perform_async(self.class.ecl_client_id, self.class.ecl_token, attributes)
+  end
+
+  def thumbnail_url(record_id)
+    image_data = @sharepoint_communicator.files("/v1.0/drives/#{@drive_id}/items/#{record_id}/thumbnails")
+    response = []
+    if image_data && image_data["value"].any?
+      data = image_data["value"].first
+      # image_data["value"].each do |data|
+        if(data && data['large'])
+          image_response = {}
+          image_response['url'] = data['large']['url']
+          response << image_response
+        end
+      # end
+    end
+    response
   end
 end
