@@ -33,9 +33,9 @@ class EdxEnterpriseIntegration < BaseIntegration
   def get_content(options={})
     begin
       catalogs = paginated_data(catalog_url)
-      catalogs.each do |catalog|
+      catalogs.uniq.each do |catalog|
         courses = paginated_data(course_url(catalog["id"]))
-        courses.each do |course|
+        courses.uniq.each do |course|
           begin
             create_content_item(course)
           rescue Exception => err
