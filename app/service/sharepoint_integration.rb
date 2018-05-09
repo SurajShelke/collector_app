@@ -83,13 +83,12 @@ class SharepointIntegration < BaseIntegration
 
   def create_content_item(entry, parent_url)
     # content = @sharepoint_communicator.get_file_content(entry["@microsoft.graph.downloadUrl"]) if @extract_content && @extract_content == "true"
-    
     image_url = thumbnail_url(entry["id"])
-
+    url = self.class.get_source_name == 'one_drive' ? entry["webUrl"] : "#{parent_url}/#{URI.encode(entry["name"])}"
     attributes = {
       name:         entry["name"],
       description:  "",
-      url:          "#{parent_url}/#{URI.encode(entry["name"])}",
+      url:          url,
       content_type: 'document',
       # content:      content,
       external_id:  entry["id"],
@@ -100,7 +99,7 @@ class SharepointIntegration < BaseIntegration
         images:       image_url,
         title:        entry["name"],
         description:  "",
-        url:          "#{parent_url}/#{URI.encode(entry["name"])}"
+        url:          url
       },
       additional_metadata: {
         desktop_url:     entry["webUrl"],
@@ -117,16 +116,7 @@ class SharepointIntegration < BaseIntegration
   def thumbnail_url(record_id)
     image_data = @sharepoint_communicator.files("/v1.0/drives/#{@drive_id}/items/#{record_id}/thumbnails")
     response = []
-    if image_data && image_data["value"].any?
-      data = image_data["value"].first
-      # image_data["value"].each do |data|
-        if(data && data['large'])
-          image_response = {}
-          image_response['url'] = data['large']['url']
-          response << image_response
-        end
-      # end
-    end
+    image_data["value"].each { |data| response << { url: data['medium']['url'] } if data['medium'] } if image_data && image_data["value"].any?
     response
   end
 end
