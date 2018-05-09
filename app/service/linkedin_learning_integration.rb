@@ -121,7 +121,7 @@ class LinkedinLearningIntegration < BaseIntegration
   def content_item_attributes(entry)
     details = entry['details']
     deep_link_url = details['urls'][deep_link_type] || details['urls']['webLaunch'] if details['urls'].present?
-    description = sanitize_content(entry['description']['value']) if entry['description']
+    description = sanitize_content(details['description']['value']) if details['description']
     {
       external_id:  entry['urn'],
       source_id:    @credentials["source_id"],
