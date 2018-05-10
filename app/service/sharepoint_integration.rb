@@ -81,7 +81,7 @@ class SharepointIntegration < BaseIntegration
     end
   end
   
-  def self.deep_link(entry, parent_url)
+  def deep_link(entry, parent_url)
     "#{parent_url}/#{URI.encode(entry["name"])}"
   end
   
@@ -91,7 +91,7 @@ class SharepointIntegration < BaseIntegration
     attributes = {
       name:         entry["name"],
       description:  "",
-      url:          self.class.deep_link(entry, parent_url),
+      url:          deep_link(entry, parent_url),
       content_type: 'document',
       # content:      content,
       external_id:  entry["id"],
@@ -102,7 +102,7 @@ class SharepointIntegration < BaseIntegration
         images:       image_url,
         title:        entry["name"],
         description:  "",
-        url:          self.class.deep_link(entry, parent_url)
+        url:          deep_link(entry, parent_url)
       },
       additional_metadata: {
         desktop_url:     entry["webUrl"],

@@ -7,7 +7,7 @@ class OneDriveIntegration < SharepointIntegration
     :one_drive
   end
 
-  def self.deep_link(entry, parent_url=nil)
+  def deep_link(entry, parent_url=nil)
     entry["webUrl"]
   end
 end
