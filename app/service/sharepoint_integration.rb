@@ -87,7 +87,6 @@ class SharepointIntegration < BaseIntegration
   
   def create_content_item(entry, parent_url)
     # content = @sharepoint_communicator.get_file_content(entry["@microsoft.graph.downloadUrl"]) if @extract_content && @extract_content == "true"
-    byebug
     image_url = thumbnail_url(entry["id"])
     attributes = {
       name:         entry["name"],
