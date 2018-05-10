@@ -76,6 +76,19 @@ SourceTypeConfig.create!(
 )
 
 SourceTypeConfig.create!(
+  source_type_name: 'intuition',
+  source_type_id: '2a2c63ea-ad8c-4242-9b74-bffc927b7d41',
+  values: {
+    'ecl_client_id' => 'Y96ZRvXXjA',
+    'ecl_token' => 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc19kZXZlbG9wZXIiOnRydWUsImNsaWVudF9pZCI6Ilk5NlpSdlhYakEiLCJlbWFpbCI6ImRhcnNoYW5fcGF0ZWxAcGVyc2lzdGVudC5jby5pbiJ9.bF638d7ZPiaXTSMZiEb4HgyOEhDN28zS-wXoRDtfa3U',
+    'organisationCode' => 'edcast',
+    'password' => '1ntuition!123',
+    'userName' => 'johnotoole',
+    'host' => 'https://api.intuition.com'
+  }
+)
+
+SourceTypeConfig.create!(
   source_type_name: 'hbr_ascend',
   source_type_id: '73045cb4-d99b-4ef4-9cfa-44a594c85d6e',
   values: {
