@@ -80,15 +80,19 @@ class SharepointIntegration < BaseIntegration
       end
     end
   end
-
+  
+  def self.deep_link(entry, parent_url)
+    "#{parent_url}/#{URI.encode(entry["name"])}"
+  end
+  
   def create_content_item(entry, parent_url)
     # content = @sharepoint_communicator.get_file_content(entry["@microsoft.graph.downloadUrl"]) if @extract_content && @extract_content == "true"
+    byebug
     image_url = thumbnail_url(entry["id"])
-    url = self.class.get_source_name == 'one_drive' ? entry["webUrl"] : "#{parent_url}/#{URI.encode(entry["name"])}"
     attributes = {
       name:         entry["name"],
       description:  "",
-      url:          url,
+      url:          self.class.deep_link(entry, parent_url),
       content_type: 'document',
       # content:      content,
       external_id:  entry["id"],
@@ -99,7 +103,7 @@ class SharepointIntegration < BaseIntegration
         images:       image_url,
         title:        entry["name"],
         description:  "",
-        url:          url
+        url:          self.class.deep_link(entry, parent_url)
       },
       additional_metadata: {
         desktop_url:     entry["webUrl"],
