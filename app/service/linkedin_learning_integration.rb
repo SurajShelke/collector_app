@@ -129,7 +129,7 @@ class LinkedinLearningIntegration < BaseIntegration
       name:         sanitize_content(entry['title']['value']),
       description:  description,
       raw_record:   entry,
-      content_type: entry['type'].try(:downcase),
+      content_type: 'course',
       readable_card_type: entry['type'].try(:downcase),
       organization_id: @credentials["organization_id"],
 
