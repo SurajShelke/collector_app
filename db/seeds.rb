@@ -96,3 +96,12 @@ SourceTypeConfig.create!(
     'ecl_token' => 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc19kZXZlbG9wZXIiOnRydWUsImNsaWVudF9pZCI6IkFoMTZrdnNNeXciLCJlbWFpbCI6InlvZ2VuZHJhQGVkY2FzdC5jb20ifQ.Fm838Eh05y6i8zqkJDLLJJx9w05O9SCE3KudVzfQdsU'
   }
 )
+
+SourceTypeConfig.create!(
+  source_type_name: 'mettl',
+  source_type_id: '73045cb4-d99b-4ef4-9cfa-44a594c85d6e',
+  values: {
+    'ecl_client_id' => 'Ah16kvsMyw',
+    'ecl_token' => 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc19kZXZlbG9wZXIiOnRydWUsImNsaWVudF9pZCI6IkFoMTZrdnNNeXciLCJlbWFpbCI6InlvZ2VuZHJhQGVkY2FzdC5jb20ifQ.Fm838Eh05y6i8zqkJDLLJJx9w05O9SCE3KudVzfQdsU'
+  }
+)
