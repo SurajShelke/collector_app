@@ -12,6 +12,10 @@
 class EdutubeIntegration < BaseIntegration
   include ActionView::Helpers::DateHelper
 
+  DAILY_FEED_URL = '/html5/edutube/dailyfeed'.freeze
+  
+  BULK_FEED_URL =  '/html5/edutube/bulkfeed'.freeze
+
   def self.get_source_name
     'edutube'
   end
@@ -34,20 +38,20 @@ class EdutubeIntegration < BaseIntegration
 
   def get_content(options = {})
     begin
-      relative_url = get_relative_url
-      if relative_url.present?
-        headers = {
-          'Content-Type' => 'application/json',
-          'API_Key' => @credentials['api_key']
-        }
-        data = json_request(
-          "#{@credentials['host']}#{relative_url}",
-          :get,
-          headers: headers,
-          basic_auth:{ key: @credentials['client_id'], secret: @credentials['client_secret']}
-        )
-        JSON.parse(data).each{|entry| create_content_item(entry)}
-      end
+      relative_url = get_relative_url(options[:last_polled_at])
+      headers = {
+        'Content-Type' => 'application/json',
+        'API_Key' => @credentials['api_key']
+      }
+      data = json_request(
+        "#{@credentials['host']}#{relative_url}",
+        :get,
+        headers: headers,
+        basic_auth:{ key: @credentials['client_id'], secret: @credentials['client_secret']}
+      )
+      JSON.parse(data).each{|entry| create_content_item(entry)}
+
+      reset_is_delta
     rescue StandardError => err
       raise Webhook::Error::IntegrationFailure, "[EdutubeIntegration] Failed Integration for source #{@credentials['source_id']}, ErrorMessage: #{err.message}"
     end
@@ -96,7 +100,12 @@ class EdutubeIntegration < BaseIntegration
   end
 
   # TODO: if last_polled_at present then use delta changes api
-  def get_relative_url
-    '/html5/edutube/bulkfeed' if @credentials['last_polled_at'].blank?
+  def get_relative_url(last_polled_at)
+    if @credentials['is_delta'] == 'false'
+      BULK_FEED_URL
+    else
+      last_polled_at = Time.now.strftime('%Y-%m-%dT%H:%M:%S.%LZ') unless last_polled_at 
+      "#{DAILY_FEED_URL}?startdate=#{last_polled_at}"
+    end
   end
 end

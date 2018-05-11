@@ -64,14 +64,15 @@ SourceTypeConfig.create!(
 
 SourceTypeConfig.create!(
   source_type_name: 'edutube',
-  source_type_id: 'a08b4e04-e11e-4286-91c2-5b115e9c8e8a',
+  source_type_id: '4a96ccf5-5523-4183-ac60-ca7c6793382d',
   values: {
     'ecl_client_id' => 'Ah16kvsMyw',
     'ecl_token' => 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc19kZXZlbG9wZXIiOnRydWUsImNsaWVudF9pZCI6IkFoMTZrdnNNeXciLCJlbWFpbCI6InlvZ2VuZHJhQGVkY2FzdC5jb20ifQ.Fm838Eh05y6i8zqkJDLLJJx9w05O9SCE3KudVzfQdsU',
     'client_id' => 'eduTubeedcast',
     'client_secret' => 'eduTubeedcast!23',
     'host' => 'https://edutubestg.emc.com',
-    'API_Key' => 'FA0ED0DD-1A7C-4603-B6C3-3A0987C6E050'
+    'api_key' => 'FA0ED0DD-1A7C-4603-B6C3-3A0987C6E050',
+    'is_delta' => true
   }
 )
 

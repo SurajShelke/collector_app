@@ -84,21 +84,7 @@ class LinkedinLearningIntegration < BaseIntegration
         'args' => [ self.class.to_s, @credentials, @credentials["source_id"], @credentials["organization_id"], options[:last_polled_at], page]
       )
     end
-
     reset_is_delta
-  end
-
-  def reset_is_delta
-    ecl_service = EclDeveloperClient::Source.new(self.class.ecl_client_id, self.class.ecl_token)
-
-    if @credentials['is_delta'].present? && @credentials['is_delta'] == 'false'
-      @credentials['is_delta'] = 'true'
-    end
-
-    ecl_service.update(@credentials["source_id"], {
-      source_config: @credentials.except("source_id", "organization_id", "last_polled_at"),
-      last_polled_at: Time.now
-    })
   end
 
   def get_access_token
