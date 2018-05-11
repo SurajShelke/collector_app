@@ -30,8 +30,9 @@ class LinkedinLearningIntegration < BaseIntegration
     "#{LINKEDIN_LEARNING_BASE_URL}/learningAssets"
   end
 
+  # pull only courses for this integration
   def asset_types
-    (@credentials['asset_type'] || '').upcase.split(',')
+    ['COURSE'] #(@credentials['asset_type'] || '').upcase.split(',')
   end
 
   def get_content(options={})
@@ -116,7 +117,6 @@ class LinkedinLearningIntegration < BaseIntegration
       description:  description,
       raw_record:   entry,
       content_type: 'course',
-      readable_card_type: entry['type'].try(:downcase),
       organization_id: @credentials["organization_id"],
 
       additional_metadata: {
