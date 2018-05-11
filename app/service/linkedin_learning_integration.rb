@@ -130,6 +130,7 @@ class LinkedinLearningIntegration < BaseIntegration
       description:  description,
       raw_record:   entry,
       content_type: entry['type'].try(:downcase),
+      readable_card_type: entry['type'].try(:downcase),
       organization_id: @credentials["organization_id"],
 
       additional_metadata: {
