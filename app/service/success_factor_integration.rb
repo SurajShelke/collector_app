@@ -25,11 +25,52 @@ class SuccessFactorIntegration < BaseIntegration
   end
 
   def courses_url
-    "#{@host_url}/learning/odatav4/public/admin/searchItem/v1/Items?$filter=criteria/itemTypeIDs%20eq%20'CRSE'%20and%20criteria/active%20eq%20true&$count=true"
+    url = "#{@host_url}/learning/odatav4/public/admin/searchItem/v1/Items?"
+    url += query_substring
+  end
+
+  def is_active(input)
+    if input.present?
+      input = input.try(:downcase).gsub(" ",'')
+      if input == "true,false" || input == "false,true"
+        false
+      else
+        true
+      end
+    end
+  end
+
+  def set_filter_default_values
+    @credentials['itemTypeIDs'] = 'CRSE'
+    @credentials['classificationIDs'] = 'TIME-BASED'
+    @credentials['sourceIDs'] = ''
+    @credentials['deliveryMethodIDs'] = ''
+    @credentials['domainIDs'] = 'PUBLIC'
+    @credentials['active'] =  'true'
+  end
+
+  def query_substring
+    query_string = []
+    query_string << "criteria/itemTypeIDs%20eq%20'#{@credentials['itemTypeIDs']}'" if @credentials['itemTypeIDs'].present?
+    query_string << "criteria/classificationIDs%20eq%20'#{@credentials['classificationIDs']}'" if @credentials['classificationIDs'].present?
+    query_string << "criteria/sourceIDs%20eq%20'#{@credentials['sourceIDs']}'" if @credentials['sourceIDs'].present?
+    query_string << "criteria/deliveryMethodIDs%20eq%20'#{@credentials['deliveryMethodIDs']}'" if @credentials['deliveryMethodIDs'].present?
+    query_string << "criteria/domainIDs%20eq%20'#{@credentials['domainIDs']}'" if @credentials['domainIDs'].present?
+    query_string << "criteria/active%20eq%20#{@credentials['active']}" if is_active(@credentials['active'])
+    if query_string.any?
+      query_string = query_string.join("%20and%20")
+      query_string.prepend("$filter=")
+      query_string += "&$count=true"
+    else
+      byebug
+      raise Webhook::Error::IntegrationFailure, "[successFactorIntegration] Failed Integration for source #{@credentials['source_id']} => Page: #{options[:page]}, ErrorMessage: Atleast one filetr parameter is required"
+    end
   end
 
   def get_content(options = {})
     begin
+      
+      set_filter_default_values
       @host_url = @credentials['host_url']
       @user_id = @credentials['user_id']
       @company_id = @credentials['company_id']
@@ -45,7 +86,6 @@ class SuccessFactorIntegration < BaseIntegration
   def access_token(user_type)
     begin
       auth_secret = Base64.encode64("#{@client_id}:#{@client_secret}").gsub("\n", '')
-
       body_params = {
         grant_type: 'client_credentials',
         scope: {
@@ -67,9 +107,9 @@ class SuccessFactorIntegration < BaseIntegration
     page = options[:page]
     per_page = options[:limit]
     skip = page * per_page
-
     token = access_token('admin')
     response = RestClient.get("#{courses_url}&$top=#{per_page}&$skip=#{skip}", { 'Authorization' => "Bearer #{token}" })
+
     response = JSON.parse(response.body)
     if options[:page].zero? && !response['value'].empty?
       count = response['value'].first['totalCount']
