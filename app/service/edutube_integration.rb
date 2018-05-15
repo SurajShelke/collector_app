@@ -86,11 +86,15 @@ class EdutubeIntegration < BaseIntegration
         description:   sanitize_content(entry['videodescription']),
         url:           entry['sharepage'],
         images:        [{ url: entry['thumbnail'] }],
-        embed_html:    entry['embedpage']
+        embed_html:    generate_embed_html(entry['shareplayer'])
       }
     }
   end
-
+  
+  def generate_embed_html(share_player_link)
+    "<iframe height='380' width='640' src='#{share_player_link}' allowfullscreen></iframe>"    
+  end
+  
   def create_content_item(entry)
     ContentItemCreationJob.perform_async(self.class.ecl_client_id, self.class.ecl_token, content_item_attributes(entry))
   end
