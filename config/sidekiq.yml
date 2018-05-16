@@ -53,3 +53,5 @@ production:
   - [intuition_ecl_job, 3]
   - [hbr_ascend, 5]
   - [hbr_ascend_ecl_job, 3]
+  - [file, 5]
+  - [file_ecl_job, 3]
