@@ -30,6 +30,6 @@ class FileParser
       File.read(@url)
   	when 'remote'
       open(@url).read
-  	end
+    end
   end
 end
