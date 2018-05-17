@@ -26,14 +26,13 @@ class FileIntegration < BaseIntegration
     data = FileParser.new(
             url: @credentials['url'], 
             root_element: @credentials['root_element'], 
-            file_type: @credentials['file_type']
+            file_type: @credentials['file_type'],
+            file_source: @credentials['file_source']
           ).parse_content
     data.each{|row| create_content_item(row)} if data
   end
 
   def content_item_attributes(entry)
-    # entry[:keywords].gsub!("\"", "") if entry[:keywords].present?
-
     {
       name:         sanitize_content(entry['title']),
       description:  sanitize_content(entry['description']),
@@ -41,7 +40,6 @@ class FileIntegration < BaseIntegration
       content_type: entry['content_type'].try(:downcase).presence || 'course',
       external_id:  entry['id'].present? ? entry['id'] : entry['deeplink_url'],
       raw_record:   entry,
-      # tags:         get_tags(entry[:keywords]),
       source_id:    @credentials["source_id"],
 
       resource_metadata:  {
