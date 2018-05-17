@@ -1,6 +1,7 @@
 class FileParser
 	attr_accessor :url, :root_element, :file_type
 
+	#root_element is the node key in case of xml and for json it can be optional
   def initialize(url: , root_element:, file_type:, file_source:)
     @url = url
     @root_element = root_element
@@ -31,5 +32,4 @@ class FileParser
   		open(@url).read
   	end
   end
-
 end
