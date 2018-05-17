@@ -1,7 +1,7 @@
 class FileParser
   attr_accessor :url, :root_element, :file_type
 
-	#root_element is the node key in case of xml and for json it can be optional
+  #root_element is the node key in case of xml and for json it can be optional
   def initialize(url: , root_element:, file_type:, file_source:)
     @url = url
     @root_element = root_element
@@ -27,9 +27,9 @@ class FileParser
     case @file_source
     #[TODO] Testing purpose will remove in final commit
     when 'local'
-  		File.read(@url)
+      File.read(@url)
   	when 'remote'
-  		open(@url).read
+      open(@url).read
   	end
   end
 end
